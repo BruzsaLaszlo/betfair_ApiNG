@@ -4,6 +4,7 @@ import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.APINGException;
+import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.ISO8601DateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -104,8 +105,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         ApiNGDemo.debug(requestString);
 
         String response = HttpUtil.sendPostRequest(requestString, operation);
-        if (response == null)
-            throw new APINGException("request " + requestString, "response: " + response);
+        if (response == null) {
+
+            throw new APINGException("request " + requestString, "hiba", "response: " + response);
+        }
         else
             return response;
 

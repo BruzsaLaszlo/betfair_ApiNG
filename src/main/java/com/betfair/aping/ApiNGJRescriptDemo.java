@@ -146,7 +146,7 @@ public class ApiNGJRescriptDemo {
             }
 
         } catch (APINGException apiExc) {
-            apiExc.printError();
+            System.err.println(apiExc);
         }
     }
 

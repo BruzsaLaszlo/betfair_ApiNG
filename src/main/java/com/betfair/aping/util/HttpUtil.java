@@ -1,8 +1,7 @@
-package com.betfair.aping.api;
+package com.betfair.aping.util;
 
 
 import com.betfair.aping.ApiNGDemo;
-import com.betfair.aping.util.RescriptResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
