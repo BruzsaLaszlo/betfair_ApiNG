@@ -13,13 +13,12 @@ import java.util.*;
  * When you execute the class will: <li>find a market (next horse race in the
  * UK)</li> <li>get prices and runners on this market</li> <li>place a bet on 1
  * runner</li> <li>handle the error</li>
- * 
  */
 public class ApiNGJRescriptDemo {
 
-	private final ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
+    private final ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
 
-    public void start(String applicationKey, String sessionToken) {
+    public void start() {
 
         try {
 
@@ -32,11 +31,11 @@ public class ApiNGJRescriptDemo {
             Set<String> eventTypeIds = new HashSet<>();
 
             System.out.println("1.(listEventTypes) Get all Event Types...\n");
-            List<EventTypeResult> r = rescriptOperations.listEventTypes(marketFilter, applicationKey, sessionToken);
+            List<EventTypeResult> r = rescriptOperations.listEventTypes(marketFilter);
             System.out.println("2. Extract Event Type Id for Horse Racing...\n");
             for (EventTypeResult eventTypeResult : r) {
-                if(eventTypeResult.getEventType().getName().equals("Soccer")){
-                    System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.getEventType().getId()+"\n");
+                if (eventTypeResult.getEventType().getName().equals("Soccer")) {
+                    System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.getEventType().getId() + "\n");
                     eventTypeIds.add(eventTypeResult.getEventType().getId());
                 }
             }
@@ -65,8 +64,7 @@ public class ApiNGJRescriptDemo {
 
             String maxResults = "1";
 
-            List<MarketCatalogue> marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResults,
-                    applicationKey, sessionToken);
+            List<MarketCatalogue> marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResults);
 
             System.out.println("5. Print static marketId, name and runners....\n");
             printMarketCatalogue(marketCatalogueResult.get(0));
@@ -93,7 +91,7 @@ public class ApiNGJRescriptDemo {
             marketIds.add(marketIdChosen);
 
             List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(marketIds, priceProjection,
-                    orderProjection, matchProjection, currencyCode, applicationKey, sessionToken);
+                    orderProjection, matchProjection, currencyCode);
 
             /**
              * PlaceOrders: we try to place a bet, based on the previous request we provide the following:
@@ -109,11 +107,11 @@ public class ApiNGJRescriptDemo {
 
 
             long selectionId;
-            if ( !marketBookReturn.isEmpty() ) {
+            if (!marketBookReturn.isEmpty()) {
                 Runner runner = marketBookReturn.get(0).getRunners().get(0);
                 selectionId = runner.getSelectionId();
                 System.out.println("7. Place a bet below minimum stake to prevent the bet actually " +
-                        "being placed for marketId: "+marketIdChosen+" with selectionId: "+selectionId+"...\n\n");
+                        "being placed for marketId: " + marketIdChosen + " with selectionId: " + selectionId + "...\n\n");
                 List<PlaceInstruction> instructions = new ArrayList<>();
                 PlaceInstruction instruction = new PlaceInstruction();
                 instruction.setHandicap(0);
@@ -133,7 +131,7 @@ public class ApiNGJRescriptDemo {
 
                 String customerRef = "1";
 
-                PlaceExecutionReport placeBetResult = rescriptOperations.placeOrders(marketIdChosen, instructions, customerRef, applicationKey, sessionToken);
+                PlaceExecutionReport placeBetResult = rescriptOperations.placeOrders(marketIdChosen, instructions, customerRef);
 
                 // Handling the operation result
                 if (placeBetResult.getStatus() == ExecutionReportStatus.SUCCESS) {
@@ -148,7 +146,7 @@ public class ApiNGJRescriptDemo {
             }
 
         } catch (APINGException apiExc) {
-            System.err.println(apiExc);
+            apiExc.printError();
         }
     }
 
@@ -163,21 +161,21 @@ public class ApiNGJRescriptDemo {
 
     }
 
-    private static double getSize(){
-        try{
-            return Double.parseDouble((String)ApiNGDemo.getProp().get("BET_SIZE"));
-        } catch (NumberFormatException e){
+    private static double getSize() {
+        try {
+            return Double.parseDouble((String) ApiNGDemo.getProp().get("BET_SIZE"));
+        } catch (NumberFormatException e) {
             //returning the default value
             return 0.01;
         }
     }
 
-    private void printMarketCatalogue(MarketCatalogue mk){
-        System.out.println("Market Name: "+mk.getMarketName() + "; Id: "+mk.getMarketId()+"\n");
+    private void printMarketCatalogue(MarketCatalogue mk) {
+        System.out.println("Market Name: " + mk.getMarketName() + "; Id: " + mk.getMarketId() + "\n");
         List<RunnerCatalog> runners = mk.getRunners();
-        if(runners!=null){
-            for(RunnerCatalog rCat : runners){
-                System.out.println("Runner Name: "+rCat.getRunnerName()+"; Selection Id: "+rCat.getSelectionId()+"\n");
+        if (runners != null) {
+            for (RunnerCatalog rCat : runners) {
+                System.out.println("Runner Name: " + rCat.getRunnerName() + "; Selection Id: " + rCat.getSelectionId() + "\n");
             }
         }
     }

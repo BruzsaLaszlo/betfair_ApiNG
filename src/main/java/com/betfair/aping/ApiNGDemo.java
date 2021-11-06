@@ -13,17 +13,16 @@ import java.util.Properties;
 public class ApiNGDemo {
 
     private static Properties prop = new Properties();
-    private static String applicationKey = "PWXyR1ihpVYw4dFe";
-    private static String sessionToken = "Y5R4h3QEnzqvOFKth6owPT79nHJp/KhZu3aaWVLv4wo=";
+
     private static boolean debug;
 
 
     static {
         try (InputStream in = ApiNGDemo.class.getResourceAsStream("/apingdemo.properties")) {
             prop.load(in);
-            debug = Boolean.valueOf(prop.getProperty("DEBUG"));
+            debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
         } catch (IOException e) {
-            System.out.println("Error loading the properties file: " + e.toString());
+            System.out.println("Error loading the properties file: " + e);
         }
     }
 
@@ -32,7 +31,7 @@ public class ApiNGDemo {
         System.out.println("Welcome to the Betfair API NG!");
 
         ApiNGJRescriptDemo rescriptDemo = new ApiNGJRescriptDemo();
-        rescriptDemo.start(applicationKey, sessionToken);
+        rescriptDemo.start();
 
     }
 
@@ -40,7 +39,8 @@ public class ApiNGDemo {
         return prop;
     }
 
-    public static boolean isDebug() {
-        return debug;
+    public static void debug(String debugString) {
+        if (debug)
+            System.out.println("\nResponse: " + debugString);
     }
 }
