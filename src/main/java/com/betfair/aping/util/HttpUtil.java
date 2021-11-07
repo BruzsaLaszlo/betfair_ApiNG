@@ -34,7 +34,8 @@ public final class HttpUtil {
         post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
         post.setHeader(HTTP_HEADER_X_APPLICATION, ApiNGDemo.getProp().getProperty("APPLICATION_KEY"));
         post.setHeader(HTTP_HEADER_X_AUTHENTICATION, ApiNGDemo.getProp().getProperty("SESSION_TOKEN"));
-        post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, ApiNGDemo.getProp().getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+        //post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, ApiNGDemo.getProp().getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+        //post.setHeader("Connection","keep-alive");
         post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
 
         ApiNGDemo.debug("Request headers", Arrays.toString(post.getAllHeaders()));
@@ -48,7 +49,7 @@ public final class HttpUtil {
 
             StatusLine statusLine = httpResponse.getStatusLine();
             if (statusLine.getStatusCode() != 200) {
-                //throw new HttpResponseException(statusLine.getStatusCode(), entityString);
+                throw new HttpResponseException(statusLine.getStatusCode(), entityString);
             }
 
             return entityString;

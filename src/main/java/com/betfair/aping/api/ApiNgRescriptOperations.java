@@ -108,8 +108,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
         } catch (HttpResponseException exception) {
 
-            //FaultData fd = ApiNgRescriptOperations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
-            //throw fd.detail.APINGException;
+            FaultData fd = ApiNgRescriptOperations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
+            throw fd.detail.APINGException;
 
         } catch (IOException exception) {
             exception.printStackTrace();
