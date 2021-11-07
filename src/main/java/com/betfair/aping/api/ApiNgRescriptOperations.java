@@ -108,8 +108,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         if (response == null) {
 
             throw new ApiNgException("request " + requestString, "hiba", "response: " + response);
-        }
-        else
+        } else
             return response;
 
     }

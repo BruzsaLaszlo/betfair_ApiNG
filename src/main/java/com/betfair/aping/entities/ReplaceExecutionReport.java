@@ -1,9 +1,9 @@
 package com.betfair.aping.entities;
 
-import java.util.List;
-
 import com.betfair.aping.enums.ExecutionReportErrorCode;
 import com.betfair.aping.enums.ExecutionReportStatus;
+
+import java.util.List;
 
 public class ReplaceExecutionReport {
     public void setCustomerRef(String customerRef) {

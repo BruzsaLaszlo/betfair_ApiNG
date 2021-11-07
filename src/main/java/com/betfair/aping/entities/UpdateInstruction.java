@@ -1,6 +1,6 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.enums.*;
+import com.betfair.aping.enums.PersistenceType;
 
 public class UpdateInstruction {
     public void setBetId(String betId) {

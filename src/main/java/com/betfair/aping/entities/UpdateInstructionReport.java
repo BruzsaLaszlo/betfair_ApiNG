@@ -1,6 +1,7 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.enums.*;
+import com.betfair.aping.enums.InstructionReportErrorCode;
+import com.betfair.aping.enums.InstructionReportStatus;
 
 public class UpdateInstructionReport {
     public void setStatus(InstructionReportStatus status) {

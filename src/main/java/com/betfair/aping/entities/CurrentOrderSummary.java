@@ -1,9 +1,9 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.enums.Side;
 import com.betfair.aping.enums.OrderStatus;
-import com.betfair.aping.enums.PersistenceType;
 import com.betfair.aping.enums.OrderType;
+import com.betfair.aping.enums.PersistenceType;
+import com.betfair.aping.enums.Side;
 
 import java.util.Date;
 

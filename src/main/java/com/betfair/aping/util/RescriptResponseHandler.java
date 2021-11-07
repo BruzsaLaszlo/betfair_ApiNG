@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class RescriptResponseHandler implements ResponseHandler<String> {
 
-	private static final String ENCODING_UTF_8 = "UTF-8";
-	
+    private static final String ENCODING_UTF_8 = "UTF-8";
+
     public String handleResponse(HttpResponse response) throws IOException {
         StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
@@ -24,6 +24,6 @@ public class RescriptResponseHandler implements ResponseHandler<String> {
 
         }
 
-        return entity == null ? null : EntityUtils.toString(entity,ENCODING_UTF_8);
+        return entity == null ? null : EntityUtils.toString(entity, ENCODING_UTF_8);
     }
 }

@@ -3,59 +3,59 @@ package com.betfair.aping.entities;
 import java.util.Date;
 
 public class ItemDescription {
-	public void setEventTypeDesc(String eventTypeDesc) {
-		this.eventTypeDesc = eventTypeDesc;
-	}
+    public void setEventTypeDesc(String eventTypeDesc) {
+        this.eventTypeDesc = eventTypeDesc;
+    }
 
-	public String getEventTypeDesc() {
-		return eventTypeDesc;
-	}
+    public String getEventTypeDesc() {
+        return eventTypeDesc;
+    }
 
-	public void setEventDesc(String eventDesc) {
-		this.eventDesc = eventDesc;
-	}
+    public void setEventDesc(String eventDesc) {
+        this.eventDesc = eventDesc;
+    }
 
-	public String getEventDesc() {
-		return eventDesc;
-	}
+    public String getEventDesc() {
+        return eventDesc;
+    }
 
-	public void setMarketDesc(String marketDesc) {
-		this.marketDesc = marketDesc;
-	}
+    public void setMarketDesc(String marketDesc) {
+        this.marketDesc = marketDesc;
+    }
 
-	public String getMarketDesc() {
-		return marketDesc;
-	}
+    public String getMarketDesc() {
+        return marketDesc;
+    }
 
-	public void setMarketStartTime(Date marketStartTime) {
-		this.marketStartTime = marketStartTime;
-	}
+    public void setMarketStartTime(Date marketStartTime) {
+        this.marketStartTime = marketStartTime;
+    }
 
-	public Date getMarketStartTime() {
-		return marketStartTime;
-	}
+    public Date getMarketStartTime() {
+        return marketStartTime;
+    }
 
-	public void setRunnerDesc(String runnerDesc) {
-		this.runnerDesc = runnerDesc;
-	}
+    public void setRunnerDesc(String runnerDesc) {
+        this.runnerDesc = runnerDesc;
+    }
 
-	public String getRunnerDesc() {
-		return runnerDesc;
-	}
+    public String getRunnerDesc() {
+        return runnerDesc;
+    }
 
-	public void setNumberOfWinners(int numberOfWinners) {
-		this.numberOfWinners = numberOfWinners;
-	}
+    public void setNumberOfWinners(int numberOfWinners) {
+        this.numberOfWinners = numberOfWinners;
+    }
 
-	public int getNumberOfWinners() {
-		return numberOfWinners;
-	}
+    public int getNumberOfWinners() {
+        return numberOfWinners;
+    }
 
-	private String eventTypeDesc;
-	private String eventDesc;
-	private String marketDesc;
-	private Date marketStartTime;
-	private String runnerDesc;
-	private int numberOfWinners;
+    private String eventTypeDesc;
+    private String eventDesc;
+    private String marketDesc;
+    private Date marketStartTime;
+    private String runnerDesc;
+    private int numberOfWinners;
 }
 

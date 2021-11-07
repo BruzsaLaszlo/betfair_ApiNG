@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 public class ApiNGDemo {
 
-    private static Properties prop = new Properties();
+    private static final Properties prop = new Properties();
 
     private static boolean debug;
 

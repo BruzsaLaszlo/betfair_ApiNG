@@ -16,7 +16,7 @@ public class ISO8601DateTypeAdapter implements JsonSerializer<Date>, JsonDeseria
     public static final String ISO_8601_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String ISO_8601_TIMEZONE = "UTC";
 
-    private DateFormat dateFormat;
+    private final DateFormat dateFormat;
 
     public ISO8601DateTypeAdapter() {
         dateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);

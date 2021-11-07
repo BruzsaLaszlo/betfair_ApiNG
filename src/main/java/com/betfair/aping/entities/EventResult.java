@@ -5,7 +5,9 @@ public class EventResult {
         return event;
     }
 
-    public void setEvent(com.betfair.aping.entities.Event event) { this.event = event; }
+    public void setEvent(com.betfair.aping.entities.Event event) {
+        this.event = event;
+    }
 
     public int getMarketCount() {
         return marketCount;
