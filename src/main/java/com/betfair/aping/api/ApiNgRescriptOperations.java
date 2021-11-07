@@ -1,6 +1,5 @@
 package com.betfair.aping.api;
 
-import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.ApiNgException;
@@ -15,15 +14,13 @@ import java.util.*;
 
 public class ApiNgRescriptOperations extends ApiNgOperations {
 
-    private static ApiNgRescriptOperations instance = null;
+    private static ApiNgRescriptOperations instance;
 
-    private ApiNgRescriptOperations() {
-    }
+    private ApiNgRescriptOperations() {}
 
     public static ApiNgRescriptOperations getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new ApiNgRescriptOperations();
-        }
         return instance;
     }
 
@@ -40,7 +37,6 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put(LOCALE, DEFAULT_LOCALE);
 
         String result = makeRequest(ApiNgOperation.LISTEVENTTYPES.getOperationName(), params);
-        ApiNGDemo.debug(result);
 
         return gson.fromJson(result, new TypeToken<List<EventTypeResult>>() {
         }.getType());
@@ -57,7 +53,6 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put(MATCH_PROJECTION, matchProjection);
 
         String result = makeRequest(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
-        ApiNGDemo.debug(result);
 
         return gson.fromJson(result, new TypeToken<List<MarketBook>>() {
         }.getType());
@@ -74,7 +69,6 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put(MARKET_PROJECTION, marketProjection);
 
         String result = makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params);
-        ApiNGDemo.debug(result);
 
         return gson.fromJson(result, new TypeToken<List<MarketCatalogue>>() {
         }.getType());
@@ -90,7 +84,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put(CUSTOMER_REF, customerRef);
 
         String result = makeRequest(ApiNgOperation.PLACORDERS.getOperationName(), params);
-        ApiNGDemo.debug(result);
+
 
         return gson.fromJson(result, PlaceExecutionReport.class);
 
@@ -102,14 +96,13 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put("id", Math.random());
 
         String requestString = gson.toJson(params);
-        ApiNGDemo.debug(requestString);
 
         String response = HttpUtil.sendPostRequest(requestString, operation);
-        if (response == null) {
 
+        if (response == null || response.equals("null") || response.isBlank())
             throw new ApiNgException("request " + requestString, "hiba", "response: " + response);
-        } else
-            return response;
+
+        return response;
 
     }
 

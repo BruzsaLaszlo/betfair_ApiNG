@@ -39,8 +39,8 @@ public class ApiNGDemo {
         return prop;
     }
 
-    public static void debug(String debugString) {
+    public static void debug(String what, String debugString) {
         if (debug)
-            System.out.println("\nResponse: " + debugString);
+            System.out.println("\n" + what + ": " + debugString);
     }
 }
