@@ -1,17 +1,17 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.exceptions.APINGException;
+import com.betfair.aping.exceptions.ApiNgException;
 
 public class Data {
 
-	private APINGException APINGException;
+    private ApiNgException apiNgException;
 
-	public APINGException getAPINGException() {
-		return APINGException;
-	}
+    public ApiNgException getApiNgException() {
+        return apiNgException;
+    }
 
-	public void setAPINGException(APINGException aPINGException) {
-		APINGException = aPINGException;
-	}
+    public void setApiNgException(ApiNgException aPINGException) {
+        apiNgException = aPINGException;
+    }
 
 }
