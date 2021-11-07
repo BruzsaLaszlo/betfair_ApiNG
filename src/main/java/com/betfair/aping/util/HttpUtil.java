@@ -4,6 +4,7 @@ package com.betfair.aping.util;
 import com.betfair.aping.ApiNGDemo;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -23,7 +24,7 @@ public final class HttpUtil {
     private static final String CHARSET_UTF8 = "UTF-8";
 
 
-    public static String sendPostRequest(String jsonRequest, String operation) {
+    public static String sendPostRequest(String jsonRequest, String operation) throws IOException {
 
         String url = ApiNGDemo.getProp().getProperty("APING_URL") + ApiNGDemo.getProp().getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
@@ -39,31 +40,20 @@ public final class HttpUtil {
         ApiNGDemo.debug("Request headers", Arrays.toString(post.getAllHeaders()));
         ApiNGDemo.debug("Request json", jsonRequest);
 
-        try {
+        return HttpClientBuilder.create().build().execute(post, (httpResponse -> {
 
-            return HttpClientBuilder.create().build().execute(post, (httpResponse -> {
+            HttpEntity entity = httpResponse.getEntity();
+            String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
+            ApiNGDemo.debug("Response", entityString);
 
-                HttpEntity entity = httpResponse.getEntity();
-                String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
+            StatusLine statusLine = httpResponse.getStatusLine();
+            if (statusLine.getStatusCode() != 200) {
+                //throw new HttpResponseException(statusLine.getStatusCode(), entityString);
+            }
 
-                StatusLine statusLine = httpResponse.getStatusLine();
-                if (statusLine.getStatusCode() != 200) {
+            return entityString;
 
-                    System.out.println("Call to api-ng failed\n");
-                    System.out.println(entityString);
-                    System.exit(0);
-
-                }
-
-                ApiNGDemo.debug("Response", entityString);
-
-                return entityString;
-            }));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        }));
 
     }
 

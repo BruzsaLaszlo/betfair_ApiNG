@@ -1,5 +1,6 @@
 package com.betfair.aping.api;
 
+import com.betfair.aping.FaultData;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.ApiNgException;
@@ -8,7 +9,9 @@ import com.betfair.aping.util.ISO8601DateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.client.HttpResponseException;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -16,7 +19,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
     private static ApiNgRescriptOperations instance;
 
-    private ApiNgRescriptOperations() {}
+    private ApiNgRescriptOperations() {
+    }
 
     public static ApiNgRescriptOperations getInstance() {
         if (instance == null)
@@ -28,7 +32,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
      * We needed to override the adapter for the Date class as Betfair's API-NG requires all dates to be serialized in ISO8601 UTC
      * Just formatting the string to the ISO format does not adjust by the timezone on the Date instance during serialization.
      */
-    private static final Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
+    public static final Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
 
     public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException {
 
@@ -97,10 +101,19 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
         String requestString = gson.toJson(params);
 
-        String response = HttpUtil.sendPostRequest(requestString, operation);
+        String response = null;
+        try {
 
-        if (response == null || response.equals("null") || response.isBlank())
-            throw new ApiNgException("request " + requestString, "hiba", "response: " + response);
+            response = HttpUtil.sendPostRequest(requestString, operation);
+
+        } catch (HttpResponseException exception) {
+
+            //FaultData fd = ApiNgRescriptOperations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
+            //throw fd.detail.APINGException;
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
 
         return response;
 

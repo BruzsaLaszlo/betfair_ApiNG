@@ -1,17 +1,27 @@
 package com.betfair.aping.exceptions;
 
 public class ApiNgException extends Exception {
+
     private String errorDetails;
     private String errorCode;
     private String requestUUID;
 
+    @Override
+    public String toString() {
+        return "ApiNgException{" +
+                "errorDetails='" + errorDetails + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                ", requestUUID='" + requestUUID + '\'' +
+                '}';
+    }
+
     public ApiNgException() {
-        super();
     }
 
     public ApiNgException(String errorDetails, String errorCode, String requestUUID) {
-        this.errorCode = errorCode;
+        super(errorDetails);
         this.errorDetails = errorDetails;
+        this.errorCode = errorCode;
         this.requestUUID = requestUUID;
     }
 
@@ -39,9 +49,6 @@ public class ApiNgException extends Exception {
         this.requestUUID = requestUUID;
     }
 
-    @Override
-    public String toString() {
-        return "ErrorCode: " + errorCode + " ErrorDetails: " + errorDetails + " RequestUUID: " + requestUUID;
-    }
+
 
 }
