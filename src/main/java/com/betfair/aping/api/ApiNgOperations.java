@@ -11,7 +11,7 @@ import com.betfair.aping.enums.MarketProjection;
 import com.betfair.aping.enums.MarketSort;
 import com.betfair.aping.enums.MatchProjection;
 import com.betfair.aping.enums.OrderProjection;
-import com.betfair.aping.exceptions.APINGException;
+import com.betfair.aping.exceptions.ApiNgException;
 
 import java.util.List;
 import java.util.Locale;
@@ -35,17 +35,17 @@ public abstract class ApiNgOperations {
     protected static  final String ORDER_PROJECTION = "orderProjection";
     protected static  final String DEFAULT_LOCALE = Locale.getDefault().toString();
 
-	public abstract List<EventTypeResult> listEventTypes(MarketFilter filter) throws APINGException;
+	public abstract List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException;
 
 	public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
-						MatchProjection matchProjection, String currencyCode) throws APINGException;
+						MatchProjection matchProjection, String currencyCode) throws ApiNgException;
 
     public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
-        MarketSort sort, String maxResult) throws APINGException;
+        MarketSort sort, String maxResult) throws ApiNgException;
 
-	public abstract PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef ) throws APINGException;
+	public abstract PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef ) throws ApiNgException;
 
-    protected abstract String makeRequest(String operation, Map<String, Object> params) throws  APINGException;
+    protected abstract String makeRequest(String operation, Map<String, Object> params) throws ApiNgException;
 
 }
 

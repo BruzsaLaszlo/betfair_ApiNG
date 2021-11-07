@@ -4,7 +4,7 @@ import com.betfair.aping.api.ApiNgOperations;
 import com.betfair.aping.api.ApiNgRescriptOperations;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
-import com.betfair.aping.exceptions.APINGException;
+import com.betfair.aping.exceptions.ApiNgException;
 
 import java.util.*;
 
@@ -145,7 +145,7 @@ public class ApiNGJRescriptDemo {
                 System.out.println("Sorry, no runners found\n\n");
             }
 
-        } catch (APINGException apiExc) {
+        } catch (ApiNgException apiExc) {
             System.err.println(apiExc);
         }
     }

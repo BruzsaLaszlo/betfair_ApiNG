@@ -3,7 +3,7 @@ package com.betfair.aping.api;
 import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
-import com.betfair.aping.exceptions.APINGException;
+import com.betfair.aping.exceptions.ApiNgException;
 import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.ISO8601DateTypeAdapter;
 import com.google.gson.Gson;
@@ -33,7 +33,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
      */
     private static final Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
 
-    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws APINGException {
+    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException {
 
         Map<String, Object> params = new HashMap<>();
         params.put(FILTER, filter);
@@ -48,7 +48,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
     }
 
     public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
-                                           MatchProjection matchProjection, String currencyCode) throws APINGException {
+                                           MatchProjection matchProjection, String currencyCode) throws ApiNgException {
         Map<String, Object> params = new HashMap<>();
         params.put(LOCALE, DEFAULT_LOCALE);
         params.put(MARKET_IDS, marketIds);
@@ -65,7 +65,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
     }
 
     public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
-                                                     MarketSort sort, String maxResult) throws APINGException {
+                                                     MarketSort sort, String maxResult) throws ApiNgException {
         Map<String, Object> params = new HashMap<>();
         params.put(LOCALE, DEFAULT_LOCALE);
         params.put(FILTER, filter);
@@ -81,7 +81,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
     }
 
-    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws APINGException {
+    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws ApiNgException {
 
         Map<String, Object> params = new HashMap<>();
         params.put(LOCALE, DEFAULT_LOCALE);
@@ -97,7 +97,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
     }
 
 
-    protected String makeRequest(String operation, Map<String, Object> params) throws APINGException {
+    protected String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
 
         params.put("id", Math.random());
 
@@ -107,7 +107,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         String response = HttpUtil.sendPostRequest(requestString, operation);
         if (response == null) {
 
-            throw new APINGException("request " + requestString, "hiba", "response: " + response);
+            throw new ApiNgException("request " + requestString, "hiba", "response: " + response);
         }
         else
             return response;
