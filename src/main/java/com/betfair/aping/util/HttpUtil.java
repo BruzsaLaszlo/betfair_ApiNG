@@ -24,7 +24,7 @@ public final class HttpUtil {
     private static final String CHARSET_UTF8 = "UTF-8";
 
 
-    public static String sendPostRequest(String jsonRequest, String operation) throws IOException {
+    public static String sendPostRequest(String operation, String jsonRequest) throws IOException {
 
         String url = ApiNGDemo.getProp().getProperty("APING_URL") + ApiNGDemo.getProp().getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
@@ -34,9 +34,10 @@ public final class HttpUtil {
         post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
         post.setHeader(HTTP_HEADER_X_APPLICATION, ApiNGDemo.getProp().getProperty("APPLICATION_KEY"));
         post.setHeader(HTTP_HEADER_X_AUTHENTICATION, ApiNGDemo.getProp().getProperty("SESSION_TOKEN"));
-        //post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, ApiNGDemo.getProp().getProperty(HTTP_HEADER_ACCEPT_ENCODING));
-        //post.setHeader("Connection","keep-alive");
-        post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
+        post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, ApiNGDemo.getProp().getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+        post.setHeader("Connection", "keep-alive");
+        if (jsonRequest != null)
+            post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
 
         ApiNGDemo.debug("Request headers", Arrays.toString(post.getAllHeaders()));
         ApiNGDemo.debug("Request json", jsonRequest);

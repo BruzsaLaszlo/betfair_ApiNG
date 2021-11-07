@@ -55,4 +55,16 @@ public class AccountFundsResponse {
     private double exposureLimit;
     private double discountRate;
     private double pointsBalance;
+
+    @Override
+    public String toString() {
+        return "AccountFundsResponse{" +
+                "availableToBetBalance=" + availableToBetBalance +
+                ", exposure=" + exposure +
+                ", retainedCommission=" + retainedCommission +
+                ", exposureLimit=" + exposureLimit +
+                ", discountRate=" + discountRate +
+                ", pointsBalance=" + pointsBalance +
+                '}';
+    }
 }

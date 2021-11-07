@@ -1,25 +1,44 @@
 package com.betfair.aping;
 
 
- import com.betfair.aping.exceptions.ApiNgException;
+import com.betfair.aping.exceptions.ApiNgException;
 
 
-public class FaultData{
-    public String faultcode;
-    public String faultstring;
-    public Detail detail;
+public class FaultData {
+    private String faultcode;
+    private String faultstring;
+    private Detail detail;
+
+    public String getFaultcode() {
+        return faultcode;
+    }
+
+    public String getFaultstring() {
+        return faultstring;
+    }
+
+    public Detail getDetail() {
+        return detail;
+    }
 
     public FaultData() {
     }
 
-    public class Detail{
+    public class Detail {
 
-        public ApiNgException APINGException;
-        public String exceptionname;
+        private ApiNgException APINGException;
+        private String exceptionname;
 
         public Detail() {
         }
 
+        public ApiNgException getAPINGException() {
+            return APINGException;
+        }
+
+        public String getExceptionname() {
+            return exceptionname;
+        }
     }
 }
 

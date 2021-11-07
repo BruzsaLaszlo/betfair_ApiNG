@@ -22,6 +22,9 @@ public class ApiNGJRescriptDemo {
 
         try {
 
+//            AccountFundsResponse afr= rescriptOperations.getAccountFunds();
+//            System.out.println(afr);
+
             /**
              * ListEventTypes: Search for the event types and then for the "Horse Racing" in the returned list to finally get
              * the listEventTypeId

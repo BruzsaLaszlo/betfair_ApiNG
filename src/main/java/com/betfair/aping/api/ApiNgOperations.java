@@ -13,33 +13,35 @@ import java.util.Map;
 import java.util.Set;
 
 
-public abstract class ApiNgOperations {
+public interface ApiNgOperations {
 
-    protected static final String FILTER = "filter";
-    protected static final String LOCALE = "locale";
-    protected static final String SORT = "sort";
-    protected static final String MAX_RESULT = "maxResults";
-    protected static final String MARKET_IDS = "marketIds";
-    protected static final String MARKET_ID = "marketId";
-    protected static final String INSTRUCTIONS = "instructions";
-    protected static final String CUSTOMER_REF = "customerRef";
-    protected static final String MARKET_PROJECTION = "marketProjection";
-    protected static final String PRICE_PROJECTION = "priceProjection";
-    protected static final String MATCH_PROJECTION = "matchProjection";
-    protected static final String ORDER_PROJECTION = "orderProjection";
-    protected static final String DEFAULT_LOCALE = Locale.getDefault().toString();
+    String FILTER = "filter";
+    String LOCALE = "locale";
+    String SORT = "sort";
+    String MAX_RESULT = "maxResults";
+    String MARKET_IDS = "marketIds";
+    String MARKET_ID = "marketId";
+    String INSTRUCTIONS = "instructions";
+    String CUSTOMER_REF = "customerRef";
+    String MARKET_PROJECTION = "marketProjection";
+    String PRICE_PROJECTION = "priceProjection";
+    String MATCH_PROJECTION = "matchProjection";
+    String ORDER_PROJECTION = "orderProjection";
+    String DEFAULT_LOCALE = Locale.getDefault().toString();
 
-    public abstract List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException;
+    List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException;
 
-    public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
-                                                    MatchProjection matchProjection, String currencyCode) throws ApiNgException;
+    List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
+                                    MatchProjection matchProjection, String currencyCode) throws ApiNgException;
 
-    public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
-                                                              MarketSort sort, String maxResult) throws ApiNgException;
+    List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
+                                              MarketSort sort, String maxResult) throws ApiNgException;
 
-    public abstract PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws ApiNgException;
+    PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws ApiNgException;
 
-    protected abstract String makeRequest(String operation, Map<String, Object> params) throws ApiNgException;
+    AccountFundsResponse getAccountFunds() throws ApiNgException;
+
+    AccountDetailsResponse getAccountDetails() throws ApiNgException;
 
 }
 

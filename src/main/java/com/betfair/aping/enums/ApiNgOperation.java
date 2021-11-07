@@ -10,7 +10,24 @@ public enum ApiNgOperation {
     LISTVENUES("listVenues"),
     LISTMARKETCATALOGUE("listMarketCatalogue"),
     LISTMARKETBOOK("listMarketBook"),
-    PLACORDERS("placeOrders");
+    PLACEORDERS("placeOrders"),
+    CANCELORDERS("cancelOrders"),
+    REPLACEORDERS("replaceOrders"),
+    UPDATEORDERS("updateOrders"),
+    LISTCLEAREDORDERS("listClearedOrders"),
+    LISTCURRENTORDERS("listCurrentOrders"),
+    LISTCLEARORDERS("listClearedOrders"),
+    CREATEDEVELOPERAPPKEYS("createDeveloperAppKeys"),
+    DEVELOPERAPPKEYS("getDeveloperAppKeys"),
+    ACCOUNTFUNDS("getAccountFunds"),
+    ACCOUNTDETAILS("getAccountDetails"),
+    ACTIVATEAPPLICATIONSUBSCRIPTION("activateApplicationSubscription"),
+    VENDORCLIENTID("getVendorClientId"),
+    APPLICATIONSUBSCRIPTIONTOKEN("getApplicationSubscriptionToken"),
+    CANCELAPPLICATIONSUBSCRIPTION("cancelApplicationSubscription"),
+    APPLICATIONSUBSCRIPTIONTOKENS("listApplicationSubscriptionTokens"),
+    ACCOUNTSUBSCRIPTIONTOKENS("listAccountSubscriptionTokens"),
+    APPLICATIONSUBSCRIPTIONHISTORY("getApplicationSubscriptionHistory");
 
     private final String operationName;
 

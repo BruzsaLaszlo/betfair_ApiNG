@@ -1,5 +1,6 @@
 package com.betfair.aping.api;
 
+import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.FaultData;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class ApiNgRescriptOperations extends ApiNgOperations {
+public class ApiNgRescriptOperations implements ApiNgOperations {
 
     private static ApiNgRescriptOperations instance;
 
@@ -87,7 +88,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
 
-        String result = makeRequest(ApiNgOperation.PLACORDERS.getOperationName(), params);
+        String result = makeRequest(ApiNgOperation.PLACEORDERS.getOperationName(), params);
 
 
         return gson.fromJson(result, PlaceExecutionReport.class);
@@ -95,21 +96,21 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
     }
 
 
-    protected String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
+    private String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
 
-        params.put("id", Math.random());
+        //params.put("id", Math.random() * 100);
 
-        String requestString = gson.toJson(params);
+        String requestString = params == null ? null : gson.toJson(params);
 
         String response = null;
         try {
 
-            response = HttpUtil.sendPostRequest(requestString, operation);
+            response = HttpUtil.sendPostRequest(operation, requestString);
 
         } catch (HttpResponseException exception) {
 
             FaultData fd = ApiNgRescriptOperations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
-            throw fd.detail.APINGException;
+            throw fd.getDetail().getAPINGException();
 
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -117,6 +118,44 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
         return response;
 
+    }
+
+    /**
+     * Create 2 application keys for given user; one active and the other
+     * delayed
+     *
+     * @param appName A Display name for the application.
+     * @return DeveloperApp A map of application keys, one marked ACTIVE, and
+     * the other DELAYED
+     */
+    public DeveloperApp createDeveloperAppKeys(String appName) {
+        return null;
+    }
+
+    /**
+     * Get all application keys owned by the given developer/vendor
+     *
+     * @return List<DeveloperApp> A list of application keys owned by the given
+     * developer/vendor
+     */
+//    public List<DeveloperApp> getDeveloperAppKeys() {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+
+    /**
+     * Get available to bet amount.
+     *
+     * @return Response for retrieving available to bet.
+     */
+    public AccountFundsResponse getAccountFunds() throws ApiNgException {
+        String response = makeRequest(ApiNgOperation.ACCOUNTFUNDS.getOperationName(), null);
+        return gson.fromJson(response, AccountFundsResponse.class);
+    }
+
+    public AccountDetailsResponse getAccountDetails() throws ApiNgException {
+        String response = makeRequest(ApiNGDemo.getProp().getProperty("ACCOUNT_APING_V1_0") + ApiNgOperation.ACCOUNTDETAILS.getOperationName(), null);
+        return gson.fromJson(response, AccountDetailsResponse.class);
     }
 
 }
