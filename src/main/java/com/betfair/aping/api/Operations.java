@@ -1,6 +1,6 @@
 package com.betfair.aping.api;
 
-import com.betfair.aping.FaultData;
+import com.betfair.aping.util.FaultData;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.ApiNgException;

@@ -1,4 +1,4 @@
-import com.betfair.aping.FaultData;
+import com.betfair.aping.util.FaultData;
 import com.betfair.aping.api.Operations;
 import org.junit.jupiter.api.Test;
 

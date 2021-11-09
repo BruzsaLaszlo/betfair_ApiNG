@@ -1,4 +1,4 @@
-package com.betfair.aping;
+package com.betfair.aping.util;
 
 
 import com.betfair.aping.exceptions.ApiNgException;
