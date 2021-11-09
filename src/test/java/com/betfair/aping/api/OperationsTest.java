@@ -1,9 +1,6 @@
 package com.betfair.aping.api;
 
-import com.betfair.aping.entities.AccountFundsResponse;
-import com.betfair.aping.entities.DeveloperApp;
-import com.betfair.aping.entities.EventTypeResult;
-import com.betfair.aping.entities.MarketFilter;
+import com.betfair.aping.entities.*;
 import com.betfair.aping.exceptions.ApiNgException;
 import com.betfair.aping.util.SessionTokenGetter;
 import org.junit.jupiter.api.Test;
@@ -50,6 +47,12 @@ class OperationsTest {
         AccountFundsResponse acr = operations.getAccountFunds();
         assertNotNull(acr);
         assertTrue(acr.getAvailableToBetBalance() > 0);
+    }
+
+    @Test
+    void accountDetails() throws ApiNgException {
+        AccountDetailsResponse adr = operations.getAccountDetails();
+        assertEquals("Laszlo", adr.getFirstName());
     }
 
     @Test

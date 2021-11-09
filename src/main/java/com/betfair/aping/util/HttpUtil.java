@@ -12,7 +12,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Properties;
 
 public final class HttpUtil {
 
@@ -24,35 +26,51 @@ public final class HttpUtil {
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String CHARSET_UTF8 = "UTF-8";
 
+    private static final Properties prop = new Properties();
+    private static boolean DEBUG;
+
+    static {
+        try (InputStream in = ApiNGDemo.class.getResourceAsStream("/apingdemo.properties")) {
+            prop.load(in);
+            DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
+        } catch (IOException e) {
+            System.out.println("Error loading the properties file: " + e);
+        }
+    }
+
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
 
         String url;
         if (endpoint == Endpoint.ACCOUNT)
-            url = ApiNGDemo.getProp().getProperty("ACCOUNT_APING_URL") + ApiNGDemo.getProp().getProperty("RESCRIPT_SUFFIX") + operation + "/";
+            url = prop.getProperty("ACCOUNT_APING_URL") + prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
         else
-            url = ApiNGDemo.getProp().getProperty("SPORT_APING_URL") + ApiNGDemo.getProp().getProperty("RESCRIPT_SUFFIX") + operation + "/";
+            url = prop.getProperty("SPORT_APING_URL") + prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
         HttpPost post = new HttpPost(url);
-        post.setHeader(HTTP_HEADER_CONTENT_TYPE, ApiNGDemo.getProp().getProperty("APPLICATION_JSON"));
-        post.setHeader(HTTP_HEADER_ACCEPT, ApiNGDemo.getProp().getProperty("APPLICATION_JSON"));
+        post.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
+        post.setHeader(HTTP_HEADER_ACCEPT, prop.getProperty("APPLICATION_JSON"));
         post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
-        post.setHeader(HTTP_HEADER_X_APPLICATION, ApiNGDemo.getProp().getProperty("APPLICATION_KEY"));
-        post.setHeader(HTTP_HEADER_X_AUTHENTICATION, ApiNGDemo.getProp().getProperty("SESSION_TOKEN"));
-        post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, ApiNGDemo.getProp().getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+        post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
+        post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
+        post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
         post.setHeader("Connection", "keep-alive");
         if (jsonRequest != null)
             post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
 
-        ApiNGDemo.debug("Request headers", Arrays.toString(post.getAllHeaders()));
-        ApiNGDemo.debug("URL: ", post.getURI().toString());
-        ApiNGDemo.debug("Request json", jsonRequest);
+        if (DEBUG) {
+            System.out.println("Request headers: " + Arrays.toString(post.getAllHeaders()));
+            System.out.println("URL: " + post.getURI().toString());
+            System.out.println("jsonRequest: " + jsonRequest);
+        }
 
         return HttpClientBuilder.create().build().execute(post, (httpResponse -> {
 
             HttpEntity entity = httpResponse.getEntity();
             String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
-            ApiNGDemo.debug("Response", entityString);
+
+            if (DEBUG)
+                System.out.println("Response: " + entityString);
 
             StatusLine statusLine = httpResponse.getStatusLine();
             if (statusLine.getStatusCode() != 200) {

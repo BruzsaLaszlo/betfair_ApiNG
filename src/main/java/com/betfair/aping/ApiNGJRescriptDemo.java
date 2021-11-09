@@ -21,12 +21,6 @@ public class ApiNGJRescriptDemo {
 
         try {
 
-//            AccountFundsResponse afr= rescriptOperations.getAccountFunds();
-//            System.out.println(afr);
-
-//            AccountDetailsResponse adr= rescriptOperations.getAccountDetails();
-//            System.out.println(adr);
-
             /**
              * ListEventTypes: Search for the event types and then for the "Horse Racing" in the returned list to finally get
              * the listEventTypeId
@@ -158,7 +152,7 @@ public class ApiNGJRescriptDemo {
     private static double getPrice() {
 
         try {
-            return Double.parseDouble((String) ApiNGDemo.getProp().get("BET_PRICE"));
+            return 0.01;
         } catch (NumberFormatException e) {
             //returning the default value
             return 1000.0;
@@ -168,7 +162,7 @@ public class ApiNGJRescriptDemo {
 
     private static double getSize() {
         try {
-            return Double.parseDouble((String) ApiNGDemo.getProp().get("BET_SIZE"));
+            return 0.01;
         } catch (NumberFormatException e) {
             //returning the default value
             return 0.01;

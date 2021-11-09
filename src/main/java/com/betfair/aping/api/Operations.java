@@ -386,7 +386,7 @@ public class Operations {
             BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds,
             Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy,
             boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws ApiNgException {
-        
+
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketIds);
         params.put("eventTypeIds", eventTypeIds);
@@ -476,7 +476,7 @@ public class Operations {
     }
 
 
-    protected String makeRequestBetting(String operation, Map<String,Object> params) throws ApiNgException {
+    protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException {
         params.put(LOCALE, DEFAULT_LOCALE);
         return makeRequest(operation, params, Endpoint.BETTING);
     }
@@ -485,7 +485,7 @@ public class Operations {
         return makeRequest(operation, null, Endpoint.ACCOUNT);
     }
 
-    private String makeRequest(String operation, Map<String,Object> params, Endpoint endpoint) throws ApiNgException {
+    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException {
 
         String requestString = params == null ? null : gson.toJson(params);
 

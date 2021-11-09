@@ -82,4 +82,19 @@ public class AccountDetailsResponse {
     private double discountRate;
     private int pointsBalance;
     private String countryCode;
+
+    @Override
+    public String toString() {
+        return "AccountDetailsResponse{" + '\n' +
+                "currencyCode = " + currencyCode + '\n' +
+                "firstName = " + firstName + '\n' +
+                "lastName = " + lastName + '\n' +
+                "localeCode = " + localeCode + '\n' +
+                "region = " + region + '\n' +
+                "timeZone = " + timeZone + '\n' +
+                "discountRate=" + discountRate + '\n' +
+                "pointsBalance=" + pointsBalance + '\n' +
+                "countryCode = " + countryCode + '\n' +
+                '}';
+    }
 }
