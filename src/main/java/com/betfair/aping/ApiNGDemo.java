@@ -14,6 +14,10 @@ public class ApiNGDemo {
 
     private static final Properties prop = new Properties();
 
+    public static boolean isDebug() {
+        return debug;
+    }
+
     private static boolean debug;
 
 

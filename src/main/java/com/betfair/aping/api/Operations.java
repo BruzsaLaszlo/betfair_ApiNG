@@ -13,21 +13,39 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.*;
 
 
-public class ApiNgRescriptOperations implements ApiNgOperations {
+public class Operations {
 
-    private static ApiNgRescriptOperations instance;
+    private static Operations instance;
 
-    private ApiNgRescriptOperations() {
+    private Operations() {
     }
 
-    public static ApiNgRescriptOperations getInstance() {
+    public static Operations getInstance() {
         if (instance == null)
-            instance = new ApiNgRescriptOperations();
+            instance = new Operations();
         return instance;
     }
+
+    private static final String FILTER = "filter";
+    private static final String LOCALE = "locale";
+    private static final String SORT = "sort";
+    private static final String MAX_RESULT = "maxResults";
+    private static final String MARKET_IDS = "marketIds";
+    private static final String MARKET_ID = "marketId";
+    private static final String INSTRUCTIONS = "instructions";
+    private static final String CUSTOMER_REF = "customerRef";
+    private static final String PRICE_PROJECTION = "priceProjection";
+    private static final String MARKET_PROJECTION = "marketProjection";
+    private static final String MATCH_PROJECTION = "matchProjection";
+    private static final String CURRENCY_CODE = "currencyCode";
+    private static final String ORDER_PROJECTION = "orderProjection";
+    private static final String PLACED_DATERANGE = "placedDateRange";
+    private static final String ORDERBY = "orderBy";
+    private static final String DEFAULT_LOCALE = Locale.getDefault().toString();
 
     /**
      * We needed to override the adapter for the Date class as Betfair's API-NG requires all dates to be serialized in ISO8601 UTC
@@ -96,9 +114,11 @@ public class ApiNgRescriptOperations implements ApiNgOperations {
     }
 
 
-    private String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
+    protected String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
 
         //params.put("id", Math.random() * 100);
+        if (params == null)
+            params = new HashMap<>();
 
         String requestString = params == null ? null : gson.toJson(params);
 
@@ -109,7 +129,7 @@ public class ApiNgRescriptOperations implements ApiNgOperations {
 
         } catch (HttpResponseException exception) {
 
-            FaultData fd = ApiNgRescriptOperations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
+            FaultData fd = Operations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
             throw fd.getDetail().getAPINGException();
 
         } catch (IOException exception) {
@@ -128,8 +148,9 @@ public class ApiNgRescriptOperations implements ApiNgOperations {
      * @return DeveloperApp A map of application keys, one marked ACTIVE, and
      * the other DELAYED
      */
-    public DeveloperApp createDeveloperAppKeys(String appName) {
-        return null;
+    public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException {
+        String response = makeRequest(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName(), null);
+        return gson.fromJson(response, DeveloperApp.class);
     }
 
     /**
@@ -148,13 +169,15 @@ public class ApiNgRescriptOperations implements ApiNgOperations {
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws ApiNgException {
+    public AccountFundsResponse getAccountFunds() throws ApiNgException ,InaccessibleObjectException{
         String response = makeRequest(ApiNgOperation.ACCOUNTFUNDS.getOperationName(), null);
         return gson.fromJson(response, AccountFundsResponse.class);
     }
 
-    public AccountDetailsResponse getAccountDetails() throws ApiNgException {
-        String response = makeRequest(ApiNGDemo.getProp().getProperty("ACCOUNT_APING_V1_0") + ApiNgOperation.ACCOUNTDETAILS.getOperationName(), null);
+    public AccountDetailsResponse getAccountDetails() throws ApiNgException, InaccessibleObjectException {
+        String response = makeRequest(ApiNgOperation.ACCOUNTDETAILS.getOperationName(), null);
+        if (response.equals("{\"faultcode\":\"Client\",\"faultstring\":\"DSC-0021\",\"detail\":{}}"))
+            throw new ApiNgException("DSC-0021", "DSC-0021", "DSC-0021");
         return gson.fromJson(response, AccountDetailsResponse.class);
     }
 

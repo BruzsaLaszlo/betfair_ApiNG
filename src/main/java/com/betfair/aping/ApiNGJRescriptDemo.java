@@ -1,7 +1,6 @@
 package com.betfair.aping;
 
-import com.betfair.aping.api.ApiNgOperations;
-import com.betfair.aping.api.ApiNgRescriptOperations;
+import com.betfair.aping.api.Operations;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.ApiNgException;
@@ -16,7 +15,7 @@ import java.util.*;
  */
 public class ApiNGJRescriptDemo {
 
-    private final ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
+    private final Operations rescriptOperations = Operations.getInstance();
 
     public void start() {
 
@@ -24,6 +23,9 @@ public class ApiNGJRescriptDemo {
 
 //            AccountFundsResponse afr= rescriptOperations.getAccountFunds();
 //            System.out.println(afr);
+
+//            AccountDetailsResponse adr= rescriptOperations.getAccountDetails();
+//            System.out.println(adr);
 
             /**
              * ListEventTypes: Search for the event types and then for the "Horse Racing" in the returned list to finally get

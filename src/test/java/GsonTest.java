@@ -1,6 +1,5 @@
 import com.betfair.aping.FaultData;
-import com.betfair.aping.api.ApiNgRescriptOperations;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.betfair.aping.api.Operations;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ public class GsonTest {
 
     @Test
     void error() throws IOException {
-        FaultData err = ApiNgRescriptOperations.gson.fromJson(response, FaultData.class);
+        FaultData err = Operations.gson.fromJson(response, FaultData.class);
         assertEquals("ANGX-0015", err.getFaultstring());
         assertEquals("APINGException", err.getDetail().getExceptionname());
         assertNotNull(err.getDetail().getAPINGException());

@@ -48,82 +48,7 @@ class OperationsTest {
         AccountFundsResponse acr = op.getAccountFunds();
     }
 
-    private static String makeRequestAccount(String operation, Map<String, Object> params) throws IOException {
-        String requestString;
-        // Handling the JSON-RPC request
 
-        class JsonrpcRequest {
-            private String jsonrpc = "2.0";
-            private String method;
-            private String id;
-            private Map<String, Object> params;
-
-            public String getJsonrpc() {
-                return jsonrpc;
-            }
-
-            public void setJsonrpc(String jsonrpc) {
-                this.jsonrpc = jsonrpc;
-            }
-
-            public String getMethod() {
-                return method;
-            }
-
-            public void setMethod(String method) {
-                this.method = method;
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public Map<String, Object> getParams() {
-                return params;
-            }
-
-            public void setParams(Map<String, Object> params) {
-                this.params = params;
-            }
-
-
-        }
-        JsonrpcRequest request = new JsonrpcRequest();
-        request.setId("1");
-        request.setMethod(ApiNGDemo.getProp().getProperty("ACCOUNT_APING_V1_0") + operation);
-        request.setParams(params);
-
-        requestString = Operations.gson.toJson(request);
-        if (ApiNGDemo.isDebug()) System.out.println("\nRequest: " + requestString);
-
-        // We need to pass the "sendPostRequest" method a string in util format:
-        // requestString
-        return HttpUtil.sendPostRequestAccount(operation, requestString);
-
-    }
-
-    @Test
-    void accountDetails() throws ApiNgException, InaccessibleObjectException, IOException {
-        AccountDetailsResponse adr = op.getAccountDetails();
-
-        String result = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName(), null);
-        if (ApiNGDemo.isDebug()) System.out.println("\nResponse: " + result);
-        AccountDetailsResponseContainer container = Operations.gson.fromJson(result, AccountDetailsResponseContainer.class);
-    }
-
-    @Test
-    void connection() throws IOException {
-        URL url = new URL("http://www.javatpoint.com");
-
-        URLConnection connection = url.openConnection();
-        String mimeType = connection.getContentType();
-        System.out.println(" The mime type is : " + mimeType);
-        System.out.println(" The time out time of connection is : " + connection.getConnectTimeout());
-    }
 
     private static KeyManager[] getKeyManagers(String keyStoreType, InputStream keyStoreFile, String keyStorePassword) throws Exception {
         KeyStore keyStore = KeyStore.getInstance(keyStoreType);
@@ -154,18 +79,11 @@ class OperationsTest {
     @Test
     void con() {
         try {
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init((KeyStore) null);
-            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-            if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
-                throw new IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers));
-            }
-            X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
+
 
             SSLContext sslContext = SSLContext.getInstance("SSL");
             URL console = new URL("https://identitysso-cert.betfair.com/api/certlogin");
             if ("https".equals(console.getProtocol())) {
-//            SSLContext sc = SSLContext.getInstance("SSL");
                 KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(new File("src/main/resources/client-2048.p12")), "LACIKa007");
                 sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
                 HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
@@ -176,8 +94,6 @@ class OperationsTest {
                 con.setUseCaches(false);
                 con.setConnectTimeout(30 * 1000);
                 con.setReadTimeout(60 * 1000);
-                con.setRequestProperty("username", "bruzsal");
-                con.setRequestProperty("password", "lvQ!VkL?DD%6nbkQ*!mw");
                 con.setRequestProperty("X-Application", "appkey");
 
                 List<NameValuePair> nvps = new ArrayList<NameValuePair>();
