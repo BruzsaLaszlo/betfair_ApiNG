@@ -2,10 +2,12 @@ package com.betfair.aping.api;
 
 import com.betfair.aping.entities.*;
 import com.betfair.aping.exceptions.ApiNgException;
+import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.SessionTokenGetter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +18,7 @@ class OperationsTest {
 
 
     Operations operations = Operations.getInstance();
+
 
     @Test
     @Disabled
@@ -63,4 +66,10 @@ class OperationsTest {
         assertEquals("bruzsal", da.get(0).getAppVersions().get(0).getOwner());
     }
 
+    @Test
+    @Disabled
+    void getNavigationData() throws IOException {
+        String data = HttpUtil.getNavigationData();
+        assertFalse(data.isEmpty());
+    }
 }

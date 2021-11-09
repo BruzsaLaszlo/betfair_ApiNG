@@ -4,8 +4,10 @@ package com.betfair.aping.util;
 import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.enums.Endpoint;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -13,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -64,6 +68,7 @@ public final class HttpUtil {
         post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
         post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
         post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+        post.setHeader("Accept-Encoding" ,"gzip,deflate");
         post.setHeader("Connection", "keep-alive");
         if (jsonRequest != null)
             post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
@@ -74,23 +79,41 @@ public final class HttpUtil {
             System.out.println("jsonRequest: " + jsonRequest);
         }
 
-        return HttpClientBuilder.create().build().execute(post, (httpResponse -> {
+        return HttpClientBuilder.create().build().execute(post, (HttpUtil::handleResponse));
 
-            HttpEntity entity = httpResponse.getEntity();
-            String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
+    }
 
-            if (DEBUG)
-                System.out.println("Response: " + entityString);
+    private static String handleResponse(HttpResponse httpResponse) throws IOException {
 
-            StatusLine statusLine = httpResponse.getStatusLine();
-            if (statusLine.getStatusCode() != 200) {
-                throw new HttpResponseException(statusLine.getStatusCode(), entityString);
-            }
+        HttpEntity entity = httpResponse.getEntity();
+        String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
 
-            return entityString;
+        if (DEBUG)
+            System.out.println("Response: " + entityString);
 
-        }));
+        StatusLine statusLine = httpResponse.getStatusLine();
+        if (statusLine.getStatusCode() != 200) {
+            throw new HttpResponseException(statusLine.getStatusCode(), entityString);
+        }
 
+        return entityString;
+
+    }
+
+    public static String getNavigationData() throws IOException {
+        String url = "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
+        HttpGet get = new HttpGet(url);
+        get.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
+        get.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
+        get.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
+        get.setHeader("Connection", "keep-alive");
+        get.setHeader("Accept-Encoding" ,"gzip,deflate");
+
+        String response = HttpClientBuilder.create().build().execute(get, (HttpUtil::handleResponse));
+
+        Files.writeString(Path.of(prop.getProperty("NAVIGATION_DATA")), response);
+
+        return response;
     }
 
 

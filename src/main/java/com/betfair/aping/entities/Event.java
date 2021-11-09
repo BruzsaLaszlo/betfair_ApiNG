@@ -1,6 +1,10 @@
 package com.betfair.aping.entities;
 
+import com.betfair.aping.navigation.Group;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Event {
 
@@ -10,6 +14,24 @@ public class Event {
     private String timezone;
     private String venue;
     private Date openDate;
+
+    private List<Market> markets = new ArrayList<>();
+
+    private List<Event> events = new ArrayList<>();
+
+    private List<Group> groups = new ArrayList<>();
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public List<Market> getMarkets() {
+        return markets;
+    }
 
     public String getId() {
         return id;
