@@ -1,6 +1,5 @@
 package com.betfair.aping.api;
 
-import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.FaultData;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
@@ -59,7 +58,7 @@ public class Operations {
         params.put(FILTER, filter);
         params.put(LOCALE, DEFAULT_LOCALE);
 
-        String result = makeRequest(ApiNgOperation.LISTEVENTTYPES.getOperationName(), params);
+        String result = makeRequestBetting(ApiNgOperation.LISTEVENTTYPES.getOperationName(), params);
 
         return gson.fromJson(result, new TypeToken<List<EventTypeResult>>() {
         }.getType());
@@ -75,7 +74,7 @@ public class Operations {
         params.put(ORDER_PROJECTION, orderProjection);
         params.put(MATCH_PROJECTION, matchProjection);
 
-        String result = makeRequest(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
+        String result = makeRequestBetting(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
 
         return gson.fromJson(result, new TypeToken<List<MarketBook>>() {
         }.getType());
@@ -91,7 +90,7 @@ public class Operations {
         params.put(MAX_RESULT, maxResult);
         params.put(MARKET_PROJECTION, marketProjection);
 
-        String result = makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params);
+        String result = makeRequestBetting(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params);
 
         return gson.fromJson(result, new TypeToken<List<MarketCatalogue>>() {
         }.getType());
@@ -106,7 +105,7 @@ public class Operations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
 
-        String result = makeRequest(ApiNgOperation.PLACEORDERS.getOperationName(), params);
+        String result = makeRequestBetting(ApiNgOperation.PLACEORDERS.getOperationName(), params);
 
 
         return gson.fromJson(result, PlaceExecutionReport.class);
@@ -114,18 +113,22 @@ public class Operations {
     }
 
 
-    protected String makeRequest(String operation, Map<String, Object> params) throws ApiNgException {
+    protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException {
+        return makeRequest(operation, params, Endpoint.BETTING);
+    }
 
-        //params.put("id", Math.random() * 100);
-        if (params == null)
-            params = new HashMap<>();
+    protected String makeRequestAccount(String operation) throws ApiNgException {
+        return makeRequest(operation, null, Endpoint.ACCOUNT);
+    }
+
+    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException {
 
         String requestString = params == null ? null : gson.toJson(params);
 
         String response = null;
         try {
 
-            response = HttpUtil.sendPostRequest(operation, requestString);
+            response = HttpUtil.sendPostRequest(operation, requestString, endpoint);
 
         } catch (HttpResponseException exception) {
 
@@ -149,7 +152,7 @@ public class Operations {
      * the other DELAYED
      */
     public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException {
-        String response = makeRequest(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName(), null);
+        String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
         return gson.fromJson(response, DeveloperApp.class);
     }
 
@@ -159,25 +162,24 @@ public class Operations {
      * @return List<DeveloperApp> A list of application keys owned by the given
      * developer/vendor
      */
-//    public List<DeveloperApp> getDeveloperAppKeys() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
+    public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException {
+        String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
+        return gson.fromJson(response, new TypeToken<List<DeveloperApp>>() {
+        }.getType());
+    }
 
     /**
      * Get available to bet amount.
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws ApiNgException ,InaccessibleObjectException{
-        String response = makeRequest(ApiNgOperation.ACCOUNTFUNDS.getOperationName(), null);
+    public AccountFundsResponse getAccountFunds() throws ApiNgException, InaccessibleObjectException {
+        String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
         return gson.fromJson(response, AccountFundsResponse.class);
     }
 
     public AccountDetailsResponse getAccountDetails() throws ApiNgException, InaccessibleObjectException {
-        String response = makeRequest(ApiNgOperation.ACCOUNTDETAILS.getOperationName(), null);
-        if (response.equals("{\"faultcode\":\"Client\",\"faultstring\":\"DSC-0021\",\"detail\":{}}"))
-            throw new ApiNgException("DSC-0021", "DSC-0021", "DSC-0021");
+        String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
         return gson.fromJson(response, AccountDetailsResponse.class);
     }
 
