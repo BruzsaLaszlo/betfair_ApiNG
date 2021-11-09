@@ -3,6 +3,7 @@ package com.betfair.aping.api;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.exceptions.ApiNgException;
 import com.betfair.aping.util.SessionTokenGetter;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ class OperationsTest {
     Operations operations = Operations.getInstance();
 
     @Test
+    @Disabled
     void getSessionToken() throws Exception {
         assertTrue(SessionTokenGetter.getSessionToken().endsWith("="));
     }

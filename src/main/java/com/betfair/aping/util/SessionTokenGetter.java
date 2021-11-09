@@ -18,8 +18,8 @@ public class SessionTokenGetter {
     public static String getSessionToken()
             throws NoSuchAlgorithmException, KeyManagementException, IOException, UnrecoverableKeyException, CertificateException, KeyStoreException {
         SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-        URL console = new URL("https://identitysso-cert.betfair.com/api/certlogin");
-        KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream("src/main/resources/client-2048.p12"), "LACIKa007");
+        URL console = new URL(HttpUtil.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
+        KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(HttpUtil.prop.getProperty("PKCS12_FILE")), HttpUtil.prop.getProperty("PKCS12_PASSWORD"));
         sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
         HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
         con.setSSLSocketFactory(sslContext.getSocketFactory());
@@ -32,8 +32,8 @@ public class SessionTokenGetter {
         con.setRequestProperty("X-Application", "apikey");
 
         List<NameValuePair> nvps = new ArrayList<>();
-        nvps.add(new BasicNameValuePair("username", "bruzsal"));
-        nvps.add(new BasicNameValuePair("password", "lvQ!VkL?DD%6nbkQ*!mw"));
+        nvps.add(new BasicNameValuePair("username", HttpUtil.prop.getProperty("BETFAIR_USERNAME")));
+        nvps.add(new BasicNameValuePair("password", HttpUtil.prop.getProperty("BETFAIR_PASSWORD")));
 
         OutputStream os = con.getOutputStream();
         BufferedWriter writer = new BufferedWriter(

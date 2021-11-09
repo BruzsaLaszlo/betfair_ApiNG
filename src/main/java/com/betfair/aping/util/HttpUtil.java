@@ -13,6 +13,11 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -26,13 +31,18 @@ public final class HttpUtil {
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String CHARSET_UTF8 = "UTF-8";
 
-    private static final Properties prop = new Properties();
+    static final Properties prop = new Properties();
     private static boolean DEBUG;
 
     static {
-        try (InputStream in = ApiNGDemo.class.getResourceAsStream("/apingdemo.properties")) {
+        try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
+
             prop.load(in);
             DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
+            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.getSessionToken());
+
+        } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Error loading the properties file: " + e);
         }
