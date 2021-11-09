@@ -3,20 +3,23 @@ package com.betfair.aping.navigation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group {
+public class Event {
 
     private final String id;
-
     private final String name;
+    private final String countryCode;
 
-    public Group(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private final List<Market> markets = new ArrayList<>();
 
     private final List<Event> events = new ArrayList<>();
 
     private final List<Group> groups = new ArrayList<>();
+
+    public Event(String id, String name, String countryCode) {
+        this.id = id;
+        this.name = name;
+        this.countryCode = countryCode;
+    }
 
     public String getId() {
         return id;
@@ -26,6 +29,13 @@ public class Group {
         return name;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public List<Market> getMarkets() {
+        return markets;
+    }
 
     public List<Event> getEvents() {
         return events;

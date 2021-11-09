@@ -1,9 +1,9 @@
 package com.betfair.aping.api;
 
-import com.betfair.aping.util.FaultData;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.enums.*;
 import com.betfair.aping.exceptions.ApiNgException;
+import com.betfair.aping.util.FaultData;
 import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.ISO8601DateTypeAdapter;
 import com.google.gson.Gson;

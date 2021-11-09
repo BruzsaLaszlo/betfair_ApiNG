@@ -1,7 +1,6 @@
 package com.betfair.aping.util;
 
 
-import com.betfair.aping.ApiNGDemo;
 import com.betfair.aping.enums.Endpoint;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -68,7 +67,7 @@ public final class HttpUtil {
         post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
         post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
         post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
-        post.setHeader("Accept-Encoding" ,"gzip,deflate");
+        post.setHeader("Accept-Encoding", "gzip,deflate");
         post.setHeader("Connection", "keep-alive");
         if (jsonRequest != null)
             post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
@@ -107,7 +106,7 @@ public final class HttpUtil {
         get.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
         get.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
         get.setHeader("Connection", "keep-alive");
-        get.setHeader("Accept-Encoding" ,"gzip,deflate");
+        get.setHeader("Accept-Encoding", "gzip,deflate");
 
         String response = HttpClientBuilder.create().build().execute(get, (HttpUtil::handleResponse));
 

@@ -1,21 +1,15 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.navigation.Group;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class EventType {
 
-    private String id;
+    private final String id;
 
-    private String name;
+    private final String name;
 
-    private List<Group> groups = new ArrayList<>();
-
-    private List<Event> events = new ArrayList<>();
-
-    private List<Race> races = new ArrayList<>();
+    public EventType(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public String getId() {
         return id;
