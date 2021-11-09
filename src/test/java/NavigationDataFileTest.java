@@ -13,33 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class NavigationDataFileTest {
 
 
-    class Root {
-
-        private String name;
-
-        private String id;
-
-        private String type;
-
-        private List<Child> children;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public List<Child> getChildren() {
-            return children;
-        }
-    }
-
     class Child {
 
         public String type;
@@ -55,53 +28,6 @@ public class NavigationDataFileTest {
         public Date startTime;
         public String raceNumber;
 
-        public String getType() {
-            return type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getExchangeId() {
-            return exchangeId;
-        }
-
-        public String getMarketType() {
-            return marketType;
-        }
-
-        public Date getMarketStartTime() {
-            return marketStartTime;
-        }
-
-        public Object getNumberOfWinners() {
-            return numberOfWinners;
-        }
-
-        public String getCountryCode() {
-            return countryCode;
-        }
-
-        public List<Child> getChildren() {
-            return children;
-        }
-
-        public String getVenue() {
-            return venue;
-        }
-
-        public Date getStartTime() {
-            return startTime;
-        }
-
-        public String getRaceNumber() {
-            return raceNumber;
-        }
     }
 
     Operations operations = Operations.getInstance();
@@ -111,23 +37,51 @@ public class NavigationDataFileTest {
 
         String data = Files.readString(Path.of("src/main/resources/NavigationData.json"));
 
-
-        Root root = Operations.gson.fromJson(data, Root.class);
+        Child root = Operations.gson.fromJson(data, Child.class);
 
         assertNotNull(root);
-        assertFalse(root.getChildren().isEmpty());
+        assertFalse(root.children.isEmpty());
 
-        for (Child e : root.getChildren()) {
-            System.out.println(e.getId() + "  " + e.getName() + "  " + e.getType());
-            for (Child ce : e.getChildren()) {
-                System.out.println("       " + e.getId() + "  " + e.getName() + "  " + e.getType());
-                for (Child ce2 : e.getChildren()) {
-                    System.out.println("       " + e.getId() + "  " + e.getName() + "  " + e.getType());
-                }
+
+        bejaras(root,0);
+
+        System.out.println(sb);
+
+    }
+
+    int count = 0;
+
+    //    private String space() {
+//        StringBuilder s = new StringBuilder();
+//        for (int i = 0; i < count * 8; i++) {
+//            s.append(" ");
+//        }
+//        return s.toString();
+//    }
+//
+//    String spaces = space();
+//
+    String[] spaces = {
+            "",
+            "    ",
+            "         ",
+            "              ",
+            "                   ",
+            "                        ",
+            "                             ",
+    };
+
+    StringBuilder sb = new StringBuilder();
+
+    private void bejaras(Child root, int i) {
+//        spaces = space();
+        if (root.children != null) {
+            for (Child c : root.children) {
+                count++;
+                sb.append(spaces[i]).append(c.name).append("\n");
+                bejaras(c, i + 1);
             }
         }
-
-
     }
 
 
