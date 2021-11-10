@@ -3,7 +3,7 @@ package com.betfair.aping.navigation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class Event implements NavigationData {
 
     private final String id;
     private final String name;
@@ -21,12 +21,28 @@ public class Event {
         this.countryCode = countryCode;
     }
 
+
+    @Override
+    public void printToConsole(int i) {
+        System.out.println(spaces[i] + this);
+        groups.forEach(et -> et.printToConsole(i + 1));
+        events.forEach(et -> et.printToConsole(i + 1));
+        markets.forEach(et -> et.printToConsole(i + 1));
+    }
+
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isChildren() {
+        return true;
     }
 
     public String getCountryCode() {

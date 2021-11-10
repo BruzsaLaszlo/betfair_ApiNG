@@ -2,7 +2,7 @@ package com.betfair.aping.navigation;
 
 import java.util.Date;
 
-public class Market {
+public class Market implements NavigationData {
 
     private final String exchangeId;
 
@@ -25,12 +25,29 @@ public class Market {
         this.name = name;
     }
 
-    public String getExchangeId() {
-        return exchangeId;
+
+    @Override
+    public void printToConsole(int i) {
+        System.out.println(spaces[i] + this);
     }
 
+    @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean isChildren() {
+        return false;
+    }
+
+    public String getExchangeId() {
+        return exchangeId;
     }
 
     public Date getMartketStartTime() {
@@ -45,7 +62,4 @@ public class Market {
         return numberOfWinners;
     }
 
-    public String getName() {
-        return name;
-    }
 }

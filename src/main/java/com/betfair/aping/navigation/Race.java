@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Race {
+public class Race implements NavigationData {
 
     private final String id;
     private final String name;
@@ -24,12 +24,26 @@ public class Race {
         this.countryCode = countryCode;
     }
 
+
+    @Override
+    public void printToConsole(int i) {
+        System.out.println(this);
+        markets.forEach(et -> et.printToConsole(i + 1));
+    }
+
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isChildren() {
+        return true;
     }
 
     public String getVenue() {

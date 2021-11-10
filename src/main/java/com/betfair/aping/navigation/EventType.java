@@ -3,7 +3,7 @@ package com.betfair.aping.navigation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventType {
+public class EventType implements NavigationData {
 
     private final String id;
 
@@ -32,13 +32,29 @@ public class EventType {
         return races;
     }
 
+    @Override
+    public void printToConsole(int i) {
+        System.out.println(spaces[i] + this);
+        groups.forEach(et -> et.printToConsole(i + 1));
+        events.forEach(et -> et.printToConsole(i + 1));
+        races.forEach(et -> et.printToConsole(i + 1));
+    }
+
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean isChildren() {
+        return true;
+    }
+
 
     public String toString() {
         return "{" + "" + "id=" + getId() + "," + "name=" + getName() + "}";

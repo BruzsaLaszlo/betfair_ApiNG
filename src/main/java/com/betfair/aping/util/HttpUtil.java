@@ -34,7 +34,7 @@ public final class HttpUtil {
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String CHARSET_UTF8 = "UTF-8";
 
-    static final Properties prop = new Properties();
+    public static final Properties prop = new Properties();
     private static boolean DEBUG;
 
     static {
