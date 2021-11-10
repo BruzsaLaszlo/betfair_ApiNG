@@ -19,7 +19,10 @@ public class Market extends NavigationData {
         this.martketStartTime = martketStartTime;
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
+        count++;
     }
+
+    public static int count;
 
     @Override
     List<List<? extends NavigationData>> getLists() {

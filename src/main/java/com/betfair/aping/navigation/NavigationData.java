@@ -1,14 +1,22 @@
 package com.betfair.aping.navigation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class NavigationData {
 
-    protected String id;
+    protected final String id;
 
-    protected String name;
+    protected final String name;
 
     protected int melyseg;
+
+    protected static final List<Market> allMarket = new ArrayList<>();
+    protected static final List<Event> allEvent = new ArrayList<>();
+    protected static final List<EventType> allEvenType = new ArrayList<>();
+    protected static final List<Group> allGroup = new ArrayList<>();
+    protected static final List<Race> allRace = new ArrayList<>();
+
 
     public NavigationData(String id, String name) {
         this.id = id;
@@ -26,12 +34,26 @@ public abstract class NavigationData {
     }
 
     public void printToConsole(int deep) {
-        System.out.printf("%s%s\n", spaces[this.melyseg], this);
+        System.out.printf("%s%s%n", spaces[this.melyseg], this);
         if (deep >= this.melyseg && getLists() != null)
             getLists().
                     forEach(list -> list.
                             forEach(navigationData ->
-                                    navigationData.printToConsole(deep + 1)));
+                                    navigationData.printToConsole(deep)));
+    }
+
+//    public NavigationData filterByName(String name) {
+//        getLists().
+//    }
+
+    public NavigationData statics() {
+        NavigationData nd;
+        getLists().forEach(list -> {
+            list.stream().
+                    filter(navigationData -> navigationData.name.equals("Soccer")).
+                    findFirst().get();
+        });
+        return null;
     }
 
     abstract List<List<? extends NavigationData>> getLists();
@@ -52,10 +74,10 @@ public abstract class NavigationData {
             getLists().
                     forEach(list -> list.
                             forEach(navigationData ->
-                                    navigationData.getAllFormatToFile(inputOutputStringBuilder, deep + 1)));
+                                    navigationData.getAllFormatToFile(inputOutputStringBuilder, deep)));
     }
 
-    public int getMelyseg() {
+    public Integer getMelyseg() {
         return melyseg;
     }
 

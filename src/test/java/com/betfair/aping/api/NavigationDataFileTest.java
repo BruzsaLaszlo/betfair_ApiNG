@@ -43,13 +43,18 @@ public class NavigationDataFileTest {
 
         Root root = new Root("1", "ROOT");
 
-        bejaras(rootJson, root, 1);
+        bejaras(rootJson, root, 0);
 
-        root.printToConsole(2);
+//        root.printToConsole(2);
+
+        root.statics();
+//        System.out.printf("Statt" + root.statics(););
+
+        System.out.printf("");
 
         StringBuilder sb = new StringBuilder(5_000_000);
 
-        root.getAllFormatToFile(sb,10);
+        root.getAllFormatToFile(sb,2);
 
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, sb.toString());
