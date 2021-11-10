@@ -39,8 +39,8 @@ public class NavigationBejarasTest {
     void overUnder25() {
 
         NavigationData.allMarket.stream()
-                .filter(market -> market.getMarketType().equals("OVER_UNDER_25"))
-                .filter(market -> market.getEvent().getCountryCode().equals("BR"))
+//                .filter(market -> market.getMarketType().equals("OVER_UNDER_25"))
+                .filter(market -> market.getEvent() != null && market.getEvent().getCountryCode().equals("") && market.getEvent().getName().contains("Hungary"))
                 .forEach(market -> {
                     System.out.println(market.getEvent());
                     System.out.println("    " + market);

@@ -2,6 +2,7 @@ package com.betfair.aping.navigation;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,14 +40,16 @@ public class Market extends NavigationData {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("{ Market }  ")
-                .append(name).append(" ")
-                .append(martketStartTime).append("  ")
-                .append("\"").append(marketType).append("\"  ")
-                .append("numOfWin=").append(numberOfWinners).append("  ")
-                .append("id=").append(id).append("  ")
-                .toString();
+        String dateTime = martketStartTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd  HH:mm"));
+        return String.format("{ Market }      %-22s %-35s id=%-17s NumOfWin=%-10s   ", dateTime, name, id, numberOfWinners);
+//        return new StringBuilder()
+//                .append("")
+//                .append(name).append(" ")
+//                .append(martketStartTime).append("  ")
+//                .append("\"").append(marketType).append("\"  ")
+//                .append("numOfWin=").append(numberOfWinners).append("  ")
+//                .append("id=").append(id).append("  ")
+//                .toString();
     }
 
 

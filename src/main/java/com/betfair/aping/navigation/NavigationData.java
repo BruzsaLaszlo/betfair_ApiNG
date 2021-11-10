@@ -10,6 +10,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A ROOT group node has one or many EVENT_TYPE nodes
+ * <p>
+ * An EVENT_TYPE node has zero, one or many GROUP nodes
+ * <p>
+ * An EVENT_TYPE node has zero, one or many EVENT nodes
+ * <p>
+ * A Horse Racing EVENT_TYPE node has zero, one or many RACE nodes
+ * <p>
+ * A RACE node has one or many MARKET nodes
+ * <p>
+ * A GROUP node has zero, one or many EVENT nodes
+ * <p>
+ * A GROUP node has zero, one or many GROUP nodes
+ * <p>
+ * An EVENT node has zero, one or many MARKET nodes
+ * <p>
+ * An EVENT node has zero, one or many GROUP nodes
+ * <p>
+ * An EVENT node has zero, one or many EVENT nodes
+ */
 public abstract class NavigationData {
 
     protected final String id;
@@ -92,13 +113,13 @@ public abstract class NavigationData {
     }
 
     public static String getSizeOfLists() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("allEvent: ").append(allEvent.size()).append("\n");
-        sb.append("allEventType: ").append(allEvenType.size()).append("\n");
-        sb.append("allGroups: ").append(allGroup.size()).append("\n");
-        sb.append("allRace: ").append(allRace.size()).append("\n");
-        sb.append("allMarket: ").append(allMarket.size()).append("\n");
-        return sb.toString();
+        return new StringBuilder()
+                .append("allEvent: ").append(allEvent.size()).append("\n")
+                .append("allEventType: ").append(allEvenType.size()).append("\n")
+                .append("allGroups: ").append(allGroup.size()).append("\n")
+                .append("allRace: ").append(allRace.size()).append("\n")
+                .append("allMarket: ").append(allMarket.size()).append("\n")
+                .toString();
     }
 
     public String getNavigationDataFromFile() throws IOException {
@@ -182,7 +203,7 @@ public abstract class NavigationData {
 
     private void bejaras(Child root, NavigationData o, int deep) {
 
-        NavigationData nd = null;
+        NavigationData nd;
         switch (root.type) {
             case "EVENT_TYPE" -> nd = new EventType(root.id, root.name);
             case "GROUP" -> {
@@ -205,6 +226,7 @@ public abstract class NavigationData {
                 nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
+            default -> nd = null;
         }
 
         if ((o = nd) == null) return;

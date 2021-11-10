@@ -27,7 +27,7 @@ public class Event extends NavigationData {
 
     @Override
     public String toString() {
-        return "Event{" +
+        return "\n" + NavigationData.spaces[melyseg] + "Event{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", countryCode='" + countryCode + '\'' +
