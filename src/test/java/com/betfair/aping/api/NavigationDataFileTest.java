@@ -37,7 +37,7 @@ class NavigationDataFileTest {
     @Test
     void makeObjects() throws IOException {
 
-        String dataJson = Files.readString(OperationsTest.NAVIGATION_DATA_JSON);
+        String dataJson = Files.readString(NavigationData.NAVIGATION_DATA_JSON);
 
         Child rootJson = Operations.GSON.fromJson(dataJson, Child.class);
 
@@ -48,8 +48,6 @@ class NavigationDataFileTest {
 //        root.printToConsole(2);
 
         System.out.println(NavigationData.getSizeOfLists());
-
-
 
         var data = root.getAllData(2);
 
@@ -90,29 +88,27 @@ class NavigationDataFileTest {
 
         NavigationData nd = null;
         switch (root.type) {
-            case "EVENT_TYPE":
-                nd = new EventType(root.id, root.name);
-                break;
-            case "GROUP":
+            case "EVENT_TYPE" -> nd = new EventType(root.id, root.name);
+            case "GROUP" -> {
                 if (root.name.equals("ROOT")) {
                     nd = o;
                     break;
                 }
                 nd = new Group(root.id, root.name);
                 add(o, (Group) nd);
-                break;
-            case "EVENT":
+            }
+            case "EVENT" -> {
                 nd = new Event(root.id, root.name, root.countryCode);
                 add(o, (Event) nd);
-                break;
-            case "RACE":
+            }
+            case "RACE" -> {
                 nd = new Race(root.id, root.name, root.venue, root.startTime, root.raceNumber, root.countryCode);
                 ((EventType) o).getRaces().add((Race) nd);
-                break;
-            case "MARKET":
+            }
+            case "MARKET" -> {
                 nd = new Market(root.exchangeId, root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
-                break;
+            }
         }
 
         if ((o = nd) == null) return;
@@ -136,7 +132,7 @@ class NavigationDataFileTest {
         @Test
         void test() throws IOException {
 
-            String data = Files.readString(OperationsTest.NAVIGATION_DATA_JSON);
+            String data = Files.readString(NavigationData.NAVIGATION_DATA_JSON);
 
             Child root = Operations.GSON.fromJson(data, Child.class);
 

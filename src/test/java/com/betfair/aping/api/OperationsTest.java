@@ -2,6 +2,7 @@ package com.betfair.aping.api;
 
 import com.betfair.aping.entities.*;
 import com.betfair.aping.exceptions.ApiNgException;
+import com.betfair.aping.navigation.NavigationData;
 import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.SessionTokenGetter;
 import org.junit.jupiter.api.Disabled;
@@ -19,7 +20,7 @@ class OperationsTest {
 
 
     Operations operations = Operations.getInstance();
-    static final Path NAVIGATION_DATA_JSON = Path.of("c:\\temp\\NavigationData.json");
+
 
 
     @Test
@@ -71,7 +72,7 @@ class OperationsTest {
     @Test
     @Disabled
     void getNavigationData() throws IOException {
-        String data = HttpUtil.getNavigationData(NAVIGATION_DATA_JSON);
+        String data = HttpUtil.getNavigationData(NavigationData.NAVIGATION_DATA_JSON);
         assertFalse(data.isEmpty());
     }
 }

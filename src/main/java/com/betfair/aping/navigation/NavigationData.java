@@ -1,5 +1,9 @@
 package com.betfair.aping.navigation;
 
+import com.betfair.aping.util.HttpUtil;
+
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,4 +97,17 @@ public abstract class NavigationData {
         sb.append("allMarket: ").append(allMarket.size()).append("\n");
         return sb.toString();
     }
+
+    public Path updateNavigationData() throws IOException {
+        downLoadNavigationData();
+        return NAVIGATION_DATA_JSON;
+    }
+
+    public static final Path NAVIGATION_DATA_JSON = Path.of("c:\\temp\\NavigationData.json");
+
+    private static String downLoadNavigationData() throws IOException {
+//        Files.createTempDirectory("betfair_aping_temp").resolve("NavigationData.json");
+        return HttpUtil.getNavigationData(NAVIGATION_DATA_JSON);
+    }
+
 }
