@@ -1,6 +1,7 @@
 package com.betfair.aping.enums;
 
 public enum ApiNgOperation {
+    HEARTBEAT("heartbeat"),
     LISTEVENTTYPES("listEventTypes"),
     LISTCOMPETITIONS("listCompetitions"),
     LISTTIMERANGES("listTimeRanges"),

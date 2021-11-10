@@ -53,10 +53,13 @@ public final class HttpUtil {
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
 
         String url;
-        if (endpoint == Endpoint.ACCOUNT)
-            url = prop.getProperty("ACCOUNT_APING_URL") + prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
-        else
-            url = prop.getProperty("SPORT_APING_URL") + prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
+        switch (endpoint) {
+            case ACCOUNT ->  url = prop.getProperty("ACCOUNT_APING_URL");
+            case BETTING ->  url = prop.getProperty("SPORT_APING_URL");
+            case HEARTBEAT ->  url = prop.getProperty("HEARTBEAT_URL");
+            default -> url = "";
+        }
+        url += prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
         HttpPost post = new HttpPost(url);
         post.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));

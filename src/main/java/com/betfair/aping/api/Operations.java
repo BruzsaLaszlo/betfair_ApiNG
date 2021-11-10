@@ -485,6 +485,10 @@ public class Operations {
         return makeRequest(operation, null, Endpoint.ACCOUNT);
     }
 
+    protected String makeRequestHeartbeat(String operation) throws ApiNgException {
+        return makeRequest(operation, null, Endpoint.HEARTBEAT);
+    }
+
     private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException {
 
         String requestString = params == null ? null : GSON.toJson(params);
@@ -523,8 +527,7 @@ public class Operations {
     /**
      * Get all application keys owned by the given developer/vendor
      *
-     * @return List<DeveloperApp> A list of application keys owned by the given
-     * developer/vendor
+     * @return List<DeveloperApp> A list of application keys owned by the given developer/vendor
      */
     public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
@@ -533,18 +536,66 @@ public class Operations {
     }
 
     /**
-     * Get available to bet amount.
+     * Returns the available to bet amount, exposure and commission information.
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws ApiNgException, InaccessibleObjectException {
+    public AccountFundsResponse getAccountFunds() throws ApiNgException{
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
         return GSON.fromJson(response, AccountFundsResponse.class);
     }
 
-    public AccountDetailsResponse getAccountDetails() throws ApiNgException, InaccessibleObjectException {
+    /**
+     * Returns the details relating your account, including your discount rate and Betfair point balance.
+     *
+     * Please note: The data returned by getAccountDetails relies on two underlying services.
+     * The pointsBalance is returned by a separate service from the other data.
+     * As a consequence of this, in the event of a failure to a single underlying service,
+     * either the pointsBalance or the remaining data may not be included in the getAccountDetails response.
+     * If both services fail, the error UNEXPECTED_ERROR will be returned.
+     *
+     * @return Response for retrieving account details.
+     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
+     */
+    public AccountDetailsResponse getAccountDetails() throws ApiNgException{
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
         return GSON.fromJson(response, AccountDetailsResponse.class);
+    }
+
+
+    /**
+     * This heartbeat operation is provided to help customers have their positions managed automatically in
+     * the event of their API clients losing connectivity with the Betfair API. If a heartbeat request is
+     * not received within a prescribed time period, then Betfair will attempt to cancel all 'LIMIT' type bets
+     * for the given customer on the given exchange. There is no guarantee that this service will result in all bets
+     * being cancelled as there are a number of circumstances where bets are unable to be cancelled.
+     * Manual intervention is strongly advised in the event of a loss of connectivity to ensure that positions
+     * are correctly managed. If this service becomes unavailable for any reason, then your heartbeat will be
+     * unregistered automatically to avoid bets being inadvertently cancelled upon resumption of service.
+     * you should manage your position manually until the service is resumed. Heartbeat data may also be lost
+     * in the unlikely event of nodes failing within the cluster, which may result in your position not being
+     * managed until a subsequent heartbeat request is received.
+     *
+     * @param preferredTimeoutSeconds
+     * Maximum period in seconds that may elapse (without a subsequent heartbeat request),
+     * before a cancellation request is automatically submitted on your behalf.
+     * The minimum value is 10, the maximum value permitted is 300. Passing 0 will result in your heartbeat
+     * being unregistered (or ignored if you have no current heartbeat registered). You will still get an
+     * actionPerformed value returned when passing 0, so this may be used to determine if any action was performed
+     * since your last heartbeat, without actually registering a new heartbeat.
+     * Passing a negative value will result in an error being returned, INVALID_INPUT_DATA.
+     * Any errors while registering your heartbeat will result in a error being returned, UNEXPECTED_ERROR.
+     * Passing a value that is less than the minimum timeout will result in your heartbeat adopting the minimum timeout.
+     * Passing a value that is greater than the maximum timeout will result in your heartbeat adopting the maximum timeout.
+     * The minimum and maximum timeouts are subject to change, so your client should utilise the returned
+     * actualTimeoutSeconds to set an appropriate frequency for your subsequent heartbeat requests.
+     *
+     * @return Response from heartbeat operation
+     * @throws ApiNgException Thrown if the operation fails
+     */
+    public HeartbeatReport heartbeat ( int preferredTimeoutSeconds ) throws ApiNgException {
+        String response = makeRequestAccount(ApiNgOperation.HEARTBEAT.getOperationName());
+        return GSON.fromJson(response, HeartbeatReport.class);
     }
 
 }
