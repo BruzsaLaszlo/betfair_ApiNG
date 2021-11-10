@@ -594,7 +594,7 @@ public class Operations {
      * @throws ApiNgException Thrown if the operation fails
      */
     public HeartbeatReport heartbeat ( int preferredTimeoutSeconds ) throws ApiNgException {
-        String response = makeRequestAccount(ApiNgOperation.HEARTBEAT.getOperationName());
+        String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName());
         return GSON.fromJson(response, HeartbeatReport.class);
     }
 
