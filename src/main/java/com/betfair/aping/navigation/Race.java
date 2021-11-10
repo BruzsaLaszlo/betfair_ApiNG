@@ -23,12 +23,6 @@ public class Race extends NavigationData {
 
 
     @Override
-    public void printToConsole(int i) {
-        System.out.println(this);
-        markets.forEach(et -> et.printToConsole(i + 1));
-    }
-
-    @Override
     List<List<? extends NavigationData>> getLists() {
         return List.of(markets);
     }
@@ -42,7 +36,6 @@ public class Race extends NavigationData {
                 ", startTime=" + startTime +
                 ", raceNumber='" + raceNumber + '\'' +
                 ", countryCode='" + countryCode + '\'' +
-                ", markets=" + markets +
                 '}';
     }
 

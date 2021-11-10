@@ -15,12 +15,6 @@ public class Root extends NavigationData {
     }
 
     @Override
-    public void printToConsole(int i) {
-        System.out.println(spaces[i] + this);
-        events.forEach(et -> et.printToConsole(i + 1));
-    }
-
-    @Override
     List<List<? extends NavigationData>> getLists() {
         return Arrays.asList(events);
     }

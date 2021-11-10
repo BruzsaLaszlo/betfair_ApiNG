@@ -8,7 +8,7 @@ public abstract class NavigationData {
 
     protected String name;
 
-    protected int deep;
+    protected int melyseg;
 
     public NavigationData(String id, String name) {
         this.id = id;
@@ -26,7 +26,12 @@ public abstract class NavigationData {
     }
 
     public void printToConsole(int deep) {
-
+        System.out.printf("%s%s\n", spaces[this.melyseg], this);
+        if (deep >= this.melyseg && getLists() != null)
+            getLists().
+                    forEach(list -> list.
+                            forEach(navigationData ->
+                                    navigationData.printToConsole(deep + 1)));
     }
 
     abstract List<List<? extends NavigationData>> getLists();
@@ -41,20 +46,20 @@ public abstract class NavigationData {
 
     public abstract String toString();
 
-    public void getAll(StringBuilder sb, int deep) {
-        sb.append(spaces[this.deep]).append(this).append("\n");
-        if (deep >= this.deep && getLists() != null) {
-            for (List<? extends NavigationData> list : getLists())
-                for (NavigationData nd : list)
-                    nd.getAll(sb, deep + 1);
-        }
+    public void getAllFormatToFile(StringBuilder inputOutputStringBuilder, int deep) {
+        inputOutputStringBuilder.append(spaces[this.melyseg]).append(this).append("\n");
+        if (deep >= this.melyseg && getLists() != null)
+            getLists().
+                    forEach(list -> list.
+                            forEach(navigationData ->
+                                    navigationData.getAllFormatToFile(inputOutputStringBuilder, deep + 1)));
     }
 
-    public int getDeep() {
-        return deep;
+    public int getMelyseg() {
+        return melyseg;
     }
 
-    public void setDeep(int deep) {
-        this.deep = deep;
+    public void setMelyseg(int melyseg) {
+        this.melyseg = melyseg;
     }
 }

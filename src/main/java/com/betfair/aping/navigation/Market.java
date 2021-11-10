@@ -16,17 +16,9 @@ public class Market extends NavigationData {
     public Market(String exchangeId, String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
         super(id,name);
         this.exchangeId = exchangeId;
-        this.id = id;
         this.martketStartTime = martketStartTime;
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
-        this.name = name;
-    }
-
-
-    @Override
-    public void printToConsole(int i) {
-        System.out.println(spaces[i] + this);
     }
 
     @Override

@@ -7,8 +7,7 @@ import java.util.List;
 public class EventType extends NavigationData {
 
     public EventType(String id, String name) {
-        this.id = id;
-        this.name = name;
+        super(id,name);
     }
 
     private final List<Group> groups = new ArrayList<>();
@@ -27,14 +26,6 @@ public class EventType extends NavigationData {
 
     public List<Race> getRaces() {
         return races;
-    }
-
-    @Override
-    public void printToConsole(int i) {
-        System.out.println(spaces[i] + this);
-        groups.forEach(et -> et.printToConsole(i + 1));
-        events.forEach(et -> et.printToConsole(i + 1));
-        races.forEach(et -> et.printToConsole(i + 1));
     }
 
     @Override

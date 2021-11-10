@@ -15,13 +15,6 @@ public class Group extends NavigationData {
     }
 
     @Override
-    public void printToConsole(int i) {
-        System.out.println(spaces[i] + this);
-        events.forEach(et -> et.printToConsole(i + 1));
-        groups.forEach(et -> et.printToConsole(i + 1));
-    }
-
-    @Override
     List<List<? extends NavigationData>> getLists() {
         return Arrays.asList(events,groups);
     }
@@ -31,8 +24,6 @@ public class Group extends NavigationData {
         return "Group{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", events=" + events +
-                ", groups=" + groups +
                 '}';
     }
 

@@ -15,18 +15,8 @@ public class Event extends NavigationData {
     private final List<Group> groups = new ArrayList<>();
 
     public Event(String id, String name, String countryCode) {
-        this.id = id;
-        this.name = name;
+        super(id,name);
         this.countryCode = countryCode;
-    }
-
-
-    @Override
-    public void printToConsole(int i) {
-        System.out.println(spaces[i] + this);
-        groups.forEach(et -> et.printToConsole(i + 1));
-        events.forEach(et -> et.printToConsole(i + 1));
-        markets.forEach(et -> et.printToConsole(i + 1));
     }
 
     @Override
@@ -40,9 +30,6 @@ public class Event extends NavigationData {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", countryCode='" + countryCode + '\'' +
-                ", markets=" + markets +
-                ", events=" + events +
-                ", groups=" + groups +
                 '}';
     }
 

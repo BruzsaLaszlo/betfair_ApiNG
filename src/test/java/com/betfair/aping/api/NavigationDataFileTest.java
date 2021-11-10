@@ -45,11 +45,11 @@ public class NavigationDataFileTest {
 
         bejaras(rootJson, root, 1);
 
-        //root.printToConsole(0);
+        root.printToConsole(2);
 
-        StringBuilder sb = new StringBuilder(10_000_000);
+        StringBuilder sb = new StringBuilder(5_000_000);
 
-        root.getAll(sb,10);
+        root.getAllFormatToFile(sb,10);
 
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, sb.toString());
@@ -114,7 +114,7 @@ public class NavigationDataFileTest {
         }
 
         if ((o = nd) == null) return;
-        nd.setDeep(deep);
+        nd.setMelyseg(deep);
 
 
         if (root.children != null) {
