@@ -1,12 +1,11 @@
 package com.betfair.aping.navigation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Event implements NavigationData {
+public class Event extends NavigationData {
 
-    private final String id;
-    private final String name;
     private final String countryCode;
 
     private final List<Market> markets = new ArrayList<>();
@@ -31,18 +30,20 @@ public class Event implements NavigationData {
     }
 
     @Override
-    public String getId() {
-        return id;
+    List<List<? extends NavigationData>> getLists() {
+        return Arrays.asList(markets,events,groups);
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean isChildren() {
-        return true;
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", markets=" + markets +
+                ", events=" + events +
+                ", groups=" + groups +
+                '}';
     }
 
     public String getCountryCode() {

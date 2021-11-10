@@ -1,22 +1,18 @@
 package com.betfair.aping.navigation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Group implements NavigationData {
-
-    private final String id;
-
-    private final String name;
-
-    public Group(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+public class Group extends NavigationData {
 
     private final List<Event> events = new ArrayList<>();
 
     private final List<Group> groups = new ArrayList<>();
+
+    public Group(String id, String name) {
+        super(id, name);
+    }
 
     @Override
     public void printToConsole(int i) {
@@ -26,20 +22,19 @@ public class Group implements NavigationData {
     }
 
     @Override
-    public String getId() {
-        return id;
+    List<List<? extends NavigationData>> getLists() {
+        return Arrays.asList(events,groups);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String toString() {
+        return "Group{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", events=" + events +
+                ", groups=" + groups +
+                '}';
     }
-
-    @Override
-    public boolean isChildren() {
-        return true;
-    }
-
 
     public List<Event> getEvents() {
         return events;

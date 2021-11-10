@@ -1,12 +1,11 @@
 package com.betfair.aping.navigation;
 
 import java.util.Date;
+import java.util.List;
 
-public class Market implements NavigationData {
+public class Market extends NavigationData {
 
     private final String exchangeId;
-
-    private final String id;
 
     private final Date martketStartTime;
 
@@ -14,9 +13,8 @@ public class Market implements NavigationData {
 
     private final String numberOfWinners;
 
-    private final String name;
-
     public Market(String exchangeId, String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
+        super(id,name);
         this.exchangeId = exchangeId;
         this.id = id;
         this.martketStartTime = martketStartTime;
@@ -32,19 +30,22 @@ public class Market implements NavigationData {
     }
 
     @Override
-    public String getId() {
-        return id;
+    List<List<? extends NavigationData>> getLists() {
+        return null;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String toString() {
+        return "Market{" +
+                "exchangeId='" + exchangeId + '\'' +
+                ", id='" + id + '\'' +
+                ", martketStartTime=" + martketStartTime +
+                ", marketType='" + marketType + '\'' +
+                ", numberOfWinners='" + numberOfWinners + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
-    @Override
-    public boolean isChildren() {
-        return false;
-    }
 
     public String getExchangeId() {
         return exchangeId;

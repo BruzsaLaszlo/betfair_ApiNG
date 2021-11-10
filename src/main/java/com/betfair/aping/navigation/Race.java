@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Race implements NavigationData {
+public class Race extends NavigationData {
 
-    private final String id;
-    private final String name;
     private final String venue;
     private final Date startTime;
     private final String raceNumber;
@@ -16,8 +14,7 @@ public class Race implements NavigationData {
     private final List<Market> markets = new ArrayList<>();
 
     public Race(String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
-        this.id = id;
-        this.name = name;
+        super(id,name);
         this.venue = venue;
         this.startTime = startTime;
         this.raceNumber = raceNumber;
@@ -32,18 +29,21 @@ public class Race implements NavigationData {
     }
 
     @Override
-    public String getId() {
-        return id;
+    List<List<? extends NavigationData>> getLists() {
+        return List.of(markets);
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean isChildren() {
-        return true;
+    public String toString() {
+        return "Race{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", venue='" + venue + '\'' +
+                ", startTime=" + startTime +
+                ", raceNumber='" + raceNumber + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", markets=" + markets +
+                '}';
     }
 
     public String getVenue() {

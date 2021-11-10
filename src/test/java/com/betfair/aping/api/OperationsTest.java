@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ class OperationsTest {
 
 
     Operations operations = Operations.getInstance();
+    static final Path NAVIGATION_DATA_JSON = Path.of("c:\\temp\\NavigationData.json");
 
 
     @Test
@@ -69,7 +71,7 @@ class OperationsTest {
     @Test
     @Disabled
     void getNavigationData() throws IOException {
-        String data = HttpUtil.getNavigationData();
+        String data = HttpUtil.getNavigationData(NAVIGATION_DATA_JSON);
         assertFalse(data.isEmpty());
     }
 }
