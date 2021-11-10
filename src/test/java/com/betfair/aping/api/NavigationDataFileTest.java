@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NavigationDataFileTest {
 
-
     class Child {
 
         public String type;
@@ -35,7 +34,7 @@ class NavigationDataFileTest {
 
 
     @Test
-    void makeObjects() throws IOException {
+    void createTree() throws IOException {
 
         String dataJson = Files.readString(NavigationData.NAVIGATION_DATA_JSON);
 
@@ -49,7 +48,7 @@ class NavigationDataFileTest {
 
         System.out.println(NavigationData.getSizeOfLists());
 
-        var data = root.getAllData(2);
+        var data = root.getAllData(10);
 
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, data);
@@ -106,7 +105,7 @@ class NavigationDataFileTest {
                 ((EventType) o).getRaces().add((Race) nd);
             }
             case "MARKET" -> {
-                nd = new Market(root.exchangeId, root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
+                nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
         }

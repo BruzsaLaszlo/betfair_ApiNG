@@ -1,26 +1,35 @@
 package com.betfair.aping.navigation;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class Market extends NavigationData {
 
-    private final String exchangeId;
-
-    private final Date martketStartTime;
+    private final LocalDateTime martketStartTime;
 
     private final String marketType;
 
     private final String numberOfWinners;
 
-    public Market(String exchangeId, String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
+    private Event event;
+
+    public Market(String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
         super(id, name);
-        this.exchangeId = exchangeId;
-        this.martketStartTime = martketStartTime;
+        this.martketStartTime = new Timestamp(martketStartTime.getTime()).toLocalDateTime();
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
         allMarket.add(this);
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override
@@ -30,22 +39,18 @@ public class Market extends NavigationData {
 
     @Override
     public String toString() {
-        return "Market{" +
-                "exchangeId='" + exchangeId + '\'' +
-                ", id='" + id + '\'' +
-                ", martketStartTime=" + martketStartTime +
-                ", marketType='" + marketType + '\'' +
-                ", numberOfWinners='" + numberOfWinners + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("{ Market }  ")
+                .append(name).append(" ")
+                .append(martketStartTime).append("  ")
+                .append("\"").append(marketType).append("\"  ")
+                .append("numOfWin=").append(numberOfWinners).append("  ")
+                .append("id=").append(id).append("  ")
+                .toString();
     }
 
 
-    public String getExchangeId() {
-        return exchangeId;
-    }
-
-    public Date getMartketStartTime() {
+    public LocalDateTime getMartketStartTime() {
         return martketStartTime;
     }
 

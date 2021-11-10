@@ -72,7 +72,7 @@ class OperationsTest {
     @Test
     @Disabled
     void getNavigationData() throws IOException {
-        String data = HttpUtil.getNavigationData(NavigationData.NAVIGATION_DATA_JSON);
+        String data = HttpUtil.getNavigationData();
         assertFalse(data.isEmpty());
     }
 }

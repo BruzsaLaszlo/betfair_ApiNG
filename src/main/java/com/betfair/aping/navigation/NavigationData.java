@@ -1,10 +1,13 @@
 package com.betfair.aping.navigation;
 
+import com.betfair.aping.api.Operations;
 import com.betfair.aping.util.HttpUtil;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class NavigationData {
@@ -15,9 +18,9 @@ public abstract class NavigationData {
 
     protected int melyseg;
 
-    protected static final List<Market> allMarket = new ArrayList<>(15_000);
+    public static final List<Market> allMarket = new ArrayList<>(15_000);
     protected static final List<Event> allEvent = new ArrayList<>(1_500);
-    protected static final List<EventType> allEvenType = new ArrayList<>(50);
+    public static final List<EventType> allEvenType = new ArrayList<>(50);
     protected static final List<Group> allGroup = new ArrayList<>(600);
     protected static final List<Race> allRace = new ArrayList<>(600);
 
@@ -98,16 +101,120 @@ public abstract class NavigationData {
         return sb.toString();
     }
 
-    public Path updateNavigationData() throws IOException {
-        downLoadNavigationData();
+    public String getNavigationDataFromFile() throws IOException {
+        return Files.readString(NavigationData.NAVIGATION_DATA_JSON);
+    }
+
+    public Path updateNavigationData() {
+        String dataJson = downLoadAndSaveNavigationData();
+        createTree(dataJson);
         return NAVIGATION_DATA_JSON;
     }
 
     public static final Path NAVIGATION_DATA_JSON = Path.of("c:\\temp\\NavigationData.json");
+//    Files.createTempDirectory("betfair_aping_temp").resolve("NavigationData.json");
 
-    private static String downLoadNavigationData() throws IOException {
-//        Files.createTempDirectory("betfair_aping_temp").resolve("NavigationData.json");
-        return HttpUtil.getNavigationData(NAVIGATION_DATA_JSON);
+    private static String downLoadAndSaveNavigationData() {
+        String dataJson = HttpUtil.getNavigationData();
+        try {
+            Files.writeString(NAVIGATION_DATA_JSON, dataJson);
+        } catch (IOException e) {
+            System.err.println("Nem sikerült kiírni a file-ba a NAVIGATION DATA-t");
+            e.printStackTrace();
+        }
+        return dataJson;
+    }
+
+    class Child {
+
+        public String type;
+        public String name;
+        public String id;
+        public String exchangeId;
+        public String marketType;
+        public Date marketStartTime;
+        public String numberOfWinners;
+        public String countryCode;
+        public List<Child> children;
+        public String venue;
+        public Date startTime;
+        public String raceNumber;
+
+    }
+
+    public void createTree(String dataJson) {
+
+        Child rootJson = Operations.GSON.fromJson(dataJson, Child.class);
+
+        Root root = Root.getInstance();
+
+        bejaras(rootJson, root, 0);
+
+        allEvent.forEach(event -> event.getMarkets()
+                .forEach(market -> market.setEvent(event)));
+
+    }
+
+    private void add(NavigationData o, Group g) {
+        if (o instanceof EventType)
+            ((EventType) o).getGroups().add(g);
+        else if (o instanceof Group)
+            ((Group) o).getGroups().add(g);
+        else if (o instanceof Event)
+            ((Event) o).getGroups().add(g);
+    }
+
+    private void add(NavigationData o, Event e) {
+        if (o instanceof EventType)
+            ((EventType) o).getEvents().add(e);
+        else if (o instanceof Group)
+            ((Group) o).getEvents().add(e);
+        else if (o instanceof Event)
+            ((Event) o).getEvents().add(e);
+    }
+
+    private void add(NavigationData o, Market m) {
+        if (o instanceof Event)
+            ((Event) o).getMarkets().add(m);
+        else if (o instanceof Race)
+            ((Race) o).getMarkets().add(m);
+    }
+
+    private void bejaras(Child root, NavigationData o, int deep) {
+
+        NavigationData nd = null;
+        switch (root.type) {
+            case "EVENT_TYPE" -> nd = new EventType(root.id, root.name);
+            case "GROUP" -> {
+                if (root.name.equals("ROOT")) {
+                    nd = o;
+                    break;
+                }
+                nd = new Group(root.id, root.name);
+                add(o, (Group) nd);
+            }
+            case "EVENT" -> {
+                nd = new Event(root.id, root.name, root.countryCode);
+                add(o, (Event) nd);
+            }
+            case "RACE" -> {
+                nd = new Race(root.id, root.name, root.venue, root.startTime, root.raceNumber, root.countryCode);
+                ((EventType) o).getRaces().add((Race) nd);
+            }
+            case "MARKET" -> {
+                nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
+                add(o, (Market) nd);
+            }
+        }
+
+        if ((o = nd) == null) return;
+        nd.setMelyseg(deep);
+
+
+        if (root.children != null)
+            for (Child c : root.children)
+                bejaras(c, o, deep + 1);
+
     }
 
 }

@@ -1,5 +1,7 @@
 package com.betfair.aping.navigation;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
 public class Race extends NavigationData {
 
     private final String venue;
-    private final Date startTime;
+    private final LocalDateTime startTime;
     private final String raceNumber;
     private final String countryCode;
 
@@ -16,7 +18,7 @@ public class Race extends NavigationData {
     public Race(String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
         super(id, name);
         this.venue = venue;
-        this.startTime = startTime;
+        this.startTime = new Timestamp(startTime.getTime()).toLocalDateTime();
         this.raceNumber = raceNumber;
         this.countryCode = countryCode;
         allRace.add(this);
@@ -44,7 +46,7 @@ public class Race extends NavigationData {
         return venue;
     }
 
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 

@@ -99,7 +99,7 @@ public final class HttpUtil {
 
     }
 
-    public static String getNavigationData(Path path) throws IOException {
+    public static String getNavigationData() {
         String url = "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
         HttpGet get = new HttpGet(url);
         get.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
@@ -108,9 +108,13 @@ public final class HttpUtil {
         get.setHeader("Connection", "keep-alive");
         get.setHeader("Accept-Encoding", "gzip,deflate");
 
-        String response = HttpClientBuilder.create().build().execute(get, (HttpUtil::handleResponse));
+        String response = null;
+        try {
+            response = HttpClientBuilder.create().build().execute(get, (HttpUtil::handleResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        Files.writeString(path, response);
 
         return response;
     }
