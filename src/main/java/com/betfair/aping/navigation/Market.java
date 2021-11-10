@@ -1,5 +1,6 @@
 package com.betfair.aping.navigation;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -14,19 +15,17 @@ public class Market extends NavigationData {
     private final String numberOfWinners;
 
     public Market(String exchangeId, String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
-        super(id,name);
+        super(id, name);
         this.exchangeId = exchangeId;
         this.martketStartTime = martketStartTime;
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
-        count++;
+        allMarket.add(this);
     }
-
-    public static int count;
 
     @Override
     List<List<? extends NavigationData>> getLists() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

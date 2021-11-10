@@ -15,13 +15,14 @@ public class Event extends NavigationData {
     private final List<Group> groups = new ArrayList<>();
 
     public Event(String id, String name, String countryCode) {
-        super(id,name);
+        super(id, name);
         this.countryCode = countryCode;
+        allEvent.add(this);
     }
 
     @Override
     List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(markets,events,groups);
+        return Arrays.asList(markets, events, groups);
     }
 
     @Override

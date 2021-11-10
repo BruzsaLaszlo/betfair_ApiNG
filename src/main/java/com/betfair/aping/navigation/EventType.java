@@ -7,7 +7,8 @@ import java.util.List;
 public class EventType extends NavigationData {
 
     public EventType(String id, String name) {
-        super(id,name);
+        super(id, name);
+        allEvenType.add(this);
     }
 
     private final List<Group> groups = new ArrayList<>();
@@ -30,7 +31,7 @@ public class EventType extends NavigationData {
 
     @Override
     List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(events,groups);
+        return Arrays.asList(events, groups);
     }
 
     public String toString() {

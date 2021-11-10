@@ -12,7 +12,7 @@ public class GsonTest {
 
     @Test
     void error() throws IOException {
-        FaultData err = Operations.gson.fromJson(response, FaultData.class);
+        FaultData err = Operations.GSON.fromJson(response, FaultData.class);
         assertEquals("ANGX-0015", err.getFaultstring());
         assertEquals("APINGException", err.getDetail().getExceptionname());
         assertNotNull(err.getDetail().getAPINGException());

@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NavigationDataFileTest {
+class NavigationDataFileTest {
 
 
     class Child {
@@ -37,29 +37,26 @@ public class NavigationDataFileTest {
     @Test
     void makeObjects() throws IOException {
 
-        String data = Files.readString(OperationsTest.NAVIGATION_DATA_JSON);
+        String dataJson = Files.readString(OperationsTest.NAVIGATION_DATA_JSON);
 
-        Child rootJson = Operations.gson.fromJson(data, Child.class);
+        Child rootJson = Operations.GSON.fromJson(dataJson, Child.class);
 
-        Root root = new Root("1", "ROOT");
+        Root root = Root.getInstance();
 
         bejaras(rootJson, root, 0);
 
 //        root.printToConsole(2);
 
-        root.statics();
-//        System.out.printf("Statt" + root.statics(););
+        System.out.println(NavigationData.getSizeOfLists());
 
-        System.out.printf("");
 
-        StringBuilder sb = new StringBuilder(5_000_000);
 
-        root.getAllFormatToFile(sb,2);
+        var data = root.getAllData(2);
 
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
-        Files.writeString(path, sb.toString());
+        Files.writeString(path, data);
 
-        assertEquals(sb.toString(), Files.readString(path));
+        assertEquals(data, Files.readString(path));
 //        bejaras(o, 0);
 
     }
@@ -85,7 +82,8 @@ public class NavigationDataFileTest {
     private void add(NavigationData o, Market m) {
         if (o instanceof Event)
             ((Event) o).getMarkets().add(m);
-        else ((Race) o).getMarkets().add(m);
+        else if (o instanceof Race)
+            ((Race) o).getMarkets().add(m);
     }
 
     private void bejaras(Child root, NavigationData o, int deep) {
@@ -94,7 +92,6 @@ public class NavigationDataFileTest {
         switch (root.type) {
             case "EVENT_TYPE":
                 nd = new EventType(root.id, root.name);
-                ((Root) o).events.add((EventType) nd);
                 break;
             case "GROUP":
                 if (root.name.equals("ROOT")) {
@@ -129,15 +126,8 @@ public class NavigationDataFileTest {
         }
     }
 
-    private void bejaras(NavigationData root, int i) {
-//        if (root.isChildren()) {
-//            for (Child c : root.children) {
-//                count++;
-//                sb.append(spaces[i]).append(c.name).append("\n");
-//                bejaras(c, i + 1);
-//            }
-//        }
-    }
+
+//    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     @Nested
     @Description("A navigation data-t kiirja fileba es a consolra" + "c:\\temp\\NavigationDataTest.test")
@@ -148,7 +138,7 @@ public class NavigationDataFileTest {
 
             String data = Files.readString(OperationsTest.NAVIGATION_DATA_JSON);
 
-            Child root = Operations.gson.fromJson(data, Child.class);
+            Child root = Operations.GSON.fromJson(data, Child.class);
 
             assertNotNull(root);
             assertFalse(root.children.isEmpty());

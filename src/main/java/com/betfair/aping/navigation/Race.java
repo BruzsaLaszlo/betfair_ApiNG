@@ -14,11 +14,12 @@ public class Race extends NavigationData {
     private final List<Market> markets = new ArrayList<>();
 
     public Race(String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
-        super(id,name);
+        super(id, name);
         this.venue = venue;
         this.startTime = startTime;
         this.raceNumber = raceNumber;
         this.countryCode = countryCode;
+        allRace.add(this);
     }
 
 

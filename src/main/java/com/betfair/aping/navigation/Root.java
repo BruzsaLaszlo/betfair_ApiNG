@@ -1,22 +1,21 @@
 package com.betfair.aping.navigation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Root extends NavigationData {
+public final class Root extends NavigationData {
 
-    public String type;
+    public static Root getInstance() {
+        return new Root();
+    }
 
-    public List<EventType> events = new ArrayList<>();
-
-    public Root(String id, String name) {
-        super(id, name);
+    private Root() {
+        super("0", "ROOT");
     }
 
     @Override
     List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(events);
+        return Arrays.asList(allEvenType);
     }
 
 
@@ -25,8 +24,6 @@ public class Root extends NavigationData {
         return "Root{" +
                 "name='" + name + '\'' +
                 ", id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", children=" + events +
                 '}';
     }
 

@@ -50,7 +50,7 @@ public class Operations {
      * We needed to override the adapter for the Date class as Betfair's API-NG requires all dates to be serialized in ISO8601 UTC
      * Just formatting the string to the ISO format does not adjust by the timezone on the Date instance during serialization.
      */
-    public static final Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
 
 
     /**
@@ -67,7 +67,7 @@ public class Operations {
         params.put(FILTER, filter);
         params.put(LOCALE, DEFAULT_LOCALE);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTTYPES.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<EventTypeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<EventTypeResult>>() {
         }.getType());
     }
 
@@ -96,7 +96,7 @@ public class Operations {
         params.put(MATCHPROJECTION, matchProjection);
         params.put(CURRENCYCODE, currencyCode);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<MarketBook>>() {
+        return GSON.fromJson(result, new TypeToken<List<MarketBook>>() {
         }.getType());
     }
 
@@ -113,7 +113,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOUNTRIES.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<CountryCodeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<CountryCodeResult>>() {
         }.getType());
     }
 
@@ -130,7 +130,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTVENUES.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<VenueResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<VenueResult>>() {
         }.getType());
     }
 
@@ -151,7 +151,7 @@ public class Operations {
         params.put(FILTER, filter);
         params.put("granularity", granularity);
         String result = makeRequestBetting(ApiNgOperation.LISTTIMERANGES.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<TimeRangeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<TimeRangeResult>>() {
         }.getType());
     }
 
@@ -180,7 +180,7 @@ public class Operations {
         params.put(MAX_RESULT, maxResult);
         params.put(MARKETPROJECTION, marketProjection);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<MarketCatalogue>>() {
+        return GSON.fromJson(result, new TypeToken<List<MarketCatalogue>>() {
         }.getType());
     }
 
@@ -199,7 +199,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETTYPES.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<MarketTypeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<MarketTypeResult>>() {
         }.getType());
     }
 
@@ -224,7 +224,7 @@ public class Operations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.PLACEORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<PlaceExecutionReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<PlaceExecutionReport>>() {
         }.getType());
     }
 
@@ -249,7 +249,7 @@ public class Operations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.CANCELORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<CancelExecutionReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<CancelExecutionReport>>() {
         }.getType());
     }
 
@@ -276,7 +276,7 @@ public class Operations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.REPLACEORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<ReplaceExecutionReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<ReplaceExecutionReport>>() {
         }.getType());
     }
 
@@ -299,7 +299,7 @@ public class Operations {
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<UpdateExecutionReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<UpdateExecutionReport>>() {
         }.getType());
     }
 
@@ -346,7 +346,7 @@ public class Operations {
         params.put("fromRecord", fromRecord);
         params.put("recordCount", recordCount);
         String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
         }.getType());
     }
 
@@ -401,7 +401,7 @@ public class Operations {
         params.put("groupBy", groupBy);
         params.put("includeItemDescription", includeItemDescription);
         String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
         }.getType());
     }
 
@@ -436,7 +436,7 @@ public class Operations {
         params.put("groupBy", groupBy);
         params.put("includeItemDescription", includeItemDescription);
         String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<ClearedOrderSummaryReport>>() {
+        return GSON.fromJson(result, new TypeToken<List<ClearedOrderSummaryReport>>() {
         }.getType());
     }
 
@@ -454,7 +454,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOMPETITIONS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<CompetitionResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<CompetitionResult>>() {
         }.getType());
     }
 
@@ -471,7 +471,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTS.getOperationName(), params);
-        return gson.fromJson(result, new TypeToken<List<EventTypeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<EventTypeResult>>() {
         }.getType());
     }
 
@@ -487,7 +487,7 @@ public class Operations {
 
     private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException {
 
-        String requestString = params == null ? null : gson.toJson(params);
+        String requestString = params == null ? null : GSON.toJson(params);
 
         String response = null;
         try {
@@ -496,7 +496,7 @@ public class Operations {
 
         } catch (HttpResponseException exception) {
 
-            FaultData fd = Operations.gson.fromJson(exception.getReasonPhrase(), FaultData.class);
+            FaultData fd = Operations.GSON.fromJson(exception.getReasonPhrase(), FaultData.class);
             throw fd.getDetail().getAPINGException();
 
         } catch (IOException exception) {
@@ -517,7 +517,7 @@ public class Operations {
      */
     public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
-        return gson.fromJson(response, DeveloperApp.class);
+        return GSON.fromJson(response, DeveloperApp.class);
     }
 
     /**
@@ -528,7 +528,7 @@ public class Operations {
      */
     public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
-        return gson.fromJson(response, new TypeToken<List<DeveloperApp>>() {
+        return GSON.fromJson(response, new TypeToken<List<DeveloperApp>>() {
         }.getType());
     }
 
@@ -539,12 +539,12 @@ public class Operations {
      */
     public AccountFundsResponse getAccountFunds() throws ApiNgException, InaccessibleObjectException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
-        return gson.fromJson(response, AccountFundsResponse.class);
+        return GSON.fromJson(response, AccountFundsResponse.class);
     }
 
     public AccountDetailsResponse getAccountDetails() throws ApiNgException, InaccessibleObjectException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
-        return gson.fromJson(response, AccountDetailsResponse.class);
+        return GSON.fromJson(response, AccountDetailsResponse.class);
     }
 
 }

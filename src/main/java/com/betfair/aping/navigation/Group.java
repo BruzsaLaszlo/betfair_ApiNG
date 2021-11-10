@@ -12,11 +12,12 @@ public class Group extends NavigationData {
 
     public Group(String id, String name) {
         super(id, name);
+        allGroup.add(this);
     }
 
     @Override
     List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(events,groups);
+        return Arrays.asList(events, groups);
     }
 
     @Override
