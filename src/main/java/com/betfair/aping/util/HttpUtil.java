@@ -6,7 +6,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -52,26 +51,28 @@ public final class HttpUtil {
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
 
-        String url;
+        String url = prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
         switch (endpoint) {
-            case ACCOUNT ->  url = prop.getProperty("ACCOUNT_APING_URL");
-            case BETTING ->  url = prop.getProperty("SPORT_APING_URL");
-            case HEARTBEAT ->  url = prop.getProperty("HEARTBEAT_URL");
+            case ACCOUNT -> url = prop.getProperty("ACCOUNT_APING_URL") + url;
+            case BETTING -> url = prop.getProperty("SPORT_APING_URL") + url;
+            case HEARTBEAT -> url = prop.getProperty("HEARTBEAT_URL") + url;
+            case NAVIGATION -> url = prop.getProperty(("NAVIGATION_URL"));
             default -> url = "";
         }
-        url += prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
         HttpPost post = new HttpPost(url);
-        post.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
-        post.setHeader(HTTP_HEADER_ACCEPT, prop.getProperty("APPLICATION_JSON"));
-        post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
-        post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
-        post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
-        post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
-        post.setHeader("Accept-Encoding", "gzip,deflate");
-        post.setHeader("Connection", "keep-alive");
-        if (jsonRequest != null)
-            post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
+        {
+            post.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
+            post.setHeader(HTTP_HEADER_ACCEPT, prop.getProperty("APPLICATION_JSON"));
+            post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
+            post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
+            post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
+            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+            post.setHeader("Accept-Encoding", "gzip,deflate");
+            post.setHeader("Connection", "keep-alive");
+            if (jsonRequest != null)
+                post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
+        }
 
         if (DEBUG) {
             System.out.println("Request headers: " + Arrays.toString(post.getAllHeaders()));
@@ -89,7 +90,10 @@ public final class HttpUtil {
         String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
 
         if (DEBUG)
-            System.out.println("Response: " + entityString);
+            if (entityString.length() > 100_000)
+                System.out.println("Response IS TOO BIG  { " + entityString.length() + " byte }");
+            else
+                System.out.println("Response: " + entityString);
 
         StatusLine statusLine = httpResponse.getStatusLine();
         if (statusLine.getStatusCode() != 200) {
@@ -98,26 +102,6 @@ public final class HttpUtil {
 
         return entityString;
 
-    }
-
-    public static String getNavigationData() {
-        String url = "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
-        HttpGet get = new HttpGet(url);
-        get.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
-        get.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
-        get.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
-        get.setHeader("Connection", "keep-alive");
-        get.setHeader("Accept-Encoding", "gzip,deflate");
-
-        String response = null;
-        try {
-            response = HttpClientBuilder.create().build().execute(get, (HttpUtil::handleResponse));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return response;
     }
 
 
