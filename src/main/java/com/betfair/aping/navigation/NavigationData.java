@@ -1,11 +1,13 @@
 package com.betfair.aping.navigation;
 
 import com.betfair.aping.api.Operations;
+import com.betfair.aping.enums.Endpoint;
 import com.betfair.aping.util.HttpUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +34,10 @@ import java.util.List;
  * An EVENT node has zero, one or many EVENT nodes
  */
 public abstract class NavigationData {
+
+    public static LocalDateTime lastUpdateTime;
+
+    private static final boolean HORSE_RACING_OFF = true;
 
     protected final String id;
 
@@ -136,14 +142,16 @@ public abstract class NavigationData {
 //    Files.createTempDirectory("betfair_aping_temp").resolve("NavigationData.json");
 
     private static String downLoadAndSaveNavigationData() {
-        String dataJson = HttpUtil.getNavigationData();
         try {
+            String dataJson = HttpUtil.sendPostRequest(null, null, Endpoint.NAVIGATION);
             Files.writeString(NAVIGATION_DATA_JSON, dataJson);
+            lastUpdateTime = LocalDateTime.now();
+            return dataJson;
         } catch (IOException e) {
             System.err.println("Nem sikerült kiírni a file-ba a NAVIGATION DATA-t");
             e.printStackTrace();
+            return null;
         }
-        return dataJson;
     }
 
     class Child {
@@ -203,9 +211,13 @@ public abstract class NavigationData {
 
     private void bejaras(Child root, NavigationData o, int deep) {
 
-        NavigationData nd;
+        NavigationData nd = null;
         switch (root.type) {
-            case "EVENT_TYPE" -> nd = new EventType(root.id, root.name);
+            case "EVENT_TYPE" -> {
+                if (root.id.equals("7") && root.name.equals("Horse Racing") && HORSE_RACING_OFF)
+                    break;
+                nd = new EventType(root.id, root.name);
+            }
             case "GROUP" -> {
                 if (root.name.equals("ROOT")) {
                     nd = o;
@@ -226,7 +238,6 @@ public abstract class NavigationData {
                 nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
-            default -> nd = null;
         }
 
         if ((o = nd) == null) return;

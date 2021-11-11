@@ -35,7 +35,7 @@ public class EventType extends NavigationData {
     }
 
     public String toString() {
-        return "{" + "" + "id=" + getId() + "," + "name=" + getName() + "}";
+        return "{EventType" + "" + "id=" + getId() + "," + "name=" + getName() + "}";
     }
 
 }

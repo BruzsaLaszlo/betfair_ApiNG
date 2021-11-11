@@ -3,6 +3,7 @@ package com.betfair.aping.api;
 import com.betfair.aping.entities.*;
 import com.betfair.aping.exceptions.ApiNgException;
 import com.betfair.aping.navigation.NavigationData;
+import com.betfair.aping.navigation.Root;
 import com.betfair.aping.util.HttpUtil;
 import com.betfair.aping.util.SessionTokenGetter;
 import org.junit.jupiter.api.Disabled;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +28,7 @@ class OperationsTest {
     @Test
     @Disabled
     void getSessionToken() throws Exception {
-        assertTrue(SessionTokenGetter.getSessionToken().endsWith("="));
+        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
     }
 
     @Test
@@ -72,7 +74,8 @@ class OperationsTest {
     @Test
     @Disabled
     void getNavigationData() throws IOException {
-        String data = HttpUtil.getNavigationData();
-        assertFalse(data.isEmpty());
+//        String data = HttpUtil.getNavigationData();
+        Root.getInstance().updateNavigationData();
+        assertFalse(LocalDateTime.now().isEqual(NavigationData.lastUpdateTime));
     }
 }

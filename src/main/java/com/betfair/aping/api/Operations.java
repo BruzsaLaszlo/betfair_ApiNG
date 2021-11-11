@@ -12,7 +12,6 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
-import java.lang.reflect.InaccessibleObjectException;
 import java.util.*;
 
 
@@ -540,14 +539,14 @@ public class Operations {
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws ApiNgException{
+    public AccountFundsResponse getAccountFunds() throws ApiNgException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
         return GSON.fromJson(response, AccountFundsResponse.class);
     }
 
     /**
      * Returns the details relating your account, including your discount rate and Betfair point balance.
-     *
+     * <p>
      * Please note: The data returned by getAccountDetails relies on two underlying services.
      * The pointsBalance is returned by a separate service from the other data.
      * As a consequence of this, in the event of a failure to a single underlying service,
@@ -557,7 +556,7 @@ public class Operations {
      * @return Response for retrieving account details.
      * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
-    public AccountDetailsResponse getAccountDetails() throws ApiNgException{
+    public AccountDetailsResponse getAccountDetails() throws ApiNgException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
         return GSON.fromJson(response, AccountDetailsResponse.class);
     }
@@ -576,24 +575,23 @@ public class Operations {
      * in the unlikely event of nodes failing within the cluster, which may result in your position not being
      * managed until a subsequent heartbeat request is received.
      *
-     * @param preferredTimeoutSeconds
-     * Maximum period in seconds that may elapse (without a subsequent heartbeat request),
-     * before a cancellation request is automatically submitted on your behalf.
-     * The minimum value is 10, the maximum value permitted is 300. Passing 0 will result in your heartbeat
-     * being unregistered (or ignored if you have no current heartbeat registered). You will still get an
-     * actionPerformed value returned when passing 0, so this may be used to determine if any action was performed
-     * since your last heartbeat, without actually registering a new heartbeat.
-     * Passing a negative value will result in an error being returned, INVALID_INPUT_DATA.
-     * Any errors while registering your heartbeat will result in a error being returned, UNEXPECTED_ERROR.
-     * Passing a value that is less than the minimum timeout will result in your heartbeat adopting the minimum timeout.
-     * Passing a value that is greater than the maximum timeout will result in your heartbeat adopting the maximum timeout.
-     * The minimum and maximum timeouts are subject to change, so your client should utilise the returned
-     * actualTimeoutSeconds to set an appropriate frequency for your subsequent heartbeat requests.
-     *
+     * @param preferredTimeoutSeconds Maximum period in seconds that may elapse (without a subsequent heartbeat request),
+     *                                before a cancellation request is automatically submitted on your behalf.
+     *                                The minimum value is 10, the maximum value permitted is 300. Passing 0 will result in your heartbeat
+     *                                being unregistered (or ignored if you have no current heartbeat registered). You will still get an
+     *                                actionPerformed value returned when passing 0, so this may be used to determine if any action was performed
+     *                                since your last heartbeat, without actually registering a new heartbeat.
+     *                                Passing a negative value will result in an error being returned, INVALID_INPUT_DATA.
+     *                                Any errors while registering your heartbeat will result in a error being returned, UNEXPECTED_ERROR.
+     *                                Passing a value that is less than the minimum timeout will result in your heartbeat adopting the minimum timeout.
+     *                                Passing a value that is greater than the maximum timeout will result in your heartbeat adopting the maximum timeout.
+     *                                The minimum and maximum timeouts are subject to change, so your client should utilise the returned
+     *                                actualTimeoutSeconds to set an appropriate frequency for your subsequent heartbeat requests.
      * @return Response from heartbeat operation
      * @throws ApiNgException Thrown if the operation fails
      */
-    public HeartbeatReport heartbeat ( int preferredTimeoutSeconds ) throws ApiNgException {
+    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException {
+        // You should be able to reset the heartbeat by passing a value of actualTimeoutSeconds":0 and then restarting it by setting the required value.
         String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName());
         return GSON.fromJson(response, HeartbeatReport.class);
     }

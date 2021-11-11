@@ -3,7 +3,7 @@ package com.betfair.aping.enums;
 public enum ActionPerformed {
 
     /**
-     *No action was performed since last heartbeat, or this is the first heartbeat
+     * No action was performed since last heartbeat, or this is the first heartbeat
      */
     NONE,
 

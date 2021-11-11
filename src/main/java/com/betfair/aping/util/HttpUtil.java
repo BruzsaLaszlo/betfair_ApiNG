@@ -67,7 +67,7 @@ public final class HttpUtil {
             post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
             post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
             post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
-            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
+//            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
             post.setHeader("Accept-Encoding", "gzip,deflate");
             post.setHeader("Connection", "keep-alive");
             if (jsonRequest != null)

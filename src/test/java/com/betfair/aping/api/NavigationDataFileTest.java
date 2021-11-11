@@ -87,7 +87,11 @@ class NavigationDataFileTest {
 
         NavigationData nd = null;
         switch (root.type) {
-            case "EVENT_TYPE" -> nd = new EventType(root.id, root.name);
+            case "EVENT_TYPE" -> {
+                if (root.id.equals("7") && root.name.equals("Horse Racing"))
+                    break;
+                nd = new EventType(root.id, root.name);
+            }
             case "GROUP" -> {
                 if (root.name.equals("ROOT")) {
                     nd = o;
@@ -97,6 +101,7 @@ class NavigationDataFileTest {
                 add(o, (Group) nd);
             }
             case "EVENT" -> {
+
                 nd = new Event(root.id, root.name, root.countryCode);
                 add(o, (Event) nd);
             }

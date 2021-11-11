@@ -49,6 +49,20 @@ public class NavigationBejarasTest {
     }
 
     @Test
+    void hungaryMatch() {
+
+        NavigationData.allMarket.stream()
+                .filter(market -> market.getEvent() != null)
+                .filter(market -> market.getEvent().getName().contains("Hungary"))
+                .filter(market -> market.getEvent().getName().contains("San"))
+                .findFirst()
+                .get()
+                .getEvent().getMarkets().forEach(System.out::println);
+
+
+    }
+
+    @Test
     @Description("segéd metódus")
     void updateNavigationData() throws IOException {
 

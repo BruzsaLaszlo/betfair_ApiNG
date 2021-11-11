@@ -21,7 +21,6 @@ public class HeartbeatReport {
     private int actualTimeoutSeconds;
 
 
-
     public ActionPerformed getActionPerformed() {
         return actionPerformed;
     }
