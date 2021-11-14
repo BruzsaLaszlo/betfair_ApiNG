@@ -61,7 +61,7 @@ public class ApiNGJRescriptDemo {
             Set<MarketProjection> marketProjection = new HashSet<>();
             marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
-            String maxResults = "1";
+            int maxResults = 1;
 
             List<MarketCatalogue> marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResults);
 
@@ -89,8 +89,12 @@ public class ApiNGJRescriptDemo {
             List<String> marketIds = new ArrayList<>();
             marketIds.add(marketIdChosen);
 
-            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(marketIds, priceProjection,
-                    orderProjection, matchProjection, currencyCode);
+            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(
+                    marketIds, priceProjection,
+                    orderProjection, matchProjection,
+                    false, false, null,
+                    currencyCode,
+                    null,null);
 
             /**
              * PlaceOrders: we try to place a bet, based on the previous request we provide the following:

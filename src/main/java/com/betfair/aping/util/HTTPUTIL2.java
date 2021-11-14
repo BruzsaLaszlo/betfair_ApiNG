@@ -41,7 +41,7 @@ public class HTTPUTIL2 {
 
             prop.load(in);
             DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
-            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.getSessionToken());
+            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.getAndSetSessionTokenToProperety());
 
         } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             e.printStackTrace();

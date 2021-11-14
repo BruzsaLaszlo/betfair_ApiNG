@@ -68,8 +68,16 @@ public class MarketCatalogue {
         this.event = event;
     }
 
+    @Override
     public String toString() {
-        return getMarketName();
+        return "MarketCatalogue{" + '\n' +
+                "marketId = '" + marketId + '\n' +
+                "marketName = '" + marketName + '\n' +
+                "description = " + description + '\n' +
+                "runners = " + runners + '\n' +
+                "eventType = " + eventType + '\n' +
+                "competition = " + competition + '\n' +
+                "event = " + event + '\n' +
+                '}';
     }
-
 }

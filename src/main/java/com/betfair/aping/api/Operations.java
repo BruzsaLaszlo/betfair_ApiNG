@@ -19,7 +19,7 @@ public class Operations {
 
     private static Operations instance;
 
-    private Operations() {
+    Operations() {
     }
 
     public static Operations getInstance() {
@@ -74,21 +74,58 @@ public class Operations {
      * Returns a list of dynamic data about markets. Dynamic data includes
      * prices, the status of the market, the status of selections, the traded
      * volume, and the status of any orders you have placed in the market
+     * <p>
+     * Please note: Separate requests should be made for OPEN & CLOSED markets.
+     * Request that include both OPEN & CLOSED markets will only return those markets that are OPEN.
+     * <p>
+     * <p>
+     * Market Data Request Limits apply to requests made to listMarketBook that include price or order projections.
+     * Calls to listMarketBook should be made up to a maximum of 5 times per second to a single marketId.
+     * <a href="https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Market+Data+Request+Limits<\a>
+     * <p>
+     * Best Practice
+     * <p>
+     * Customers seeking to use listMarketBook to obtain price, volume, unmatched (EXECUTABLE) orders and matched
+     * position in a single operation should provide an OrderProjectionof “EXECUTABLE” in their listMarketBook request
+     * and receive all unmatched (EXECUTABLE) orders and the aggregated matched volume from all orders irrespective of
+     * whether they are partially or fully matched. The level of matched volume aggregation (MatchProjection) requested
+     * should be ROLLED_UP_BY_AVG_PRICE or ROLLED_UP_BY_PRICE, the former being preferred. This provides a single call
+     * in which you can track prices, traded volume, unmatched orders and your evolving matched position with a
+     * reasonably fixed, minimally sized response.
      *
-     * @param marketIds       <u>One or more market ids. The number of markets returned
-     *                        depends on the amount of data you request via the price
-     *                        projection</u>
-     * @param priceProjection The projection of price data you want to receive in the
-     *                        response
-     * @param orderProjection The orders you want to receive in the response
-     * @param matchProjection If you ask for orders, specifies the representation of matches
-     * @param currencyCode    A Betfair standard currency code. If not specified, the
-     *                        default currency code is used
+     * @param marketIds One or more market ids. The number of markets returned depends on the amount of data you request via the price projection.
+     * @param priceProjection The projection of price data you want to receive in the response.
+     * @param orderProjection The orders you want to receive in the response.
+     * @param matchProjection If you ask for orders, specifies the representation of matches.
+     * @param includeOverallPosition If you ask for orders, returns matches for each selection. Defaults to true if unspecified.
+     * @param partitionMatchedByStrategyRef If you ask for orders, returns the breakdown of matches by strategy for each selection. Defaults to false if unspecified.
+     * @param customerStrategyRefs If you ask for orders, restricts the results to orders matching any of the specified set of customer defined strategies.
+     *                             Also filters which matches by strategy for selections are returned, if partitionMatchedByStrategyRef is true.
+     *                             An empty set will be treated as if the parameter has been omitted (or null passed).
+     * @param currencyCode A Betfair standard currency code. If not specified, the default currency code is used.
+     * @param locale The language used for the response. If not specified, the default is returned.
+     * @param matchedSince If you ask for orders, restricts the results to orders that have at least one fragment matched since
+     *                     the specified date (all matched fragments of such an order will be returned even if some were matched before the specified date).
+     *                     All EXECUTABLE orders will be returned regardless of matched date.
+     * @param betIds If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
+     *               parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be provided at a time.
      * @return
      * @throws ApiNgException
      */
-    public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
-                                           MatchProjection matchProjection, String currencyCode) throws ApiNgException {
+    public List<MarketBook> listMarketBook(
+            List<String> marketIds,
+            PriceProjection priceProjection,
+            OrderProjection orderProjection,
+            MatchProjection matchProjection,
+            boolean includeOverallPosition,
+            boolean partitionMatchedByStrategyRef,
+            Set<String> customerStrategyRefs,
+            String currencyCode,
+            Date matchedSince,
+            Set<String> betIds)
+
+            throws ApiNgException {
+
         var params = new HashMap<String, Object>();
         params.put(MARKET_IDS, marketIds);
         params.put(PRICEPROJECTION, priceProjection);
@@ -155,24 +192,31 @@ public class Operations {
     }
 
     /**
-     * Returns a list of information about markets that does not change (or
-     * changes very rarely). You use listMarketCatalogue to retrieve the name of
-     * the market, the names of selections and other information about markets.
-     * Market Data Request Limits apply to requests made to listMarketCatalogue
+     * Returns a list of information about published (ACTIVE/SUSPENDED) markets that does not change (or changes very rarely).
+     * You use listMarketCatalogue to retrieve the name of the market, the names of selections and other information about markets.
+     * Market Data Request Limits apply to requests made to listMarketCatalogue.
+     * <p>
+     * Please note: listMarketCatalogue does not return markets that are CLOSED.
      *
-     * @param filter           <u>The filter to select desired markets. All markets that
-     *                         match
-     *                         the criteria in the filter are selected</u>
+     * @param filter           The filter to select desired markets. All markets that match the criteria in the filter are selected.
      * @param marketProjection The type and amount of data returned about the market
-     * @param sort             The order of the results. Will default to RANK if not passed
-     * @param maxResult        <u>limit on the total number of results returned, must be
-     *                         greater
-     *                         than 0 and less than or equal to 1000</u>
+     * @param sort             The order of the results. Will default to RANK if not passed.
+     *                         RANK is an assigned priority that is determined by our Market Operations team in our back-end system.
+     *                         A result's overall rank is derived from the ranking given to the flowing attributes for the result.
+     *                         EventType, Competition, StartTime, MarketType, MarketId. For example, EventType is ranked by the most
+     *                         popular sports types and marketTypes are ranked in the following order: ODDS ASIAN LINE RANGE
+     *                         If all other dimensions of the result are equal, then the results are ranked in MarketId order.
+     * @param maxResult        limit on the total number of results returned, must be greater than 0 and less than or equal to 1000
      * @return
      * @throws ApiNgException
      */
-    public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection, MarketSort sort,
-                                                     String maxResult) throws ApiNgException {
+    public List<MarketCatalogue> listMarketCatalogue(
+            MarketFilter filter,
+            Set<MarketProjection> marketProjection,
+            MarketSort sort,
+            int maxResult)
+            throws ApiNgException {
+
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         params.put(SORT, sort);
@@ -476,7 +520,7 @@ public class Operations {
 
 
     protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException {
-        params.put(LOCALE, DEFAULT_LOCALE);
+        //params.put(LOCALE, DEFAULT_LOCALE);
         return makeRequest(operation, params, Endpoint.BETTING);
     }
 

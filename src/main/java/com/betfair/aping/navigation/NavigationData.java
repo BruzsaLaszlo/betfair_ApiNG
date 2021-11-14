@@ -43,10 +43,12 @@ public abstract class NavigationData {
 
     protected final String name;
 
-    protected int melyseg;
+    protected int depth;
 
-    public static final List<Market> allMarket = new ArrayList<>(15_000);
-    protected static final List<Event> allEvent = new ArrayList<>(1_500);
+    protected NavigationData parent;
+
+    public static final List<Market> allMarket = new ArrayList<>(20_000);
+    protected static final List<Event> allEvent = new ArrayList<>(2_000);
     public static final List<EventType> allEvenType = new ArrayList<>(50);
     protected static final List<Group> allGroup = new ArrayList<>(600);
     protected static final List<Race> allRace = new ArrayList<>(600);
@@ -70,8 +72,8 @@ public abstract class NavigationData {
     abstract List<List<? extends NavigationData>> getLists();
 
     public void printToConsole(int deep) {
-        System.out.printf("%s%s%n", spaces[this.melyseg], this);
-        if (deep >= this.melyseg && getLists() != null)
+        System.out.printf("%s%s%n", spaces[this.depth], this);
+        if (deep >= this.depth && getLists() != null)
             getLists().
                     forEach(list -> list.
                             forEach(navigationData ->
@@ -102,20 +104,24 @@ public abstract class NavigationData {
     }
 
     protected void getAllData(StringBuilder inputOutputStringBuilder, int deep) {
-        inputOutputStringBuilder.append(spaces[this.melyseg]).append(this).append("\n");
-        if (deep >= this.melyseg && getLists() != null)
+        inputOutputStringBuilder.append(spaces[this.depth]).append(this).append("\n");
+        if (deep >= this.depth && getLists() != null)
             getLists().
                     forEach(list -> list.
                             forEach(navigationData ->
                                     navigationData.getAllData(inputOutputStringBuilder, deep)));
     }
 
-    public Integer getMelyseg() {
-        return melyseg;
+    public Integer getDepth() {
+        return depth;
     }
 
-    public void setMelyseg(int melyseg) {
-        this.melyseg = melyseg;
+    public NavigationData getParent() {
+        return parent;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public static String getSizeOfLists() {
@@ -179,18 +185,28 @@ public abstract class NavigationData {
 
         bejaras(rootJson, root, 0);
 
-        allEvent.forEach(event -> event.getMarkets()
-                .forEach(market -> market.setEvent(event)));
+//        allEvent.forEach(event -> event.getMarkets()
+//                .forEach(market -> market.setEvent(event)));
+        for (var event : allEvent)
+            for (var market : event.getMarkets())
+                market.setEvent(event);
 
     }
 
     private void add(NavigationData o, Group g) {
+//        switch (o) {
+//            case EventType et -> et.getGroups().add(g);
+//            default -> throw new IllegalStateException("Unexpected value: " + o);
+//        }
+//        if (o instanceof EventType et )
+//            et.getGroups().add(g);
         if (o instanceof EventType)
             ((EventType) o).getGroups().add(g);
         else if (o instanceof Group)
             ((Group) o).getGroups().add(g);
         else if (o instanceof Event)
             ((Event) o).getGroups().add(g);
+        else throw new IllegalStateException("Az EventType nem lehet mas");
     }
 
     private void add(NavigationData o, Event e) {
@@ -200,6 +216,7 @@ public abstract class NavigationData {
             ((Group) o).getEvents().add(e);
         else if (o instanceof Event)
             ((Event) o).getEvents().add(e);
+        else throw new IllegalStateException("Az Event nem lehet mas");
     }
 
     private void add(NavigationData o, Market m) {
@@ -207,6 +224,7 @@ public abstract class NavigationData {
             ((Event) o).getMarkets().add(m);
         else if (o instanceof Race)
             ((Race) o).getMarkets().add(m);
+        else throw new IllegalStateException("Az Market nem lehet mas");
     }
 
     private void bejaras(Child root, NavigationData o, int deep) {
@@ -231,6 +249,8 @@ public abstract class NavigationData {
                 add(o, (Event) nd);
             }
             case "RACE" -> {
+                if (HORSE_RACING_OFF)
+                    break;
                 nd = new Race(root.id, root.name, root.venue, root.startTime, root.raceNumber, root.countryCode);
                 ((EventType) o).getRaces().add((Race) nd);
             }
@@ -238,10 +258,11 @@ public abstract class NavigationData {
                 nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
+            default -> throw new IllegalStateException("A root nem lehet mas");
         }
 
         if ((o = nd) == null) return;
-        nd.setMelyseg(deep);
+        nd.setDepth(deep);
 
 
         if (root.children != null)

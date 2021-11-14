@@ -65,6 +65,7 @@ class NavigationDataFileTest {
             ((Group) o).getGroups().add(g);
         else if (o instanceof Event)
             ((Event) o).getGroups().add(g);
+        else throw new AssertionError();
     }
 
     private void add(NavigationData o, Event e) {
@@ -74,6 +75,7 @@ class NavigationDataFileTest {
             ((Group) o).getEvents().add(e);
         else if (o instanceof Event)
             ((Event) o).getEvents().add(e);
+        else throw new AssertionError();
     }
 
     private void add(NavigationData o, Market m) {
@@ -81,6 +83,7 @@ class NavigationDataFileTest {
             ((Event) o).getMarkets().add(m);
         else if (o instanceof Race)
             ((Race) o).getMarkets().add(m);
+        else throw new AssertionError();
     }
 
     private void bejaras(Child root, NavigationData o, int deep) {
@@ -101,7 +104,6 @@ class NavigationDataFileTest {
                 add(o, (Group) nd);
             }
             case "EVENT" -> {
-
                 nd = new Event(root.id, root.name, root.countryCode);
                 add(o, (Event) nd);
             }
@@ -113,10 +115,11 @@ class NavigationDataFileTest {
                 nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
+            default -> throw new AssertionError();
         }
 
         if ((o = nd) == null) return;
-        nd.setMelyseg(deep);
+        nd.setDepth(deep);
 
 
         if (root.children != null) {

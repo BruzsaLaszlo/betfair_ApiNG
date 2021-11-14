@@ -1,12 +1,5 @@
 package com.betfair.aping.entities;
 
-import com.betfair.aping.navigation.Group;
-import com.betfair.aping.navigation.Market;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class Event {
 
     private String id;
@@ -14,89 +7,42 @@ public class Event {
     private String countryCode;
     private String timezone;
     private String venue;
-    private Date openDate;
+    private String openDate;
 
-
-    public Event(String id, String name, String countryCode, String timezone, String venue, Date openDate) {
-        this.id = id;
-        this.name = name;
-        this.countryCode = countryCode;
-        this.timezone = timezone;
-        this.venue = venue;
-        this.openDate = openDate;
-    }
-
-    private final List<Market> markets = new ArrayList<>();
-
-    private final List<Event> events = new ArrayList<>();
-
-    private final List<Group> groups = new ArrayList<>();
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public List<Market> getMarkets() {
-        return markets;
-    }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCountryCode() {
         return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
     }
 
     public String getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
-
     public String getVenue() {
         return venue;
     }
 
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
-
-    public Date getOpenDate() {
+    public String getOpenDate() {
         return openDate;
     }
 
-    public void setOpenDate(Date openDate) {
-        this.openDate = openDate;
-    }
-
+    @Override
     public String toString() {
-        return "{" + "" + "id=" + getId() + "," + "name=" + getName() + ","
-                + "countryCode=" + getCountryCode() + "," + "timezone="
-                + getTimezone() + "," + "venue=" + getVenue() + ","
-                + "openDate=" + getOpenDate() + "," + "}";
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", timezone='" + timezone + '\'' +
+                ", venue='" + venue + '\'' +
+                ", openDate='" + openDate + '\'' +
+                '}';
     }
-
 }

@@ -19,8 +19,11 @@ public class EventType {
         return name;
     }
 
+    @Override
     public String toString() {
-        return "{" + "" + "id=" + getId() + "," + "name=" + getName() + "}";
+        return "EventType {" + '\n' +
+                "id='" + id + '\'' + '\n' +
+                ", name='" + name + '\'' + '\n' +
+                '}';
     }
-
 }

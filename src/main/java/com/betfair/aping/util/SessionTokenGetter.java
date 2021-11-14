@@ -1,5 +1,6 @@
 package com.betfair.aping.util;
 
+import com.betfair.aping.api.Operations;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class SessionTokenGetter {
 
-    public static String getSessionToken()
+    public static String getAndSetSessionTokenToProperety()
             throws NoSuchAlgorithmException, KeyManagementException, IOException, UnrecoverableKeyException, CertificateException, KeyStoreException {
         SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
         URL console = new URL(HttpUtil.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
@@ -55,7 +56,15 @@ public class SessionTokenGetter {
         }
         System.out.println(sb);
         in.close();
-        return sb.toString().split("\"")[3];
+
+        String sessionToken;
+        try {
+            sessionToken = SessionToken.getSessionToken(sb.toString());
+        } catch (Exception exception) {
+            sessionToken = sb.toString().split("\"")[3];
+        }
+        HttpUtil.prop.setProperty("SESSION_TOKEN", sessionToken);
+        return sessionToken;
     }
 
     private static KeyManager[] getKeyManagers(String keyStoreType, InputStream keyStoreFile, String keyStorePassword)
@@ -103,6 +112,18 @@ public class SessionTokenGetter {
         }
 
         return result.toString();
+    }
+
+    private class SessionToken {
+        private String sessionToken;
+        private String loginStatus;
+
+        public static String getSessionToken(String dataJson) {
+            SessionToken st = Operations.GSON.fromJson(dataJson, SessionToken.class);
+            if (st.loginStatus.equals("SUCCESS"))
+                return st.sessionToken;
+            else throw new IllegalStateException("Sikertelen");
+        }
     }
 
     private SessionTokenGetter() {

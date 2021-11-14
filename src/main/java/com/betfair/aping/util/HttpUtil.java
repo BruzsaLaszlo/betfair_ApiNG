@@ -4,7 +4,6 @@ package com.betfair.aping.util;
 import com.betfair.aping.enums.Endpoint;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -39,7 +38,7 @@ public final class HttpUtil {
 
             prop.load(in);
             DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
-            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.getSessionToken());
+            SessionTokenGetter.getAndSetSessionTokenToProperety();
 
         } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             e.printStackTrace();
@@ -47,7 +46,6 @@ public final class HttpUtil {
             System.out.println("Error loading the properties file: " + e);
         }
     }
-
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
 
@@ -67,8 +65,7 @@ public final class HttpUtil {
             post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
             post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
             post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
-//            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, prop.getProperty(HTTP_HEADER_ACCEPT_ENCODING));
-            post.setHeader("Accept-Encoding", "gzip,deflate");
+            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, "gzip,deflate");
             post.setHeader("Connection", "keep-alive");
             if (jsonRequest != null)
                 post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
@@ -95,10 +92,8 @@ public final class HttpUtil {
             else
                 System.out.println("Response: " + entityString);
 
-        StatusLine statusLine = httpResponse.getStatusLine();
-        if (statusLine.getStatusCode() != 200) {
-            throw new HttpResponseException(statusLine.getStatusCode(), entityString);
-        }
+        var statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (statusCode != 200) throw new HttpResponseException(statusCode, entityString);
 
         return entityString;
 
