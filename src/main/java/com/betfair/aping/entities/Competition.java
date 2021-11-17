@@ -19,8 +19,8 @@ public class Competition {
     @Override
     public String toString() {
         return "Competition {" + '\n' +
-                "id='" + id + '\'' +'\n' +
-                ", name='" + name + '\'' +'\n' +
+                "id='" + id + '\'' + '\n' +
+                ", name='" + name + '\'' + '\n' +
                 '}';
     }
 

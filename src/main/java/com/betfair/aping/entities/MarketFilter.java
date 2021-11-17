@@ -96,7 +96,6 @@ public class MarketFilter {
 //    ##############  END OF FIELDS ##############
 
 
-
     public String getTextQuery() {
         return textQuery;
     }

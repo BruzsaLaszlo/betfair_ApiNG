@@ -94,7 +94,7 @@ public class ApiNGJRescriptDemo {
                     orderProjection, matchProjection,
                     false, false, null,
                     currencyCode,
-                    null,null);
+                    null, null);
 
             /**
              * PlaceOrders: we try to place a bet, based on the previous request we provide the following:

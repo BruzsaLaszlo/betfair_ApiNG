@@ -13,7 +13,6 @@ public class EventTypeResult {
     private int marketCount;
 
 
-
     public EventType getEventType() {
         return eventType;
     }
