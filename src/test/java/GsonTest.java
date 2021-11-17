@@ -1,5 +1,5 @@
-import com.betfair.aping.util.FaultData;
-import com.betfair.aping.api.Operations;
+import bruzsal.betfair.util.FaultData;
+import bruzsal.betfair.api.Operations;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
