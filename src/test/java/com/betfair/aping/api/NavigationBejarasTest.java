@@ -9,7 +9,6 @@ import com.betfair.aping.exceptions.ApiNgException;
 import com.betfair.aping.navigation.NavigationData;
 import com.betfair.aping.navigation.Root;
 import jdk.jfr.Description;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NavigationBejarasTest {
 
@@ -49,7 +47,6 @@ public class NavigationBejarasTest {
     void navdataFunctionTest() {
 
 
-
         NavigationData.allEvenType.forEach(System.out::println);
         NavigationData.allEvenType.stream()
                 .filter(eventType -> eventType.getName().equals("Soccer"))
@@ -71,7 +68,7 @@ public class NavigationBejarasTest {
     }
 
     @Test
-    void nullE() throws ApiNgException {
+    void nullE()  {
         NavigationData.allMarket.stream()
                 .filter(market -> market.getEvent() == null)
                 .forEach(System.out::println);
@@ -112,12 +109,26 @@ public class NavigationBejarasTest {
                 .filter(market -> market.getEvent().getName().contains("Hungary"))
                 .filter(market -> market.getEvent().getName().contains("San"))
                 .findFirst()
-                .get()
-                .getEvent().getMarkets().forEach(System.out::println);
+                .ifPresent(market -> market
+                        .getEvent()
+                        .getMarkets()
+                        .forEach(System.out::println));
 
 
     }
 
+    @Test
+    void sameParentAndEvent() {
+
+//        NavigationData.allMarket.stream()
+//                .map(Market::getParent)
+//                .forEach(System.out::println);
+
+        long count = NavigationData.allMarket.stream()
+                .filter(market -> market.getEvent() != market.getParent())
+                .count();
+        assertEquals(0, count);
+    }
 
 
 }

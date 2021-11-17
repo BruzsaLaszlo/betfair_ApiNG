@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -7,10 +10,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HackerRank {
+class HackerRank {
 
     @Test
     void JavaDataTypes() {
@@ -136,7 +143,7 @@ public class HackerRank {
 
         Pattern p = Pattern.compile(one,Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(one);
-        m.
+
 
         String pattern = one + "[.]" + one + "[.]" +one + "[.]" +one;
         assertTrue("093".matches(one));
@@ -150,5 +157,25 @@ public class HackerRank {
 
     }
 
+
+    @Test
+    void ingatlanCom() throws URISyntaxException, IOException, InterruptedException {
+
+        String url = "https://ingatlan.com/lista/elado+haz+mikebuda";
+
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(new URI(url))
+                .GET()
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body());
+
+    }
 
 }

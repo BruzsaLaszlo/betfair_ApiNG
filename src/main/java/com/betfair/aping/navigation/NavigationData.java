@@ -59,7 +59,7 @@ public abstract class NavigationData {
         this.name = name;
     }
 
-    protected static final String[] spaces = new String[10];
+    public static final String[] spaces = new String[10];
 
     static {
         StringBuilder sb = new StringBuilder();
@@ -258,9 +258,11 @@ public abstract class NavigationData {
                 nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
                 add(o, (Market) nd);
             }
-            default -> throw new IllegalStateException("A root nem lehet mas");
+            default -> throw new IllegalStateException("A root(child) nem lehet mas");
         }
 
+        if (nd != null)
+            nd.parent = o;
         if ((o = nd) == null) return;
         nd.setDepth(deep);
 
