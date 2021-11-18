@@ -13,7 +13,7 @@ public class DeveloperAppVersion {
     private long versionId;
 
     /**
-     * The version identifier string such as 1.0, 2.0. Unique for a given
+     * The version identifier string such as 1.0    2.0. Unique for a given
      * application.
      */
     private String version;
@@ -36,7 +36,7 @@ public class DeveloperAppVersion {
 
     /**
      * Indicates whether the application version needs explicit management by
-     * producers. A value of false indicates, this is a version meant for
+     * producers. A value of false indicates    this is a version meant for
      * developer use.
      */
     private boolean ownerManaged;
@@ -46,68 +46,49 @@ public class DeveloperAppVersion {
      */
     private boolean active;
 
+
     public String getOwner() {
         return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public long getVersionId() {
         return versionId;
     }
 
-    public void setVersionId(long versionId) {
-        this.versionId = versionId;
-    }
-
     public String getVersion() {
         return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public String getApplicationKey() {
         return applicationKey;
     }
 
-    public void setApplicationKey(String applicationKey) {
-        this.applicationKey = applicationKey;
-    }
-
     public boolean isDelayData() {
         return delayData;
-    }
-
-    public void setDelayData(boolean delayData) {
-        this.delayData = delayData;
     }
 
     public boolean isSubscriptionRequired() {
         return subscriptionRequired;
     }
 
-    public void setSubscriptionRequired(boolean subscriptionRequired) {
-        this.subscriptionRequired = subscriptionRequired;
-    }
-
     public boolean isOwnerManaged() {
         return ownerManaged;
-    }
-
-    public void setOwnerManaged(boolean ownerManaged) {
-        this.ownerManaged = ownerManaged;
     }
 
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    @Override
+    public String toString() {
+        return "\n >  DeveloperAppVersion" + '\n' +
+                "    owner = " + owner + '\n' +
+                "    versionId = " + versionId + '\n' +
+                "    version = " + version + '\n' +
+                "    applicationKey = " + applicationKey + '\n' +
+                "    delayData = " + delayData + '\n' +
+                "    subscriptionRequired = " + subscriptionRequired + '\n' +
+                "    ownerManaged = " + ownerManaged + '\n' +
+                "    active = " + active;
     }
-
 }

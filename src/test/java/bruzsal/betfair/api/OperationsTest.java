@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static bruzsal.betfair.enums.CountryCodes.HUNGARY;
 import static bruzsal.betfair.enums.EventTypeIds.SOCCER;
@@ -53,10 +56,6 @@ class OperationsTest {
         assertTrue(list.size() > 0);
     }
 
-    public List<VenueResult> listVenues(MarketFilter filter) throws APINGException {
-        return operations.listVenues(filter);
-    }
-
     @Test
     void listTimeRanges() throws APINGException {
 
@@ -84,7 +83,7 @@ class OperationsTest {
                 .setMarketCountries(HUNGARY)
                 .build();
 
-        List<MarketTypeResult> list =  operations.listMarketTypes(marketFilter);
+        List<MarketTypeResult> list = operations.listMarketTypes(marketFilter);
         list.sort((o1, o2) -> o2.getMarketCount() < o1.getMarketCount() ? -1 : 1);
         list.forEach(System.out::println);
 
@@ -167,66 +166,43 @@ class OperationsTest {
         return operations.createDeveloperAppKeys(appName);
     }
 
-    public AccountFundsResponse getAccountFunds() throws APINGException {
-        return operations.getAccountFunds();
-    }
-
-    public AccountDetailsResponse getAccountDetails() throws APINGException {
-        return operations.getAccountDetails();
-    }
 
     public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws APINGException {
         return operations.heartbeat(preferredTimeoutSeconds);
     }
 
     @Test
-    @Disabled
-    void getSessionToken() throws Exception {
-        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
-    }
-
-    @Test
-    void makeRequest() throws APINGException {
-
-
-        MarketFilter marketFilter;
-        marketFilter = new MarketFilter();
-        Set<String> eventTypeIds = new HashSet<>();
-
-        List<EventTypeResult> r = operations.listEventTypes(marketFilter);
-
-        for (EventTypeResult eventTypeResult : r) {
-            if (eventTypeResult.getEventType().getName().equals("Soccer")) {
-                System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.getEventType().getId() + "\n");
-                eventTypeIds.add(eventTypeResult.getEventType().getId());
-            }
-        }
-
-        assertFalse(eventTypeIds.isEmpty());
-
-    }
-
-    @Test
-    void accountFunds() throws APINGException {
+    void getAccountFunds() throws APINGException {
         AccountFundsResponse acr = operations.getAccountFunds();
         assertNotNull(acr);
-        assertTrue(acr.getAvailableToBetBalance() > 0);
+        System.out.println(acr);
+        assertTrue(acr.getExposureLimit() < 0);
     }
 
     @Test
-    void accountDetails() throws APINGException {
+    void getAccountDetails() throws APINGException {
         AccountDetailsResponse adr = operations.getAccountDetails();
+        assertNotNull(adr);
+        System.out.println(adr);
         assertEquals("Laszlo", adr.getFirstName());
     }
 
     @Test
     void getDeveloperAppKeys() throws APINGException {
-        List<DeveloperApp> da = operations.getDeveloperAppKeys();
-        assertEquals("bruzsal", da.get(0).getAppVersions().get(0).getOwner());
+        List<DeveloperApp> list = operations.getDeveloperAppKeys();
+        assertNotNull(list);
+        list.forEach(System.out::println);
+        assertEquals("bruzsal", list.get(0).getAppVersions().get(0).getOwner());
     }
 
     @Test
-    @Disabled
+    @Disabled("")
+    void getSessionToken() throws Exception {
+        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
+    }
+
+    @Test
+    @Disabled("túl nagy file-t tölt le")
     void getNavigationData() throws IOException {
 //        String data = HttpUtil.getNavigationData();
         Root.getInstance().updateNavigationData();

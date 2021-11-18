@@ -20,27 +20,24 @@ public class DeveloperApp {
      */
     private List<DeveloperAppVersion> appVersions;
 
-    public List<DeveloperAppVersion> getAppVersions() {
-        return appVersions;
-    }
-
-    public void setAppVersions(List<DeveloperAppVersion> appVersions) {
-        this.appVersions = appVersions;
-    }
 
     public long getAppId() {
         return appId;
     }
 
-    public void setAppId(long appId) {
-        this.appId = appId;
-    }
-
     public String getAppName() {
         return appName;
     }
+    
+    public List<DeveloperAppVersion> getAppVersions() {
+        return appVersions;
+    }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    @Override
+    public String toString() {
+        return "DeveloperApp" + '\n' +
+                "  appName  =  " + appName + '\n' +
+                "  appId  =  " + appId + '\n' +
+                "  appVersions  =  " + appVersions;
     }
 }
