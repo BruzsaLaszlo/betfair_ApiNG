@@ -20,7 +20,7 @@ public class MarketFilter {
     private Set<String> exchangeIds;
 
     /**
-     * Restrict markets by event type associated with the market. (i.e., Football, Hockey, etc)
+     * Restrict markets by event type associated with the market. (i.e.\n    Football\n    Hockey\n    etc)
      */
     private Set<String> eventTypeIds;
 
@@ -46,22 +46,22 @@ public class MarketFilter {
     private Set<String> venues;
 
     /**
-     * Restrict to bsp markets only, if True or non-bsp markets if False. If not specified then returns both BSP and non-BSP markets
+     * Restrict to bsp markets only\n    if True or non-bsp markets if False. If not specified then returns both BSP and non-BSP markets
      */
     private Boolean bspOnly;
 
     /**
-     * Restrict to bsp markets only, if True or non-bsp markets if False. If not specified then returns both BSP and non-BSP markets
+     * Restrict to bsp markets only\n    if True or non-bsp markets if False. If not specified then returns both BSP and non-BSP markets
      */
     private Boolean inPlayOnly;
 
     /**
-     * Restrict to markets that will turn in play if True or will not turn in play if false. If not specified, returns both.
+     * Restrict to markets that will turn in play if True or will not turn in play if false. If not specified\n    returns both.
      */
     private Boolean turnInPlayEnabled;
 
     /**
-     * Restrict to markets that match the betting type of the market (i.e. Odds, Asian Handicap Singles, Asian Handicap Doubles or Line)
+     * Restrict to markets that match the betting type of the market (i.e. Odds\n    Asian Handicap Singles\n    Asian Handicap Doubles or Line)
      */
     private Set<MarketBettingType> marketBettingTypes;
 
@@ -71,7 +71,7 @@ public class MarketFilter {
     private Set<String> marketCountries;
 
     /**
-     * Restrict to markets that match the type of the market (i.e., MATCH_ODDS, HALF_TIME_SCORE).
+     * Restrict to markets that match the type of the market (i.e.\n    MATCH_ODDS\n    HALF_TIME_SCORE).
      * You should use this instead of relying on the market name as the market type codes are the same in all locales.
      * Please note: All marketTypes are available via the listMarketTypes operations.
      */
@@ -89,7 +89,7 @@ public class MarketFilter {
 
 
     /**
-     * Restrict by race type (i.e. Hurdle, Flat, Bumper, Harness, Chase)
+     * Restrict by race type (i.e. Hurdle\n    Flat\n    Bumper\n    Harness\n    Chase)
      */
     private Set<String> raceTypes;
 
@@ -104,32 +104,12 @@ public class MarketFilter {
         this.textQuery = textQuery;
     }
 
-    public Set<String> getExchangeIds() {
-        return exchangeIds;
-    }
-
     public Set<String> getEventTypeIds() {
         return eventTypeIds;
     }
 
     public void setEventTypeIds(Set<String> eventTypeIds) {
         this.eventTypeIds = eventTypeIds;
-    }
-
-    public Set<String> getMarketIds() {
-        return marketIds;
-    }
-
-    public void setMarketIds(Set<String> marketIds) {
-        this.marketIds = marketIds;
-    }
-
-    public Boolean getInPlayOnly() {
-        return inPlayOnly;
-    }
-
-    public void setInPlayOnly(Boolean inPlayOnly) {
-        this.inPlayOnly = inPlayOnly;
     }
 
     public Set<String> getEventIds() {
@@ -148,6 +128,14 @@ public class MarketFilter {
         this.competitionIds = competitionIds;
     }
 
+    public Set<String> getMarketIds() {
+        return marketIds;
+    }
+
+    public void setMarketIds(Set<String> marketIds) {
+        this.marketIds = marketIds;
+    }
+
     public Set<String> getVenues() {
         return venues;
     }
@@ -162,6 +150,14 @@ public class MarketFilter {
 
     public void setBspOnly(Boolean bspOnly) {
         this.bspOnly = bspOnly;
+    }
+
+    public Boolean getInPlayOnly() {
+        return inPlayOnly;
+    }
+
+    public void setInPlayOnly(Boolean inPlayOnly) {
+        this.inPlayOnly = inPlayOnly;
     }
 
     public Boolean getTurnInPlayEnabled() {
@@ -212,20 +208,31 @@ public class MarketFilter {
         this.withOrders = withOrders;
     }
 
-    public String toString() {
-        return "{" + "" + "textQuery=" + getTextQuery() + "," + "exchangeIds="
-                + getExchangeIds() + "," + "eventTypeIds=" + getEventTypeIds()
-                + "," + "eventIds=" + getEventIds() + "," + "competitionIds="
-                + getCompetitionIds() + "," + "marketIds=" + getMarketIds()
-                + "," + "venues=" + getVenues() + "," + "bspOnly="
-                + getBspOnly() + "," + "turnInPlayEnabled="
-                + getTurnInPlayEnabled() + "," + "inPlayOnly="
-                + getInPlayOnly() + "," + "marketBettingTypes="
-                + getMarketBettingTypes() + "," + "marketCountries="
-                + getMarketCountries() + "," + "marketTypeCodes="
-                + getMarketTypeCodes() + "," + "marketStartTime="
-                + getMarketStartTime() + "," + "withOrders=" + getWithOrders()
-                + "," + "}";
+    public Set<String> getRaceTypes() {
+        return raceTypes;
     }
 
+    public void setRaceTypes(Set<String> raceTypes) {
+        this.raceTypes = raceTypes;
+    }
+
+    @Override
+    public String toString() {
+        return "MarketFilter :" +
+                "\n    textQuery='" + textQuery + '\'' +
+                "\n    eventTypeIds=" + eventTypeIds +
+                "\n    eventIds=" + eventIds +
+                "\n    competitionIds=" + competitionIds +
+                "\n    marketIds=" + marketIds +
+                "\n    venues=" + venues +
+                "\n    bspOnly=" + bspOnly +
+                "\n    inPlayOnly=" + inPlayOnly +
+                "\n    turnInPlayEnabled=" + turnInPlayEnabled +
+                "\n    marketBettingTypes=" + marketBettingTypes +
+                "\n    marketCountries=" + marketCountries +
+                "\n    marketTypeCodes=" + marketTypeCodes +
+                "\n    marketStartTime=" + marketStartTime +
+                "\n    withOrders=" + withOrders +
+                "\n    raceTypes=" + raceTypes;
+    }
 }

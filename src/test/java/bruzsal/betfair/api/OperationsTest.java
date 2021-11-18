@@ -76,24 +76,14 @@ class OperationsTest {
         return operations.listClearedOrders(betStatus, settledDateRange, groupBy, includeItemDescription, fromRecord, recordCount);
     }
 
-    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws APINGException {
-        return operations.listCompetitions(filter);
+    @Test
+    void listCompetitions(MarketFilter filter) throws APINGException {
+        var mf = new MarketFilter();
+        List<CompetitionResult> list = operations.listCompetitions(filter);
     }
 
     public List<EventResult> listEvents(MarketFilter filter) throws APINGException {
         return operations.listEvents(filter);
-    }
-
-    public String makeRequestBetting(String operation, Map<String, Object> params) throws APINGException {
-        return operations.makeRequestBetting(operation, params);
-    }
-
-    public String makeRequestAccount(String operation) throws APINGException {
-        return operations.makeRequestAccount(operation);
-    }
-
-    public String makeRequestHeartbeat(String operation) throws APINGException {
-        return operations.makeRequestHeartbeat(operation);
     }
 
     public DeveloperApp createDeveloperAppKeys(String appName) throws APINGException {
