@@ -1,12 +1,12 @@
 package bruzsal.betfair.api;
 
-import bruzsal.betfair.enums.MarketProjection;
-import bruzsal.betfair.enums.MarketSort;
-import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.entities.EventTypeResult;
 import bruzsal.betfair.entities.MarketCatalogue;
 import bruzsal.betfair.entities.MarketFilter;
-import bruzsal.betfair.exceptions.ApiNgException;
+import bruzsal.betfair.enums.MarketProjection;
+import bruzsal.betfair.enums.MarketSort;
+import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.navigation.Root;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ public class NavigationBejarasTest {
     }
 
     @Test
-    void nullE()  {
+    void nullE() {
         NavigationData.allMarket.stream()
                 .filter(market -> market.getEvent() == null)
                 .forEach(System.out::println);
@@ -80,7 +80,7 @@ public class NavigationBejarasTest {
 
 
     @Test
-    void atoolfugg() throws ApiNgException {
+    void atoolfugg() throws APINGException {
 
         Operations operations = new Operations();
 

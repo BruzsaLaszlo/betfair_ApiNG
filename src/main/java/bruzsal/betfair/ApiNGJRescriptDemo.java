@@ -3,7 +3,7 @@ package bruzsal.betfair;
 import bruzsal.betfair.api.Operations;
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import bruzsal.betfair.exceptions.ApiNgException;
+import bruzsal.betfair.exceptions.APINGException;
 
 import java.util.*;
 
@@ -148,8 +148,8 @@ public class ApiNGJRescriptDemo {
                 System.out.println("Sorry, no runners found\n\n");
             }
 
-        } catch (ApiNgException apiExc) {
-            System.err.println(apiExc);
+        } catch (APINGException apiExc) {
+            apiExc.printStackTrace();
         }
     }
 

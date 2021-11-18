@@ -3,7 +3,6 @@ package bruzsal.betfair.util;
 import bruzsal.betfair.enums.Endpoint;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -92,7 +91,7 @@ public final class HttpUtil {
                 System.out.println("Response: " + entityString);
 
         var statusCode = httpResponse.getStatusLine().getStatusCode();
-        if (statusCode != 200) throw new HttpResponseException(statusCode, entityString);
+        if (statusCode != 200) throw new IllegalStateException(entityString);
 
         return entityString;
 

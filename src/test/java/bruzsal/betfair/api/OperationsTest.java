@@ -2,7 +2,7 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.exceptions.ApiNgException;
+import bruzsal.betfair.exceptions.APINGException;
 import bruzsal.betfair.navigation.Root;
 import bruzsal.betfair.util.HttpUtil;
 import org.junit.jupiter.api.Disabled;
@@ -30,7 +30,7 @@ class OperationsTest {
     }
 
     @Test
-    void makeRequest() throws ApiNgException {
+    void makeRequest() throws APINGException {
 
 
         MarketFilter marketFilter;
@@ -51,20 +51,20 @@ class OperationsTest {
     }
 
     @Test
-    void accountFunds() throws ApiNgException {
+    void accountFunds() throws APINGException {
         AccountFundsResponse acr = operations.getAccountFunds();
         assertNotNull(acr);
         assertTrue(acr.getAvailableToBetBalance() > 0);
     }
 
     @Test
-    void accountDetails() throws ApiNgException {
+    void accountDetails() throws APINGException {
         AccountDetailsResponse adr = operations.getAccountDetails();
         assertEquals("Laszlo", adr.getFirstName());
     }
 
     @Test
-    void getDeveloperAppKeys() throws ApiNgException {
+    void getDeveloperAppKeys() throws APINGException {
         List<DeveloperApp> da = operations.getDeveloperAppKeys();
         assertEquals("bruzsal", da.get(0).getAppVersions().get(0).getOwner());
     }

@@ -1,16 +1,16 @@
 package bruzsal.betfair.entities;
 
-import bruzsal.betfair.exceptions.ApiNgException;
+import bruzsal.betfair.exceptions.APINGException;
 
 public class Data {
 
-    private ApiNgException apiNgException;
+    private APINGException apiNgException;
 
-    public ApiNgException getApiNgException() {
+    public APINGException getApiNgException() {
         return apiNgException;
     }
 
-    public void setApiNgException(ApiNgException aPINGException) {
+    public void setApiNgException(APINGException aPINGException) {
         apiNgException = aPINGException;
     }
 

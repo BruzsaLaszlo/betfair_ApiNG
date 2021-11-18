@@ -1,4 +1,4 @@
-import bruzsal.betfair.util.FaultData;
+import bruzsal.betfair.exceptions.FaultData;
 import bruzsal.betfair.api.Operations;
 import org.junit.jupiter.api.Test;
 

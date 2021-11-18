@@ -2,16 +2,17 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import bruzsal.betfair.exceptions.ApiNgException;
-import bruzsal.betfair.util.FaultData;
+import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.exceptions.FaultData;
 import bruzsal.betfair.util.HttpUtil;
 import bruzsal.betfair.util.ISO8601DateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.*;
 
 
@@ -59,9 +60,9 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException {
+    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         params.put(LOCALE, DEFAULT_LOCALE);
@@ -103,14 +104,14 @@ public class Operations {
      *                                      Also filters which matches by strategy for selections are returned, if partitionMatchedByStrategyRef is true.
      *                                      An empty set will be treated as if the parameter has been omitted (or null passed).
      * @param currencyCode                  A Betfair standard currency code. If not specified, the default currency code is used.
-     * @param locale                        The language used for the response. If not specified, the default is returned.
+     *                                      //@param locale                        The language used for the response. If not specified, the default is returned.
      * @param matchedSince                  If you ask for orders, restricts the results to orders that have at least one fragment matched since
      *                                      the specified date (all matched fragments of such an order will be returned even if some were matched before the specified date).
      *                                      All EXECUTABLE orders will be returned regardless of matched date.
      * @param betIds                        If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
      *                                      parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be provided at a time.
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public List<MarketBook> listMarketBook(
             List<String> marketIds,
@@ -124,7 +125,7 @@ public class Operations {
             Date matchedSince,
             Set<String> betIds)
 
-            throws ApiNgException {
+            throws APINGException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_IDS, marketIds);
@@ -143,9 +144,9 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<CountryCodeResult> listCountries(MarketFilter filter) throws ApiNgException {
+    public List<CountryCodeResult> listCountries(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOUNTRIES.getOperationName(), params);
@@ -160,9 +161,9 @@ public class Operations {
      *
      * @param filter
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<VenueResult> listVenues(MarketFilter filter) throws ApiNgException {
+    public List<VenueResult> listVenues(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTVENUES.getOperationName(), params);
@@ -180,9 +181,9 @@ public class Operations {
      * @param granularity <u>The granularity of time periods that correspond to markets
      *                    selected by the market filter</u>
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws ApiNgException {
+    public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         params.put("granularity", granularity);
@@ -208,14 +209,14 @@ public class Operations {
      *                         If all other dimensions of the result are equal, then the results are ranked in MarketId order.
      * @param maxResult        limit on the total number of results returned, must be greater than 0 and less than or equal to 1000
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public List<MarketCatalogue> listMarketCatalogue(
             MarketFilter filter,
             Set<MarketProjection> marketProjection,
             MarketSort sort,
             int maxResult)
-            throws ApiNgException {
+            throws APINGException {
 
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
@@ -236,9 +237,9 @@ public class Operations {
      *               match
      *               the criteria in the filter are selected</u>
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws ApiNgException {
+    public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETTYPES.getOperationName(), params);
@@ -258,10 +259,10 @@ public class Operations {
      *                     re-submissions. CustomerRef can contain: upper/lower chars,
      *                     digits, chars : - . _ + * : ; ~ only
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef)
-            throws ApiNgException {
+            throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
@@ -283,10 +284,10 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef)
-            throws ApiNgException {
+            throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
@@ -310,10 +311,10 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public ReplaceExecutionReport replaceOrders(String marketId, List<ReplaceInstruction> instructions, String customerRef)
-            throws ApiNgException {
+            throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
@@ -333,10 +334,10 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public UpdateExecutionReport updateOrders(String marketId, List<UpdateInstruction> instructions, String customerRef)
-            throws ApiNgException {
+            throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
@@ -374,11 +375,11 @@ public class Operations {
      *                        1000. A value of zero indicates that you would like all
      *                        records (including and from 'fromRecord') up to the limit
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public CurrentOrderSummaryReport listCurrentOrders(
             Set<String> betIds, Set<String> marketIds, OrderProjection orderProjection,
-            TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws ApiNgException {
+            TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws APINGException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketIds);
@@ -423,12 +424,12 @@ public class Operations {
      *                               50. A value of zero indicates that you would like all records
      *                               (including and from 'fromRecord') up to the limit
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public ClearedOrderSummaryReport listClearedOrders(
             BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds,
             Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy,
-            boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws ApiNgException {
+            boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketIds);
@@ -467,10 +468,10 @@ public class Operations {
      *                               50. A value of zero indicates that you would like all records
      *                               (including and from 'fromRecord') up to the limit
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
     public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, TimeRange settledDateRange, GroupBy groupBy,
-                                                       Boolean includeItemDescription, Integer fromRecord, Integer recordCount) throws ApiNgException {
+                                                       Boolean includeItemDescription, Integer fromRecord, Integer recordCount) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put("betStatus", betStatus);
         params.put("fromRecord", fromRecord);
@@ -491,9 +492,9 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws ApiNgException {
+    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOMPETITIONS.getOperationName(), params);
@@ -508,9 +509,9 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws ApiNgException
+     * @throws APINGException
      */
-    public List<EventResult> listEvents(MarketFilter filter) throws ApiNgException {
+    public List<EventResult> listEvents(MarketFilter filter) throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTS.getOperationName(), params);
@@ -519,38 +520,43 @@ public class Operations {
     }
 
 
-    protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException {
+    protected String makeRequestBetting(String operation, Map<String, Object> params) throws APINGException {
         //params.put(LOCALE, DEFAULT_LOCALE);
         return makeRequest(operation, params, Endpoint.BETTING);
     }
 
-    protected String makeRequestAccount(String operation) throws ApiNgException {
+    protected String makeRequestAccount(String operation) throws APINGException {
         return makeRequest(operation, null, Endpoint.ACCOUNT);
     }
 
-    protected String makeRequestHeartbeat(String operation) throws ApiNgException {
+    protected String makeRequestHeartbeat(String operation) throws APINGException {
         return makeRequest(operation, null, Endpoint.HEARTBEAT);
     }
 
-    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException {
+    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws APINGException {
 
         String requestString = params == null ? null : GSON.toJson(params);
 
-        String response = null;
         try {
 
-            response = HttpUtil.sendPostRequest(operation, requestString, endpoint);
+            return HttpUtil.sendPostRequest(operation, requestString, endpoint);
 
-        } catch (HttpResponseException exception) {
+        } catch (IllegalStateException exception) {
 
-            FaultData fd = Operations.GSON.fromJson(exception.getReasonPhrase(), FaultData.class);
-            throw fd.getDetail().getAPINGException();
+            try {
 
-        } catch (IOException exception) {
-            exception.printStackTrace();
+                throw GSON.fromJson(exception.getMessage(), FaultData.class)
+                        .getDetail().getAPINGException();
+
+            } catch (InaccessibleObjectException | JsonSyntaxException | IllegalStateException jsonException) {
+                jsonException.printStackTrace();
+            }
+
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
 
-        return response;
+        return null;
 
     }
 
@@ -562,7 +568,7 @@ public class Operations {
      * @return DeveloperApp A map of application keys, one marked ACTIVE, and
      * the other DELAYED
      */
-    public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException {
+    public DeveloperApp createDeveloperAppKeys(String appName) throws APINGException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
         return GSON.fromJson(response, DeveloperApp.class);
     }
@@ -572,7 +578,7 @@ public class Operations {
      *
      * @return List<DeveloperApp> A list of application keys owned by the given developer/vendor
      */
-    public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException {
+    public List<DeveloperApp> getDeveloperAppKeys() throws APINGException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
         return GSON.fromJson(response, new TypeToken<List<DeveloperApp>>() {
         }.getType());
@@ -583,7 +589,7 @@ public class Operations {
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws ApiNgException {
+    public AccountFundsResponse getAccountFunds() throws APINGException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
         return GSON.fromJson(response, AccountFundsResponse.class);
     }
@@ -598,9 +604,9 @@ public class Operations {
      * If both services fail, the error UNEXPECTED_ERROR will be returned.
      *
      * @return Response for retrieving account details.
-     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
+     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
      */
-    public AccountDetailsResponse getAccountDetails() throws ApiNgException {
+    public AccountDetailsResponse getAccountDetails() throws APINGException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
         return GSON.fromJson(response, AccountDetailsResponse.class);
     }
@@ -632,9 +638,9 @@ public class Operations {
      *                                The minimum and maximum timeouts are subject to change, so your client should utilise the returned
      *                                actualTimeoutSeconds to set an appropriate frequency for your subsequent heartbeat requests.
      * @return Response from heartbeat operation
-     * @throws ApiNgException Thrown if the operation fails
+     * @throws APINGException Thrown if the operation fails
      */
-    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException {
+    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws APINGException {
         // You should be able to reset the heartbeat by passing a value of actualTimeoutSeconds":0 and then restarting it by setting the required value.
         String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName());
         return GSON.fromJson(response, HeartbeatReport.class);
