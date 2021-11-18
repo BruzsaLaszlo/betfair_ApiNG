@@ -1,7 +1,7 @@
 package bruzsal.betfair.entities;
 
-import bruzsal.betfair.enums.OrderStatus;
 import bruzsal.betfair.enums.MarketBettingType;
+import bruzsal.betfair.enums.OrderStatus;
 
 import java.util.Set;
 

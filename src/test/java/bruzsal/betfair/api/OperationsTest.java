@@ -2,7 +2,6 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.navigation.NavigationData;
-import com.betfair.aping.entities.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.navigation.Root;
 import bruzsal.betfair.util.HttpUtil;

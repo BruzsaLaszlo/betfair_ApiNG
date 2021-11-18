@@ -1,7 +1,6 @@
 package bruzsal.betfair.api;
 
 import bruzsal.betfair.navigation.*;
-import com.betfair.aping.navigation.*;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

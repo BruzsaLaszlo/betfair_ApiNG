@@ -2,8 +2,6 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import com.betfair.aping.entities.*;
-import com.betfair.aping.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.util.FaultData;
 import bruzsal.betfair.util.HttpUtil;

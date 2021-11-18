@@ -3,8 +3,6 @@ package bruzsal.betfair;
 import bruzsal.betfair.api.Operations;
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import com.betfair.aping.entities.*;
-import com.betfair.aping.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 
 import java.util.*;
