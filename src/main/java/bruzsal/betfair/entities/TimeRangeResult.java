@@ -1,22 +1,25 @@
 package bruzsal.betfair.entities;
 
 public class TimeRangeResult {
-    public void setTimeRange(TimeRange timeRange) {
-        this.timeRange = timeRange;
-    }
+
+    private TimeRange timeRange;
+
+    private int marketCount;
+
 
     public TimeRange getTimeRange() {
         return timeRange;
-    }
-
-    public void setMarketCount(int marketCount) {
-        this.marketCount = marketCount;
     }
 
     public int getMarketCount() {
         return marketCount;
     }
 
-    private TimeRange timeRange;
-    private int marketCount;
+
+    @Override
+    public String toString() {
+        return "TimeRangeResult" + '\n'+
+                timeRange + '\n'+
+                "    marketCount = " + marketCount;
+    }
 }

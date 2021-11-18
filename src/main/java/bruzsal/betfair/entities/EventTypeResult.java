@@ -2,14 +2,9 @@ package bruzsal.betfair.entities;
 
 public class EventTypeResult {
 
-    /**
-     * The ID identifying the Event Type
-     */
+
     private EventType eventType;
 
-    /**
-     * Count of markets associated with this eventType
-     */
     private int marketCount;
 
 
@@ -21,4 +16,11 @@ public class EventTypeResult {
         return marketCount;
     }
 
+
+    @Override
+    public String toString() {
+        return "EventTypeResult" + '\n' +
+                eventType + '\n' +
+                "    marketCount = " + marketCount;
+    }
 }

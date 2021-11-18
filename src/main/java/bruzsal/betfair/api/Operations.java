@@ -515,10 +515,9 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<EventTypeResult>>() {
+        return GSON.fromJson(result, new TypeToken<List<EventResult>>() {
         }.getType());
     }
-
 
     protected String makeRequestBetting(String operation, Map<String, Object> params) throws APINGException {
         //params.put(LOCALE, DEFAULT_LOCALE);

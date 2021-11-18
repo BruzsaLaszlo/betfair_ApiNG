@@ -1,24 +1,35 @@
 package bruzsal.betfair.entities;
 
 public class CompetitionResult {
-    public Competition getCompetition() {
-        return competition;
+
+    private Competition competition;
+
+    private int marketCount;
+
+    private String competitionRegion;
+
+
+    public String getCompetitionRegion() {
+        return competitionRegion;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
+    public Competition getCompetition() {
+        return competition;
     }
 
     public int getMarketCount() {
         return marketCount;
     }
 
-    public void setMarketCount(int marketCount) {
-        this.marketCount = marketCount;
+    @Override
+    public String toString() {
+        return String.format("CompetitionResult %n    %s ( %s, id = %s)%n    marketCount: %s",
+                competition.getName(),
+                competitionRegion,
+                competition.getId(),
+                marketCount);
     }
 
-    private Competition competition;
-    private int marketCount;
 }
 
 

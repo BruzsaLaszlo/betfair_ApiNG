@@ -1,72 +1,137 @@
 package bruzsal.betfair.entities;
 
+import bruzsal.betfair.enums.CountryCodes;
+import bruzsal.betfair.enums.EventTypeIds;
 import bruzsal.betfair.enums.MarketBettingType;
 import bruzsal.betfair.enums.OrderStatus;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MarketFilterBuilder {
-    
-    private MarketFilter marketFilter;
 
-    public void setTextQuery(String textQuery) {
-        marketFilter.setTextQuery (textQuery);
+    private final MarketFilter marketFilter;
+
+    public MarketFilterBuilder() {
+        marketFilter = new MarketFilter();
     }
 
-    public void setEventTypeIds(Set<String> eventTypeIds) {
-        marketFilter.setEventTypeIds (eventTypeIds);
+    public MarketFilter build() {
+        return marketFilter;
     }
 
-    public void setEventIds(Set<String> eventIds) {
-        marketFilter.setEventIds (eventIds);
+    public MarketFilterBuilder setTextQuery(String textQuery) {
+        marketFilter.setTextQuery(textQuery);
+        return this;
     }
 
-    public void setCompetitionIds(Set<String> competitionIds) {
-        marketFilter.setCompetitionIds (competitionIds);
+    public MarketFilterBuilder setEventTypeIds(Set<String> eventTypeIds) {
+        marketFilter.setEventTypeIds(eventTypeIds);
+        return this;
     }
 
-    public void setMarketIds(Set<String> marketIds) {
-        marketFilter.setMarketIds (marketIds);
+    public MarketFilterBuilder setEventTypeId(EventTypeIds eventTypeIds) {
+        switch (eventTypeIds) {
+            case SOCCER -> {
+                return setEventTypeId(1);
+            }
+            default -> throw new IllegalStateException(eventTypeIds.name());
+        }
     }
 
-    public void setVenues(Set<String> venues) {
-        marketFilter.setVenues (venues);
+    public MarketFilterBuilder setEventTypeId(String eventTypeId) {
+        marketFilter.setEventTypeIds(Set.of(eventTypeId));
+        return this;
     }
 
-    public void setBspOnly(Boolean bspOnly) {
-        marketFilter.setBspOnly (bspOnly);
+    public MarketFilterBuilder setEventTypeId(long eventTypeId) {
+        marketFilter.setEventTypeIds(Set.of(String.valueOf(eventTypeId)));
+        return this;
     }
 
-    public void setInPlayOnly(Boolean inPlayOnly) {
-        marketFilter.setInPlayOnly (inPlayOnly);
+    public MarketFilterBuilder setEventIds(Set<String> eventIds) {
+        marketFilter.setEventIds(eventIds);
+        return this;
     }
 
-    public void setTurnInPlayEnabled(Boolean turnInPlayEnabled) {
-        marketFilter.setTurnInPlayEnabled (turnInPlayEnabled);
+    public MarketFilterBuilder setCompetitionIds(Set<String> competitionIds) {
+        marketFilter.setCompetitionIds(competitionIds);
+        return this;
     }
 
-    public void setMarketBettingTypes(Set<MarketBettingType> marketBettingTypes) {
-        marketFilter.setMarketBettingTypes (marketBettingTypes);
+    public MarketFilterBuilder setMarketIds(Set<String> marketIds) {
+        marketFilter.setMarketIds(marketIds);
+        return this;
     }
 
-    public void setMarketCountries(Set<String> marketCountries) {
-        marketFilter.setMarketCountries (marketCountries);
+    public MarketFilterBuilder setVenues(Set<String> venues) {
+        marketFilter.setVenues(venues);
+        return this;
     }
 
-    public void setMarketTypeCodes(Set<String> marketTypeCodes) {
-        marketFilter.setMarketTypeCodes (marketTypeCodes);
+    public MarketFilterBuilder setBspOnly(Boolean bspOnly) {
+        marketFilter.setBspOnly(bspOnly);
+        return this;
     }
 
-    public void setMarketStartTime(TimeRange marketStartTime) {
-        marketFilter.setMarketStartTime (marketStartTime);
+    public MarketFilterBuilder setInPlayOnly(Boolean inPlayOnly) {
+        marketFilter.setInPlayOnly(inPlayOnly);
+        return this;
     }
 
-    public void setWithOrders(Set<OrderStatus> withOrders) {
-        marketFilter.setWithOrders (withOrders);
+    public MarketFilterBuilder setTurnInPlayEnabled(Boolean turnInPlayEnabled) {
+        marketFilter.setTurnInPlayEnabled(turnInPlayEnabled);
+        return this;
     }
 
-    public void setRaceTypes(Set<String> raceTypes) {
-        marketFilter.setRaceTypes (raceTypes);
+    public MarketFilterBuilder setMarketBettingTypes(Set<MarketBettingType> marketBettingTypes) {
+        marketFilter.setMarketBettingTypes(marketBettingTypes);
+        return this;
     }
-    
+
+    public MarketFilterBuilder setMarketCountries(Set<String> marketCountries) {
+        marketFilter.setMarketCountries(marketCountries);
+        return this;
+    }
+
+    public MarketFilterBuilder setMarketCountries(CountryCodes... countryCodes) {
+        marketFilter.setMarketCountries(Arrays.stream(countryCodes).map(cc -> cc.CODE).collect(Collectors.toSet()));
+        return this;
+    }
+
+    public MarketFilterBuilder setMarketTypeCodes(Set<String> marketTypeCodes) {
+        marketFilter.setMarketTypeCodes(marketTypeCodes);
+        return this;
+    }
+
+    public MarketFilterBuilder setMarketStartTime(LocalDateTime from, LocalDateTime to) {
+        TimeRange timeRange = new TimeRange();
+        timeRange.setFrom(Timestamp.valueOf(from));
+        if (to != null)
+            timeRange.setTo(Timestamp.valueOf(to));
+        marketFilter.setMarketStartTime(timeRange);
+        return this;
+    }
+
+    public MarketFilterBuilder setMarketStartTime(LocalDateTime from) {
+        return setMarketStartTime(from, null);
+    }
+
+    public MarketFilterBuilder setWithOrders(Set<OrderStatus> withOrders) {
+        marketFilter.setWithOrders(withOrders);
+        return this;
+    }
+
+    public static MarketFilter empty() {
+        return new MarketFilter();
+    }
+
+//    public MarketFilterBuilder setRaceTypes(Set<String> raceTypes) {
+//        marketFilter.setRaceTypes(raceTypes);
+//        return this;
+//    }
+
 }

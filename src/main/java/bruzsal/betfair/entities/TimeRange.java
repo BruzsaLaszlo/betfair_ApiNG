@@ -5,6 +5,8 @@ import java.util.Date;
 public class TimeRange {
 
     private Date from;
+    private Date to;
+
 
     public final Date getFrom() {
         return from;
@@ -14,7 +16,6 @@ public class TimeRange {
         this.from = from;
     }
 
-    private Date to;
 
     public final Date getTo() {
         return to;
@@ -24,4 +25,10 @@ public class TimeRange {
         this.to = to;
     }
 
+
+    @Override
+    public String toString() {
+        return "    from = " + from + '\n' +
+                "    to = " + to;
+    }
 }

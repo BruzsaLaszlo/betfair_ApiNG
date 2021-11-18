@@ -21,9 +21,7 @@ public class EventType {
 
     @Override
     public String toString() {
-        return "EventType {" + '\n' +
-                "id='" + id + '\'' + '\n' +
-                ", name='" + name + '\'' + '\n' +
-                '}';
+        return "    name = " + name + '\n' +
+                "    id = " + id;
     }
 }

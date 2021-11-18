@@ -1,5 +1,9 @@
 package bruzsal.betfair.entities;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class Event {
 
     private String id;
@@ -7,7 +11,7 @@ public class Event {
     private String countryCode;
     private String timezone;
     private String venue;
-    private String openDate;
+    private Date openDate;
 
 
     public String getId() {
@@ -30,19 +34,17 @@ public class Event {
         return venue;
     }
 
-    public String getOpenDate() {
-        return openDate;
+    public LocalDateTime getOpenDate() {
+        return new Timestamp(openDate.getTime()).toLocalDateTime();
     }
 
     @Override
     public String toString() {
-        return "Event{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                ", timezone='" + timezone + '\'' +
-                ", venue='" + venue + '\'' +
-                ", openDate='" + openDate + '\'' +
-                '}';
+        return "Event" + '\n' +
+                "    " + name + '\n' +
+                "    countryCode = " + countryCode + '\n' +
+                "    id = " + id + '\n' +
+                "    timezone = " + timezone + '\n' +
+                "    openDate = " + getOpenDate().toString().replace('T', ' ');
     }
 }

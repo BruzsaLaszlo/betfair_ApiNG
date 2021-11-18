@@ -161,7 +161,9 @@ class HackerRank {
     @Test
     void ingatlanCom() throws URISyntaxException, IOException, InterruptedException {
 
-        String url = "https://ingatlan.com/lista/elado+haz+mikebuda";
+        String url = "https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3";
+//        String url = "https://datahub.io/core/country-list";
+//        String url = "https://www.nationsonline.org/oneworld/country_code_list.htm";
 
         HttpRequest request = HttpRequest
                 .newBuilder()
