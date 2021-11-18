@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,6 +15,19 @@ import static org.junit.jupiter.api.condition.OS.*;
 @DisplayNameGeneration(DisplayNameGenerator.Standard.class)
 class Junit5Test {
 
+    {
+
+        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.enabled", "true");
+
+        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.strategy", "dynamic");
+        // Computes the desired parallelism based on the number of available processors/cores multiplied by the configuration parameter (defaults to 1)
+        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.dynamic.factor", "1");
+
+        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.strategy", "fixed");
+        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.fixed.parallelism", "2");
+
+
+    }
 
     @RepeatedTest(10)
     void repeatedTest() {
