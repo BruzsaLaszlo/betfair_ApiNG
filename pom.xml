@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.betfair</groupId>
-	<artifactId>aping</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>com.betfair</groupId>
+    <artifactId>aping</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>api ng sample code</name>
+    <name>api ng sample code</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.compiler.version>17</java.compiler.version>
-	</properties>
+    </properties>
 
     <build>
         <plugins>
@@ -26,50 +26,66 @@
                     <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
-	    <plugin>
-		<artifactId>maven-assembly-plugin</artifactId>
-		<configuration>
-			<descriptorRefs>
-				<descriptorRef>jar-with-dependencies</descriptorRef>
-			</descriptorRefs>
-			<appendAssemblyId>false</appendAssemblyId>
-			<attach>true</attach>
-			<finalName>${project.artifactId}-all-${project.version}</finalName>
-			<archive>
-				<manifest>
-					<mainClass>bruzsal.betfair.ApiNGDemo</mainClass>
-				</manifest>
-			</archive>
-		</configuration>
-		<executions>
-			<execution>
-				<id>make-assembly</id><!-- this is used for inheritance merges -->
-				<phase>package</phase><!-- append to the packaging phase. -->
-				<goals>
-					<goal>attached</goal><!-- goals == mojos -->
-				</goals>
-			</execution>
-		</executions>
-	 </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <attach>true</attach>
+                    <finalName>${project.artifactId}-all-${project.version}</finalName>
+                    <archive>
+                        <manifest>
+                            <mainClass>bruzsal.betfair.ApiNGDemo</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <phase>package</phase><!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>sources</goal>
+							<goal>resolve</goal>
+						</goals>
+						<configuration>
+							<classifier>javadoc</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.13.0</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.13.0</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -82,11 +98,11 @@
             <version>1.21</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-launcher</artifactId>
-			<version>1.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
