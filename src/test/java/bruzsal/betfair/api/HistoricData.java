@@ -6,11 +6,14 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 class HistoricData {
 
@@ -93,19 +96,8 @@ class HistoricData {
 
     }
 
-    //@org.junit.jupiter.api.parallel.Execution()
+    @Execution(CONCURRENT)
     void deleteFiles(File targetDir, String extension) {
-
-        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.enabled", "true");
-
-        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.strategy", "dynamic");
-        // Computes the desired parallelism based on the number of available processors/cores multiplied by the configuration parameter (defaults to 1)
-        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.dynamic.factor", "1");
-
-        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.strategy", "fixed");
-        LauncherDiscoveryRequestBuilder.request().configurationParameter("junit.jupiter.execution.parallel.config.fixed.parallelism", "2");
-
-
 
         for (File f : targetDir.listFiles()) {
             if (f.isDirectory()) {
@@ -113,8 +105,9 @@ class HistoricData {
             } else {
                 if (f.getName().endsWith(extension)) {
                     f.delete();
-                    if (++counter % 1000 == 0)
+                    if (++counter % 1000 == 0) {
                         System.out.println(counter + " deleted");
+                    }
                 }
             }
         }
