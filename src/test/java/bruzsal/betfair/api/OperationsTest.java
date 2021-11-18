@@ -1,6 +1,7 @@
 package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
+import bruzsal.betfair.enums.*;
 import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.exceptions.APINGException;
 import bruzsal.betfair.navigation.Root;
@@ -10,9 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,97 @@ class OperationsTest {
 
     Operations operations = Operations.getInstance();
 
+    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws APINGException {
+        return operations.listEventTypes(filter);
+    }
 
+    public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection, MatchProjection matchProjection, boolean includeOverallPosition, boolean partitionMatchedByStrategyRef, Set<String> customerStrategyRefs, String currencyCode, Date matchedSince, Set<String> betIds) throws APINGException {
+        return operations.listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, includeOverallPosition, partitionMatchedByStrategyRef, customerStrategyRefs, currencyCode, matchedSince, betIds);
+    }
+
+    public List<CountryCodeResult> listCountries(MarketFilter filter) throws APINGException {
+        return operations.listCountries(filter);
+    }
+
+    public List<VenueResult> listVenues(MarketFilter filter) throws APINGException {
+        return operations.listVenues(filter);
+    }
+
+    public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws APINGException {
+        return operations.listTimeRanges(filter, granularity);
+    }
+
+    public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection, MarketSort sort, int maxResult) throws APINGException {
+        return operations.listMarketCatalogue(filter, marketProjection, sort, maxResult);
+    }
+
+    public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws APINGException {
+        return operations.listMarketTypes(filter);
+    }
+
+    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws APINGException {
+        return operations.placeOrders(marketId, instructions, customerRef);
+    }
+
+    public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef) throws APINGException {
+        return operations.cancelOrders(marketId, instructions, customerRef);
+    }
+
+    public ReplaceExecutionReport replaceOrders(String marketId, List<ReplaceInstruction> instructions, String customerRef) throws APINGException {
+        return operations.replaceOrders(marketId, instructions, customerRef);
+    }
+
+    public UpdateExecutionReport updateOrders(String marketId, List<UpdateInstruction> instructions, String customerRef) throws APINGException {
+        return operations.updateOrders(marketId, instructions, customerRef);
+    }
+
+    public CurrentOrderSummaryReport listCurrentOrders(Set<String> betIds, Set<String> marketIds, OrderProjection orderProjection, TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws APINGException {
+        return operations.listCurrentOrders(betIds, marketIds, orderProjection, placedDateRange, orderBy, sortDir, fromRecord, recordCount);
+    }
+
+    public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds, Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy, boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
+        return operations.listClearedOrders(betStatus, eventTypeIds, eventIds, marketIds, runnerIds, betIds, side, settledDateRange, groupBy, includeItemDescription, locale, fromRecord, recordCount);
+    }
+
+    public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, TimeRange settledDateRange, GroupBy groupBy, Boolean includeItemDescription, Integer fromRecord, Integer recordCount) throws APINGException {
+        return operations.listClearedOrders(betStatus, settledDateRange, groupBy, includeItemDescription, fromRecord, recordCount);
+    }
+
+    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws APINGException {
+        return operations.listCompetitions(filter);
+    }
+
+    public List<EventResult> listEvents(MarketFilter filter) throws APINGException {
+        return operations.listEvents(filter);
+    }
+
+    public String makeRequestBetting(String operation, Map<String, Object> params) throws APINGException {
+        return operations.makeRequestBetting(operation, params);
+    }
+
+    public String makeRequestAccount(String operation) throws APINGException {
+        return operations.makeRequestAccount(operation);
+    }
+
+    public String makeRequestHeartbeat(String operation) throws APINGException {
+        return operations.makeRequestHeartbeat(operation);
+    }
+
+    public DeveloperApp createDeveloperAppKeys(String appName) throws APINGException {
+        return operations.createDeveloperAppKeys(appName);
+    }
+
+    public AccountFundsResponse getAccountFunds() throws APINGException {
+        return operations.getAccountFunds();
+    }
+
+    public AccountDetailsResponse getAccountDetails() throws APINGException {
+        return operations.getAccountDetails();
+    }
+
+    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws APINGException {
+        return operations.heartbeat(preferredTimeoutSeconds);
+    }
 
     @Test
     @Disabled

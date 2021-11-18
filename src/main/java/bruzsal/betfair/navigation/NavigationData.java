@@ -47,7 +47,7 @@ public abstract class NavigationData {
 
     protected NavigationData parent;
 
-    public static final List<Market> allMarket = new ArrayList<>(20_000);
+    public static final List<Market> allMarket = new ArrayList<>(25_000);
     protected static final List<Event> allEvent = new ArrayList<>(2_000);
     public static final List<EventType> allEvenType = new ArrayList<>(50);
     protected static final List<Group> allGroup = new ArrayList<>(600);
