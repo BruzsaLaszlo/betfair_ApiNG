@@ -114,8 +114,16 @@ class OperationsTest {
         return operations.listClearedOrders(betStatus, eventTypeIds, eventIds, marketIds, runnerIds, betIds, side, settledDateRange, groupBy, includeItemDescription, locale, fromRecord, recordCount);
     }
 
-    public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, TimeRange settledDateRange, GroupBy groupBy, Boolean includeItemDescription, Integer fromRecord, Integer recordCount) throws APINGException {
-        return operations.listClearedOrders(betStatus, settledDateRange, groupBy, includeItemDescription, fromRecord, recordCount);
+    @Test
+    void listClearedOrders() throws APINGException {
+        TimeRange timeRange = new TimeRange();
+        timeRange.setFrom(LocalDateTime.now().minusDays(1));
+
+        ClearedOrderSummaryReport cosr =  operations.listClearedOrders(
+                BetStatus.LAPSED, timeRange, GroupBy.MARKET, true, 0, 1000);
+
+        assertNotNull(cosr);
+
     }
 
     @Test

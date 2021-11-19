@@ -3,23 +3,20 @@ package bruzsal.betfair.entities;
 import java.util.List;
 
 public class ClearedOrderSummaryReport {
-    public List<ClearedOrderSummary> getClearedOrders() {
-        return clearedOrders;
-    }
 
-    public void setClearedOrders(List<ClearedOrderSummary> clearedOrders) {
-        this.clearedOrders = clearedOrders;
-    }
+    private boolean moreAvailable;
+
+    private List<ClearedOrderSummary> clearedOrders;
+
 
     public boolean isMoreAvailable() {
         return moreAvailable;
     }
 
-    public void setMoreAvailable(boolean moreAvailable) {
-        this.moreAvailable = moreAvailable;
+    public List<ClearedOrderSummary> getClearedOrders() {
+        return clearedOrders;
     }
 
-    private boolean moreAvailable;
-    private List<ClearedOrderSummary> clearedOrders;
+
 }
 

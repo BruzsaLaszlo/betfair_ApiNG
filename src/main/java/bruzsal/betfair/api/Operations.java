@@ -480,8 +480,7 @@ public class Operations {
         params.put("groupBy", groupBy);
         params.put("includeItemDescription", includeItemDescription);
         String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<ClearedOrderSummaryReport>>() {
-        }.getType());
+        return GSON.fromJson(result, ClearedOrderSummaryReport.class);
     }
 
     /**
