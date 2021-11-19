@@ -4,6 +4,8 @@ import bruzsal.betfair.enums.OrderType;
 import bruzsal.betfair.enums.PersistenceType;
 import bruzsal.betfair.enums.Side;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ClearedOrderSummary {
@@ -34,6 +36,34 @@ public class ClearedOrderSummary {
     private String customerOrderRef;
     private String customerStrategyRef;
 
+    @Override
+    public String toString() {
+        return "ClearedOrderSummary" + '\n' +
+                "    eventTypeId = " + eventTypeId + '\n' +
+                "    eventId = " + eventId + '\n' +
+                "    marketId = " + marketId + '\n' +
+                "    selectionId = " + selectionId + '\n' +
+                "    handicap = " + handicap + '\n' +
+                "    betId = " + betId + '\n' +
+                "    placedDate = " + placedDate + '\n' +
+                "    persistenceType = " + persistenceType + '\n' +
+                "    orderType = " + orderType + '\n' +
+                "    side = " + side + '\n' +
+                "    itemDescription = " + itemDescription + '\n' +
+                "    betOutcome = " + betOutcome + '\n' +
+                "    priceRequested = " + priceRequested + '\n' +
+                "    settledDate = " + settledDate + '\n' +
+                "    lastMatchedDate = " + lastMatchedDate + '\n' +
+                "    betCount = " + betCount + '\n' +
+                "    commission = " + commission + '\n' +
+                "    priceMatched = " + priceMatched + '\n' +
+                "    priceReduced = " + priceReduced + '\n' +
+                "    sizeSettled = " + sizeSettled + '\n' +
+                "    profit = " + profit + '\n' +
+                "    sizeCancelled = " + sizeCancelled + '\n' +
+                "    customerOrderRef = " + customerOrderRef + '\n' +
+                "    customerStrategyRef = " + customerStrategyRef;
+    }
 
     public String getEventTypeId() {
         return eventTypeId;
@@ -59,8 +89,8 @@ public class ClearedOrderSummary {
         return betId;
     }
 
-    public Date getPlacedDate() {
-        return placedDate;
+    public LocalDateTime getPlacedDate() {
+        return new Timestamp(placedDate.getTime()).toLocalDateTime();
     }
 
     public PersistenceType getPersistenceType() {
@@ -87,12 +117,12 @@ public class ClearedOrderSummary {
         return priceRequested;
     }
 
-    public Date getSettledDate() {
-        return settledDate;
+    public LocalDateTime getSettledDate() {
+        return new Timestamp(settledDate.getTime()).toLocalDateTime();
     }
 
-    public Date getLastMatchedDate() {
-        return lastMatchedDate;
+    public LocalDateTime getLastMatchedDate() {
+        return new Timestamp(lastMatchedDate.getTime()).toLocalDateTime();
     }
 
     public int getBetCount() {

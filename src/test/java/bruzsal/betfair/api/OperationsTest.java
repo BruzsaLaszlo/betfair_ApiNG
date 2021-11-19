@@ -106,8 +106,26 @@ class OperationsTest {
         return operations.updateOrders(marketId, instructions, customerRef);
     }
 
-    public CurrentOrderSummaryReport listCurrentOrders(Set<String> betIds, Set<String> marketIds, OrderProjection orderProjection, TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws APINGException {
-        return operations.listCurrentOrders(betIds, marketIds, orderProjection, placedDateRange, orderBy, sortDir, fromRecord, recordCount);
+    @Test
+    void listCurrentOrders() throws APINGException {
+
+        TimeRange timeRange = new TimeRange();
+        timeRange.setFrom(LocalDateTime.now().minusDays(1));
+        timeRange.setTo(LocalDateTime.now());
+
+        CurrentOrderSummaryReport cosr =  operations.listCurrentOrders(
+                null,null,
+                OrderProjection.ALL,
+                timeRange,
+                OrderBy.BY_MARKET,
+                SortDir.EARLIEST_TO_LATEST,
+                0, 1000);
+
+        System.out.println(cosr);
+
+        assertNotNull(cosr);
+
+        assertTrue(cosr.isMoreAvailable());
     }
 
     public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds, Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy, boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
@@ -118,9 +136,10 @@ class OperationsTest {
     void listClearedOrders() throws APINGException {
         TimeRange timeRange = new TimeRange();
         timeRange.setFrom(LocalDateTime.now().minusDays(1));
+        timeRange.setTo(LocalDateTime.now());
 
         ClearedOrderSummaryReport cosr =  operations.listClearedOrders(
-                BetStatus.LAPSED, timeRange, GroupBy.MARKET, true, 0, 1000);
+                BetStatus.CANCELLED, timeRange, GroupBy.MARKET, true, 0, 1000);
 
         assertNotNull(cosr);
 

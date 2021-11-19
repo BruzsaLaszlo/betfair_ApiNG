@@ -8,165 +8,6 @@ import bruzsal.betfair.enums.Side;
 import java.util.Date;
 
 public class CurrentOrderSummary {
-    public String getBetId() {
-        return betId;
-    }
-
-    public void setBetId(String betId) {
-        this.betId = betId;
-    }
-
-    public String getMarketId() {
-        return marketId;
-    }
-
-    public void setMarketId(String marketId) {
-        this.marketId = marketId;
-    }
-
-    public long getSelectionId() {
-        return selectionId;
-    }
-
-    public void setSelectionId(long selectionId) {
-        this.selectionId = selectionId;
-    }
-
-    public double getHandicap() {
-        return handicap;
-    }
-
-    public void setHandicap(double handicap) {
-        this.handicap = handicap;
-    }
-
-    public PriceSize getPriceSize() {
-        return priceSize;
-    }
-
-    public void setPriceSize(PriceSize priceSize) {
-        this.priceSize = priceSize;
-    }
-
-    public double getBspLiability() {
-        return bspLiability;
-    }
-
-    public void setBspLiability(double bspLiability) {
-        this.bspLiability = bspLiability;
-    }
-
-    public Side getSide() {
-        return side;
-    }
-
-    public void setSide(Side side) {
-        this.side = side;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public PersistenceType getPersistenceType() {
-        return persistenceType;
-    }
-
-    public void setPersistenceType(PersistenceType persistenceType) {
-        this.persistenceType = persistenceType;
-    }
-
-    public OrderType getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(OrderType orderType) {
-        this.orderType = orderType;
-    }
-
-    public Date getPlacedDate() {
-        return placedDate;
-    }
-
-    public void setPlacedDate(Date placedDate) {
-        this.placedDate = placedDate;
-    }
-
-    public Date getMatchedDate() {
-        return matchedDate;
-    }
-
-    public void setMatchedDate(Date matchedDate) {
-        this.matchedDate = matchedDate;
-    }
-
-    public double getAveragePriceMatched() {
-        return averagePriceMatched;
-    }
-
-    public void setAveragePriceMatched(double averagePriceMatched) {
-        this.averagePriceMatched = averagePriceMatched;
-    }
-
-    public double getSizeMatched() {
-        return sizeMatched;
-    }
-
-    public void setSizeMatched(double sizeMatched) {
-        this.sizeMatched = sizeMatched;
-    }
-
-    public double getSizeRemaining() {
-        return sizeRemaining;
-    }
-
-    public void setSizeRemaining(double sizeRemaining) {
-        this.sizeRemaining = sizeRemaining;
-    }
-
-    public double getSizeLapsed() {
-        return sizeLapsed;
-    }
-
-    public void setSizeLapsed(double sizeLapsed) {
-        this.sizeLapsed = sizeLapsed;
-    }
-
-    public double getSizeCancelled() {
-        return sizeCancelled;
-    }
-
-    public void setSizeCancelled(double sizeCancelled) {
-        this.sizeCancelled = sizeCancelled;
-    }
-
-    public double getSizeVoided() {
-        return sizeVoided;
-    }
-
-    public void setSizeVoided(double sizeVoided) {
-        this.sizeVoided = sizeVoided;
-    }
-
-    public String getRegulatorAuthCode() {
-        return regulatorAuthCode;
-    }
-
-    public void setRegulatorAuthCode(String regulatorAuthCode) {
-        this.regulatorAuthCode = regulatorAuthCode;
-    }
-
-    public String getRegulatorCode() {
-        return regulatorCode;
-    }
-
-    public void setRegulatorCode(String regulatorCode) {
-        this.regulatorCode = regulatorCode;
-    }
 
     private String betId;
     private String marketId;
@@ -188,4 +29,128 @@ public class CurrentOrderSummary {
     private double sizeVoided;
     private String regulatorAuthCode;
     private String regulatorCode;
+    private String customerOrderRef;
+    private String customerStrategyRef;
+    private CurrentItemDescription currentItemDescription;
+
+
+    @Override
+    public String toString() {
+        return "CurrentOrderSummary" + '\n' +
+                "    betId = " + betId + '\n' +
+                "    marketId = " + marketId + '\n' +
+                "    selectionId = " + selectionId + '\n' +
+                "    handicap = " + handicap + '\n' +
+                "    priceSize = " + priceSize + '\n' +
+                "    bspLiability = " + bspLiability + '\n' +
+                "    side = " + side + '\n' +
+                "    status = " + status + '\n' +
+                "    persistenceType = " + persistenceType + '\n' +
+                "    orderType = " + orderType + '\n' +
+                "    placedDate = " + placedDate + '\n' +
+                "    matchedDate = " + matchedDate + '\n' +
+                "    averagePriceMatched = " + averagePriceMatched + '\n' +
+                "    sizeMatched = " + sizeMatched + '\n' +
+                "    sizeRemaining = " + sizeRemaining + '\n' +
+                "    sizeLapsed = " + sizeLapsed + '\n' +
+                "    sizeCancelled = " + sizeCancelled + '\n' +
+                "    sizeVoided = " + sizeVoided + '\n' +
+                "    regulatorAuthCode = " + regulatorAuthCode + '\n' +
+                "    regulatorCode = " + regulatorCode + '\n' +
+                "    customerOrderRef = " + customerOrderRef + '\n' +
+                "    customerStrategyRef = " + customerStrategyRef + '\n' +
+                "    currentItemDescription = " + currentItemDescription;
+    }
+
+    public String getBetId() {
+        return betId;
+    }
+
+    public String getMarketId() {
+        return marketId;
+    }
+
+    public long getSelectionId() {
+        return selectionId;
+    }
+
+    public double getHandicap() {
+        return handicap;
+    }
+
+    public PriceSize getPriceSize() {
+        return priceSize;
+    }
+
+    public double getBspLiability() {
+        return bspLiability;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public PersistenceType getPersistenceType() {
+        return persistenceType;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public Date getPlacedDate() {
+        return placedDate;
+    }
+
+    public Date getMatchedDate() {
+        return matchedDate;
+    }
+
+    public double getAveragePriceMatched() {
+        return averagePriceMatched;
+    }
+
+    public double getSizeMatched() {
+        return sizeMatched;
+    }
+
+    public double getSizeRemaining() {
+        return sizeRemaining;
+    }
+
+    public double getSizeLapsed() {
+        return sizeLapsed;
+    }
+
+    public double getSizeCancelled() {
+        return sizeCancelled;
+    }
+
+    public double getSizeVoided() {
+        return sizeVoided;
+    }
+
+    public String getRegulatorAuthCode() {
+        return regulatorAuthCode;
+    }
+
+    public String getRegulatorCode() {
+        return regulatorCode;
+    }
+
+    public String getCustomerOrderRef() {
+        return customerOrderRef;
+    }
+
+    public String getCustomerStrategyRef() {
+        return customerStrategyRef;
+    }
+
+    public CurrentItemDescription getCurrentItemDescription() {
+        return currentItemDescription;
+    }
 }

@@ -382,7 +382,8 @@ public class Operations {
             TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws APINGException {
 
         var params = new HashMap<String, Object>();
-        params.put(MARKET_ID, marketIds);
+//        params.put(BETIDS)
+//        params.put(MARKET_ID, marketIds);
         params.put(ORDERPROJECTION, orderProjection);
         params.put(PLACEDDATERANGE, placedDateRange);
         params.put(ORDERBY, orderBy);
@@ -390,8 +391,7 @@ public class Operations {
         params.put("fromRecord", fromRecord);
         params.put("recordCount", recordCount);
         String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
-        }.getType());
+        return GSON.fromJson(result, CurrentOrderSummaryReport.class);
     }
 
     /**
