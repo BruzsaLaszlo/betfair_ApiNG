@@ -354,43 +354,27 @@ public class Operations {
      * 1000 bets, ordered BY_BET and sorted EARLIEST_TO_LATEST. To retrieve more
      * than 1000 orders, you need to make use of the fromRecord and recordCount
      * parameters.
-     *
-     * @param betIds          Optionally restricts the results to the specified bet IDs
-     * @param marketIds       Optionally restricts the results to the specified market IDs
-     * @param orderProjection Optionally restricts the results to the specified order
-     *                        status.
-     * @param placedDateRange Optionally restricts the results to be from/to the specified
-     *                        placed date. This date is inclusive, i.e. if an order was
-     *                        placed on exactly this date (to the millisecond) then it will
-     *                        be included in the results. If the from is later than the to,
-     *                        no results will be returned
-     * @param orderBy         Specifies how the results will be ordered. If no value is
-     *                        passed in, it defaults to BY_BET
-     * @param sortDir         Specifies the direction the results will be sorted in. If no
-     *                        value is passed in, it defaults to EARLIEST_TO_LATEST
-     * @param fromRecord      Specifies the first record that will be returned. Records
-     *                        start at index zero, not at index one
-     * @param recordCount     Specifies how many records will be returned, from the index
-     *                        position 'fromRecord'. Note that there is a page size limit of
-     *                        1000. A value of zero indicates that you would like all
-     *                        records (including and from 'fromRecord') up to the limit
+
+     * @param
      * @return
      * @throws APINGException
      */
     public CurrentOrderSummaryReport listCurrentOrders(
-            Set<String> betIds, Set<String> marketIds, OrderProjection orderProjection,
-            TimeRange placedDateRange, OrderBy orderBy, SortDir sortDir, int fromRecord, int recordCount) throws APINGException {
+            CurrentOrdersParametersBuilder copb) throws APINGException {
 
         var params = new HashMap<String, Object>();
-//        params.put(BETIDS)
-//        params.put(MARKET_ID, marketIds);
-        params.put(ORDERPROJECTION, orderProjection);
-        params.put(PLACEDDATERANGE, placedDateRange);
-        params.put(ORDERBY, orderBy);
-        params.put("sortDir", sortDir);
-        params.put("fromRecord", fromRecord);
-        params.put("recordCount", recordCount);
-        String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
+        params.put("betIds", copb.getBetIds());
+        params.put(MARKET_ID, copb.getMarketIds());
+        params.put(ORDERPROJECTION, copb.getOrderProjection());
+        params.put("customerOrderRefs", copb.getCustomerOrderRefs());
+        params.put("customerStrategyRefs", copb.getCustomerStrategyRefs());
+        params.put(PLACEDDATERANGE, copb.getPlacedDateRange());
+        params.put(ORDERBY, copb.getOrderBy());
+        params.put("sortDir", copb.getSortDir());
+        params.put("fromRecord", copb.getFromRecord());
+        params.put("recordCount", copb.getRecordCount());
+        params.put("includeItemDescription", copb.isIncludeItemDescription());
+        String result = makeRequestBetting(ApiNgOperation.LISTCURRENTORDERS.getOperationName(), params);
         return GSON.fromJson(result, CurrentOrderSummaryReport.class);
     }
 

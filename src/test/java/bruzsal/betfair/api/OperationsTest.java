@@ -119,13 +119,14 @@ class OperationsTest {
                 timeRange,
                 OrderBy.BY_MARKET,
                 SortDir.EARLIEST_TO_LATEST,
-                0, 1000);
+                0, 1000,
+                true);
 
         System.out.println(cosr);
 
         assertNotNull(cosr);
 
-        assertTrue(cosr.isMoreAvailable());
+        assertFalse(cosr.isMoreAvailable());
     }
 
     public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds, Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy, boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
