@@ -59,7 +59,7 @@ public class CurrentOrderSummary {
                 "    regulatorCode = " + regulatorCode + '\n' +
                 "    customerOrderRef = " + customerOrderRef + '\n' +
                 "    customerStrategyRef = " + customerStrategyRef + '\n' +
-                "    currentItemDescription = " + currentItemDescription;
+                "    currentItemDescription = " + currentItemDescription.getMarketVersion().getVersion();
     }
 
     public String getBetId() {

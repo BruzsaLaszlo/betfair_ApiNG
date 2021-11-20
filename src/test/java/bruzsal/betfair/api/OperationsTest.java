@@ -113,14 +113,9 @@ class OperationsTest {
         timeRange.setFrom(LocalDateTime.now().minusDays(1));
         timeRange.setTo(LocalDateTime.now());
 
-        CurrentOrderSummaryReport cosr =  operations.listCurrentOrders(
-                null,null,
-                OrderProjection.ALL,
-                timeRange,
-                OrderBy.BY_MARKET,
-                SortDir.EARLIEST_TO_LATEST,
-                0, 1000,
-                true);
+        CurrentOrdersParametersBuilder copb = CurrentOrdersParametersBuilder.getDefault();
+
+        CurrentOrderSummaryReport cosr =  operations.listCurrentOrders(copb);
 
         System.out.println(cosr);
 

@@ -82,9 +82,6 @@ public class CurrentOrdersParametersBuilder {
      */
     private boolean includeItemDescription = true;
 
-    private CurrentOrdersParametersBuilder copb = new CurrentOrdersParametersBuilder();
-
-
     public CurrentOrdersParametersBuilder setBetIds(Set<String> betIds) {
         this.betIds = betIds;
         return this;
@@ -140,11 +137,6 @@ public class CurrentOrdersParametersBuilder {
         return this;
     }
 
-    public CurrentOrdersParametersBuilder setCopb(CurrentOrdersParametersBuilder copb) {
-        this.copb = copb;
-        return this;
-    }
-
     public Set<String> getBetIds() {
         return betIds;
     }
@@ -189,7 +181,9 @@ public class CurrentOrdersParametersBuilder {
         return includeItemDescription;
     }
 
-    public CurrentOrdersParametersBuilder getCopb() {
-        return copb;
+    public static CurrentOrdersParametersBuilder getDefault() {
+        return new CurrentOrdersParametersBuilder();
     }
+
+    private CurrentOrdersParametersBuilder(){}
 }

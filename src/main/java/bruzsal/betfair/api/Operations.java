@@ -354,13 +354,17 @@ public class Operations {
      * 1000 bets, ordered BY_BET and sorted EARLIEST_TO_LATEST. To retrieve more
      * than 1000 orders, you need to make use of the fromRecord and recordCount
      * parameters.
-
-     * @param
-     * @return
-     * @throws APINGException
+     *
+     * Best Practice
+     * To efficiently track new bet matches from a specific time, customers should use a combination of the
+     * dateRange, orderBy "BY_MATCH_TIME" and orderProjection “ALL” to filter fully/partially matched orders
+     * from the list of returned bets. The response will then filter out any bet records that have no matched
+     * date and provide a list of betIds in the order which they are fully/partially matched from the date and
+     * time specified in the dateRange field.
+     *
+     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
      */
-    public CurrentOrderSummaryReport listCurrentOrders(
-            CurrentOrdersParametersBuilder copb) throws APINGException {
+    public CurrentOrderSummaryReport listCurrentOrders(CurrentOrdersParametersBuilder copb) throws APINGException {
 
         var params = new HashMap<String, Object>();
         params.put("betIds", copb.getBetIds());
