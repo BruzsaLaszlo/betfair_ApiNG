@@ -313,15 +313,17 @@ public class Operations {
      * @return
      * @throws APINGException
      */
-    public ReplaceExecutionReport replaceOrders(String marketId, List<ReplaceInstruction> instructions, String customerRef)
+    public ReplaceExecutionReport replaceOrders(
+            String marketId,
+            List<ReplaceInstruction> instructions,
+            String customerRef)
             throws APINGException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.REPLACEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<ReplaceExecutionReport>>() {
-        }.getType());
+        return GSON.fromJson(result, ReplaceExecutionReport.class);
     }
 
     /**
@@ -334,17 +336,21 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws APINGException
+     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
      */
-    public UpdateExecutionReport updateOrders(String marketId, List<UpdateInstruction> instructions, String customerRef)
+    public UpdateExecutionReport updateOrders(
+            String marketId,
+            List<UpdateInstruction> instructions,
+            String customerRef)
             throws APINGException {
+
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
+
         String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<UpdateExecutionReport>>() {
-        }.getType());
+        return GSON.fromJson(result, UpdateExecutionReport.class);
     }
 
     /**
@@ -354,7 +360,7 @@ public class Operations {
      * 1000 bets, ordered BY_BET and sorted EARLIEST_TO_LATEST. To retrieve more
      * than 1000 orders, you need to make use of the fromRecord and recordCount
      * parameters.
-     *
+     * <p>
      * Best Practice
      * To efficiently track new bet matches from a specific time, customers should use a combination of the
      * dateRange, orderBy "BY_MATCH_TIME" and orderProjection “ALL” to filter fully/partially matched orders
@@ -382,94 +388,33 @@ public class Operations {
         return GSON.fromJson(result, CurrentOrderSummaryReport.class);
     }
 
-    /**
-     * Returns a List of bets based on the bet status, ordered by settled date
-     *
-     * @param betStatus              Restricts the results to the specified status.
-     * @param eventTypeIds           Optionally restricts the results to the specified Event Type
-     *                               IDs
-     * @param eventIds               Optionally restricts the results to the specified Event ID
-     * @param marketIds              Optionally restricts the results to the specified market IDs
-     * @param runnerIds              Optionally restricts the results to the specified Runners
-     * @param betIds                 Optionally restricts the results to the specified bet IDs
-     * @param side                   Optionally restricts the results to the specified side
-     * @param settledDateRange       Optionally restricts the results to be from/to the specified
-     *                               settled date. This date is inclusive, i.e. if an order was
-     *                               placed on exactly this date (to the millisecond) then it will
-     *                               be included in the results. If the from is later than the to,
-     *                               no results will be returned
-     * @param groupBy                How to aggregate the lines, if not supplied then the lowest
-     *                               level is returned, i.e. bet by bet This is only applicable to
-     *                               SETTLED BetStatus.
-     * @param includeItemDescription If true then an ItemDescription object is included in the
-     *                               response
-     * @param locale                 The language used for the itemDescription. If not specified,
-     *                               the customer account default is returned
-     * @param fromRecord             Specifies the first record that will be returned. Records
-     *                               start at index zero
-     * @param recordCount            Specifies how many records will be returned, from the index
-     *                               position 'fromRecord'. Note that there is a page size limit of
-     *                               50. A value of zero indicates that you would like all records
-     *                               (including and from 'fromRecord') up to the limit
-     * @return
-     * @throws APINGException
-     */
-    public ClearedOrderSummaryReport listClearedOrders(
-            BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds,
-            Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy,
-            boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
-
-        var params = new HashMap<String, Object>();
-        params.put(MARKET_ID, marketIds);
-        params.put("eventTypeIds", eventTypeIds);
-        params.put("eventIds", eventIds);
-        params.put("betStatus", betStatus);
-        params.put("runnerIds", runnerIds);
-        params.put("side", side);
-        params.put("betIds", betIds);
-        params.put("fromRecord", fromRecord);
-        params.put("recordCount", recordCount);
-        params.put("settledDateRange", settledDateRange);
-        params.put("groupBy", groupBy);
-        params.put("includeItemDescription", includeItemDescription);
-        String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<CurrentOrderSummaryReport>>() {
-        }.getType());
-    }
 
     /**
-     * @param betStatus              Restricts the results to the specified status.
-     * @param settledDateRange       Optionally restricts the results to be from/to the specified
-     *                               settled date. This date is inclusive, i.e. if an order was
-     *                               placed on exactly this date (to the millisecond) then it will
-     *                               be included in the results. If the from is later than the to,
-     *                               no results will be returned
-     * @param groupBy                How to aggregate the lines, if not supplied then the lowest
-     *                               level is returned, i.e. bet by bet This is only applicable to
-     *                               SETTLED BetStatus.
-     * @param includeItemDescription If true then an ItemDescription object is included in the
-     *                               response
-     * @param fromRecord             Specifies the first record that will be returned. Records
-     *                               start at index zero
-     * @param recordCount            Specifies how many records will be returned, from the index
-     *                               position 'fromRecord'. Note that there is a page size limit of
-     *                               50. A value of zero indicates that you would like all records
-     *                               (including and from 'fromRecord') up to the limit
-     * @return
-     * @throws APINGException
+     * Returns a list of settled bets based on the bet status, ordered by settled date.
+     * To retrieve more than 1000 records, you need to make use of the fromRecord and recordCount parameters.
+     * By default the service will return all available data for the last 90 days (see Best Practice note below).
+     * The fields available at each roll-up are available here: https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders+-+Roll-up+Fields+Available
      */
-    public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, TimeRange settledDateRange, GroupBy groupBy,
-                                                       Boolean includeItemDescription, Integer fromRecord, Integer recordCount) throws APINGException {
+    public ClearedOrderSummaryReport listClearedOrders(ClearedOrderSummaryParameterBuilder builder) throws APINGException {
+
         var params = new HashMap<String, Object>();
-        params.put("betStatus", betStatus);
-        params.put("fromRecord", fromRecord);
-        params.put("recordCount", recordCount);
-        params.put("settledDateRange", settledDateRange);
-        params.put("groupBy", groupBy);
-        params.put("includeItemDescription", includeItemDescription);
+        params.put(MARKET_ID, builder.getMarketIds());
+        params.put("eventTypeIds", builder.getEventTypeIds());
+        params.put("eventIds", builder.getEventIds());
+        params.put("betStatus", builder.getBetStatus());
+        params.put("runnerIds", builder.getRunnerIds());
+        params.put("side", builder.getSide());
+        params.put("betIds", builder.getBetIds());
+        params.put("fromRecord", builder.getFromRecord());
+        params.put("recordCount", builder.getRecordCount());
+        params.put("settledDateRange", builder.getSettledDateRange());
+        params.put("groupBy", builder.getGroupBy());
+        params.put("includeItemDescription", builder.isIncludeItemDescription());
+
         String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
         return GSON.fromJson(result, ClearedOrderSummaryReport.class);
     }
+
 
     /**
      * Returns a list of Competitions (i.e., World Cup 2013) associated with the

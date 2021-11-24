@@ -98,12 +98,24 @@ class OperationsTest {
         return operations.cancelOrders(marketId, instructions, customerRef);
     }
 
-    public ReplaceExecutionReport replaceOrders(String marketId, List<ReplaceInstruction> instructions, String customerRef) throws APINGException {
-        return operations.replaceOrders(marketId, instructions, customerRef);
+    @Test
+    void replaceOrders() throws APINGException {
+
+        ReplaceInstruction ri = new ReplaceInstruction("251188825177", 5);
+
+        ReplaceExecutionReport report = operations.replaceOrders(
+                "1.190116217", List.of(ri), "customerRefReplaceTest");
+
     }
 
-    public UpdateExecutionReport updateOrders(String marketId, List<UpdateInstruction> instructions, String customerRef) throws APINGException {
-        return operations.updateOrders(marketId, instructions, customerRef);
+    @Test
+    @Disabled("csak akkor müxik,ha valós marketId-t és betId-t adok meg")
+    void updateOrders() throws APINGException {
+
+        UpdateInstruction updateInstruction = new UpdateInstruction("251188825177", PersistenceType.MARKET_ON_CLOSE);
+
+        UpdateExecutionReport updateExecutionReport = operations.updateOrders(
+                "1.190116217", List.of(updateInstruction), "customerRefUpdateTest");
     }
 
     @Test
@@ -113,9 +125,10 @@ class OperationsTest {
         timeRange.setFrom(LocalDateTime.now().minusDays(1));
         timeRange.setTo(LocalDateTime.now());
 
-        CurrentOrdersParametersBuilder copb = CurrentOrdersParametersBuilder.getDefault();
+        CurrentOrdersParametersBuilder copb = new CurrentOrdersParametersBuilder()
+                .setPlacedDateRange(timeRange);
 
-        CurrentOrderSummaryReport cosr =  operations.listCurrentOrders(copb);
+        CurrentOrderSummaryReport cosr = operations.listCurrentOrders(copb);
 
         System.out.println(cosr);
 
@@ -124,18 +137,15 @@ class OperationsTest {
         assertFalse(cosr.isMoreAvailable());
     }
 
-    public ClearedOrderSummaryReport listClearedOrders(BetStatus betStatus, Set<String> eventTypeIds, Set<String> eventIds, Set<String> marketIds, Set<String> runnerIds, Set<String> betIds, Side side, TimeRange settledDateRange, GroupBy groupBy, boolean includeItemDescription, String locale, int fromRecord, int recordCount) throws APINGException {
-        return operations.listClearedOrders(betStatus, eventTypeIds, eventIds, marketIds, runnerIds, betIds, side, settledDateRange, groupBy, includeItemDescription, locale, fromRecord, recordCount);
-    }
-
     @Test
     void listClearedOrders() throws APINGException {
         TimeRange timeRange = new TimeRange();
         timeRange.setFrom(LocalDateTime.now().minusDays(1));
         timeRange.setTo(LocalDateTime.now());
 
-        ClearedOrderSummaryReport cosr =  operations.listClearedOrders(
-                BetStatus.CANCELLED, timeRange, GroupBy.MARKET, true, 0, 1000);
+        ClearedOrderSummaryParameterBuilder builder = ClearedOrderSummaryParameterBuilder.getDefault();
+
+        ClearedOrderSummaryReport cosr = operations.listClearedOrders(builder);
 
         assertNotNull(cosr);
 
@@ -194,12 +204,15 @@ class OperationsTest {
         return operations.heartbeat(preferredTimeoutSeconds);
     }
 
+
     @Test
     void getAccountFunds() throws APINGException {
+
         AccountFundsResponse acr = operations.getAccountFunds();
         assertNotNull(acr);
         System.out.println(acr);
         assertTrue(acr.getExposureLimit() < 0);
+
     }
 
     @Test
