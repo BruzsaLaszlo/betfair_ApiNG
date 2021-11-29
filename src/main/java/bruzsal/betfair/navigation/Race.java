@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Race extends NavigationData {
+public class Race extends Child {
 
     private final String venue;
     private final LocalDateTime startTime;
@@ -21,12 +21,11 @@ public class Race extends NavigationData {
         this.startTime = new Timestamp(startTime.getTime()).toLocalDateTime();
         this.raceNumber = raceNumber;
         this.countryCode = countryCode;
-        allRace.add(this);
     }
 
 
     @Override
-    List<List<? extends NavigationData>> getLists() {
+    List<List<? extends Child>> getLists() {
         return List.of(markets);
     }
 

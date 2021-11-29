@@ -1,10 +1,9 @@
 package bruzsal.betfair.navigation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Group extends NavigationData {
+public class Group extends Child {
 
     private final List<Event> events = new ArrayList<>();
 
@@ -12,12 +11,11 @@ public class Group extends NavigationData {
 
     public Group(String id, String name) {
         super(id, name);
-        allGroup.add(this);
     }
 
     @Override
-    List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(events, groups);
+    List<List<? extends Child>> getLists() {
+        return List.of(events, groups);
     }
 
     @Override

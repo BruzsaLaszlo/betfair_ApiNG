@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class Market extends NavigationData {
+public class Market extends Child {
 
     private final LocalDateTime martketStartTime;
 
@@ -22,7 +22,6 @@ public class Market extends NavigationData {
         this.martketStartTime = new Timestamp(martketStartTime.getTime()).toLocalDateTime();
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
-        allMarket.add(this);
     }
 
     public Event getEvent() {
@@ -34,22 +33,16 @@ public class Market extends NavigationData {
     }
 
     @Override
-    List<List<? extends NavigationData>> getLists() {
+    List<List<? extends Child>> getLists() {
         return Collections.emptyList();
     }
 
     @Override
     public String toString() {
         String dateTime = martketStartTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd  HH:mm"));
-        return String.format("{ Market }      %-22s %-35s id=%-17s NumOfWin=%-10s   ", dateTime, name, id, numberOfWinners);
-//        return new StringBuilder()
-//                .append("")
-//                .append(name).append(" ")
-//                .append(martketStartTime).append("  ")
-//                .append("\"").append(marketType).append("\"  ")
-//                .append("numOfWin=").append(numberOfWinners).append("  ")
-//                .append("id=").append(id).append("  ")
-//                .toString();
+        return String.format(
+                "{ Market }      %-22s %-35s id=%-17s NumOfWin=%-10s   ",
+                dateTime, name, id, numberOfWinners);
     }
 
 

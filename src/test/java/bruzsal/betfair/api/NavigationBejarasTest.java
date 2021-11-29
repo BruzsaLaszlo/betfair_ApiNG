@@ -1,133 +1,120 @@
 package bruzsal.betfair.api;
 
-import bruzsal.betfair.entities.EventTypeResult;
-import bruzsal.betfair.entities.MarketCatalogue;
-import bruzsal.betfair.entities.MarketFilter;
-import bruzsal.betfair.enums.MarketProjection;
-import bruzsal.betfair.enums.MarketSort;
-import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.navigation.Market;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.navigation.Root;
-import jdk.jfr.Description;
+import bruzsal.betfair.navigation.NavigationDataBase;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class NavigationBejarasTest {
+class NavigationBejarasTest {
 
-    static {
-        Root root = Root.getInstance();
-        String dataJson = null;
-        try {
-            dataJson = root.getNavigationDataFromFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        root.createTree(dataJson);
+    static NavigationData ND = new NavigationData();
+
+    @BeforeAll
+    static void createTree() {
+        String dataJson = ND.getNavigationDataFromFile();
+        ND.createTree(dataJson);
     }
 
     @Test
-    @Description("segéd metódus")
+    @DisplayName("NavigationDataTest.test készítés")
     void updateNavigationData() throws IOException {
 
-        var data = Root.getInstance().getAllData(10);
+        var data = ND.getAllData(100);
+        ND.getRoot().printToConsole(2);
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, data);
+
+        assertEquals(data, Files.readString(path));
+
     }
 
 
     @Test
-    void navdataFunctionTest() {
+    @DisplayName("Van Soccer az EventType-ok között")
+    void isSoccerPresent() {
 
-
-        NavigationData.allEvenType.forEach(System.out::println);
-        NavigationData.allEvenType.stream()
+        boolean isPresent = NavigationDataBase.EVENT_TYPES.stream()
                 .filter(eventType -> eventType.getName().equals("Soccer"))
-                .findFirst().ifPresent(System.out::println);
+                .peek(System.out::println)
+                .findFirst()
+                .isPresent();
+
+        assertTrue(isPresent);
 
     }
 
     @Test
-    void overUnder25() {
+    @DisplayName("Van HU és Hungary")
+    void hungaryExists() {
 
-        NavigationData.allMarket.stream()
-//                .filter(market -> market.getMarketType().equals("OVER_UNDER_25"))
-                .filter(market -> market.getEvent().getCountryCode().equals("") && market.getEvent().getName().contains("Hungary"))
-                .forEach(market -> {
+        long count = NavigationDataBase.MARKETS.stream()
+                .filter(market -> market.getEvent().getCountryCode().equals("HU"))
+                .peek(System.out::println)
+                .count();
+
+        assertTrue(count > 0);
+
+        count = NavigationDataBase.MARKETS.stream()
+                .filter(market -> market.getEvent().getName().contains("Hungary"))
+                .peek(market -> {
                     System.out.println(market.getEvent());
                     System.out.println("    " + market);
-                });
-
-    }
-
-    @Test
-    void nullE() {
-        NavigationData.allMarket.stream()
-                .filter(market -> market.getEvent() == null)
-                .forEach(System.out::println);
-        long count = NavigationData.allMarket.stream()
-                .filter(market -> market.getEvent() == null)
+                })
                 .count();
+
+        assertTrue(count > 0);
+
+    }
+
+    @Test
+    @DisplayName("Null-vizsgálat")
+    void nullE() {
+
+        long count = NavigationDataBase.MARKETS.stream()
+                .filter(market -> market.getEvent() == null)
+                .peek(System.out::println)
+                .count();
+
         assertEquals(0, count);
+
     }
 
 
     @Test
-    void atoolfugg() throws APINGException {
-
-        Operations operations = new Operations();
-
-        MarketFilter mf = new MarketFilter();
-        mf.setMarketIds(Set.of("1.190656015"));
-
-        List<EventTypeResult> erl = operations.listEventTypes(mf);
-
-        var smp = new HashSet<MarketProjection>();
-        smp.add(MarketProjection.MARKET_DESCRIPTION);
-        smp.add(MarketProjection.COMPETITION);
-
-        List<MarketCatalogue> mcl = operations.listMarketCatalogue(mf, smp, MarketSort.MAXIMUM_AVAILABLE, 10);
-        mcl.forEach(System.out::println);
-
-//        erl.forEach(er -> er.setEventType());
-
-
-    }
-
-    @Test
+    @DisplayName("Magyar meccsek")
     void hungaryMatch() {
 
-        NavigationData.allMarket.stream()
+        Optional<Market> m = NavigationDataBase.MARKETS.stream()
                 .filter(market -> market.getEvent() != null)
                 .filter(market -> market.getEvent().getName().contains("Hungary"))
-                .filter(market -> market.getEvent().getName().contains("San"))
-                .findFirst()
-                .ifPresent(market -> market
-                        .getEvent()
-                        .getMarkets()
-                        .forEach(System.out::println));
+                .findFirst();
+
+        if (m.isPresent())
+            assertFalse(m.get().getEvent().getMarkets().isEmpty());
 
 
     }
 
     @Test
+    @DisplayName("Szülö gyerek kapcsolat")
     void sameParentAndEvent() {
 
-//        NavigationData.allMarket.stream()
-//                .map(Market::getParent)
-//                .forEach(System.out::println);
-
-        long count = NavigationData.allMarket.stream()
+        long count = NavigationDataBase.MARKETS.stream()
                 .filter(market -> market.getEvent() != market.getParent())
+                .peek(System.out::println)
                 .count();
+
         assertEquals(0, count);
+
     }
 
 

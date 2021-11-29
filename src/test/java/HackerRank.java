@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.NumberFormat;
+import java.time.Month;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Scanner;
@@ -82,7 +83,7 @@ class HackerRank {
 
         int i = new Scanner(System.in).nextInt();
 
-        if (i >= -100 || i <= 100) {
+        if (i >= -100 && i <= 100) {
             System.out.println("Good job");
         } else {
             System.out.println("Wrong answer");
@@ -98,7 +99,7 @@ class HackerRank {
         int day = 14;
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day);
+        calendar.set(year, Month.of(month).getValue(), day);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         String dayOfWeekString;
@@ -110,7 +111,7 @@ class HackerRank {
             case 5 -> dayOfWeekString = "Thursday";
             case 6 -> dayOfWeekString = "Friday";
             case 7 -> dayOfWeekString = "Saturday";
-            default -> dayOfWeekString = null;
+            default -> dayOfWeekString = "";
         }
 
         System.out.println(dayOfWeekString.toUpperCase());

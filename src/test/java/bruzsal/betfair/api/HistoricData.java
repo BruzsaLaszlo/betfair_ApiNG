@@ -7,7 +7,6 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -58,7 +57,7 @@ class HistoricData {
     private void bejaras(File root, int depth) {
 
         for (File f : root.listFiles()) {
-            sb.append(NavigationData.spaces[depth]).append(f).append('\n');
+            sb.append(NavigationData.SPACES[depth]).append(f).append('\n');
 
             if (f.isDirectory())
                 bejaras(f, depth + 1);
@@ -71,7 +70,7 @@ class HistoricData {
 
         for (File f : file.listFiles()) {
 
-            sb.append(NavigationData.spaces[depth]).append(f).append('\n');
+            sb.append(NavigationData.SPACES[depth]).append(f).append('\n');
 
             if (f.isDirectory()) {
                 listFiles(f, depth + 1);

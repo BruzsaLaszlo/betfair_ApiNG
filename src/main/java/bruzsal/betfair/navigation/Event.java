@@ -1,10 +1,9 @@
 package bruzsal.betfair.navigation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Event extends NavigationData {
+public class Event extends Child {
 
     private final String countryCode;
 
@@ -17,17 +16,16 @@ public class Event extends NavigationData {
     public Event(String id, String name, String countryCode) {
         super(id, name);
         this.countryCode = countryCode;
-        allEvent.add(this);
     }
 
     @Override
-    List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(markets, events, groups);
+    List<List<? extends Child>> getLists() {
+        return List.of(markets, events, groups);
     }
 
     @Override
     public String toString() {
-        return "\n" + NavigationData.spaces[depth] + "Event{" +
+        return "\n" + NavigationData.SPACES[depth] + "Event{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", countryCode='" + countryCode + '\'' +

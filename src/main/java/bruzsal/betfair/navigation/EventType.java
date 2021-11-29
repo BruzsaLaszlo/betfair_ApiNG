@@ -1,14 +1,12 @@
 package bruzsal.betfair.navigation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class EventType extends NavigationData {
+public class EventType extends Child {
 
     public EventType(String id, String name) {
         super(id, name);
-        allEvenType.add(this);
     }
 
     private final List<Group> groups = new ArrayList<>();
@@ -30,8 +28,8 @@ public class EventType extends NavigationData {
     }
 
     @Override
-    List<List<? extends NavigationData>> getLists() {
-        return Arrays.asList(events, groups);
+    List<List<? extends Child>> getLists() {
+        return List.of(events, groups);
     }
 
     public String toString() {

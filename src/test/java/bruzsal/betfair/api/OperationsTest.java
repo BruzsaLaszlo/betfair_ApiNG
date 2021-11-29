@@ -241,7 +241,7 @@ class OperationsTest {
     @Disabled("túl nagy file-t tölt le")
     void getNavigationData() throws IOException {
 //        String data = HttpUtil.getNavigationData();
-        Root.getInstance().updateNavigationData();
+        new NavigationData().updateNavigationData();
         assertFalse(LocalDateTime.now().isEqual(NavigationData.lastUpdateTime));
     }
 }
