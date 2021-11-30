@@ -104,6 +104,7 @@ public class ClearedOrderSummaryParameterBuilder {
         return betStatus;
     }
 
+
     public ClearedOrderSummaryParameterBuilder setBetStatus(BetStatus betStatus) {
         this.betStatus = betStatus;
         return this;
