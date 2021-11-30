@@ -1,31 +1,10 @@
 package bruzsal.betfair.entities;
 
-public class RunnerProfitAndLoss {
-    public void setSelectionId(long selectionId) {
-        this.selectionId = selectionId;
-    }
+public record RunnerProfitAndLoss(
 
-    public long getSelectionId() {
-        return selectionId;
-    }
+        long selectionId,
+        double ifWin,
+        double ifLose
 
-    public void setIfWin(double ifWin) {
-        this.ifWin = ifWin;
-    }
-
-    public double getIfWin() {
-        return ifWin;
-    }
-
-    public void setIfLose(double ifLose) {
-        this.ifLose = ifLose;
-    }
-
-    public double getIfLose() {
-        return ifLose;
-    }
-
-    private long selectionId;
-    private double ifWin;
-    private double ifLose;
+) {
 }
