@@ -78,15 +78,8 @@ public class ApiNGJRescriptDemo {
             System.out.println("6.(listMarketBook) Get volatile info for Market including best 3 exchange prices available...\n");
             String marketIdChosen = marketCatalogueResult.get(0).marketId();
 
-            PriceProjection priceProjection = new PriceProjection();
             Set<PriceData> priceData = new HashSet<>();
             priceData.add(PriceData.EX_BEST_OFFERS);
-            priceProjection.setPriceData(priceData);
-
-            //In this case we don't need these objects so they are declared null
-            OrderProjection orderProjection = null;
-            MatchProjection matchProjection = null;
-            String currencyCode = null;
 
             List<String> marketIds = new ArrayList<>();
             marketIds.add(marketIdChosen);
@@ -110,7 +103,7 @@ public class ApiNGJRescriptDemo {
             long selectionId;
             if (!marketBookReturn.isEmpty()) {
                 Runner runner = marketBookReturn.get(0).runners().get(0);
-                selectionId = runner.getSelectionId();
+                selectionId = runner.selectionId();
                 System.out.println("7. Place a bet below minimum stake to prevent the bet actually " +
                         "being placed for marketId: " + marketIdChosen + " with selectionId: " + selectionId + "...\n\n");
 

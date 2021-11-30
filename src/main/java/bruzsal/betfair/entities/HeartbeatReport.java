@@ -19,4 +19,12 @@ public record HeartbeatReport(
         Integer actualTimeoutSeconds
 
 ) {
+
+    @Override
+    public String toString() {
+        return "HeartbeatReport{" + '\n'+
+                "    actualTimeoutSeconds = " + actualTimeoutSeconds + '\n' +
+                "    actionPerformed = " + actionPerformed + '\n' +
+                '}' + '\n';
+    }
 }

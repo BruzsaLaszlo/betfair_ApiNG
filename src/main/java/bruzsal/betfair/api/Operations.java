@@ -52,8 +52,6 @@ public class Operations {
      *
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
-     * @return
-     * @throws ApiNgException
      */
     public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -86,25 +84,6 @@ public class Operations {
      * should be ROLLED_UP_BY_AVG_PRICE or ROLLED_UP_BY_PRICE, the former being preferred. This provides a single call
      * in which you can track prices, traded volume, unmatched orders and your evolving matched position with a
      * reasonably fixed, minimally sized response.
-     *
-     * @param marketIds                     One or more market ids. The number of markets returned depends on the amount of data you request via the price projection.
-     * @param priceProjection               The projection of price data you want to receive in the response.
-     * @param orderProjection               The orders you want to receive in the response.
-     * @param matchProjection               If you ask for orders, specifies the representation of matches.
-     * @param includeOverallPosition        If you ask for orders, returns matches for each selection. Defaults to true if unspecified.
-     * @param partitionMatchedByStrategyRef If you ask for orders, returns the breakdown of matches by strategy for each selection. Defaults to false if unspecified.
-     * @param customerStrategyRefs          If you ask for orders, restricts the results to orders matching any of the specified set of customer defined strategies.
-     *                                      Also filters which matches by strategy for selections are returned, if partitionMatchedByStrategyRef is true.
-     *                                      An empty set will be treated as if the parameter has been omitted (or null passed).
-     * @param currencyCode                  A Betfair standard currency code. If not specified, the default currency code is used.
-     *                                      //@param locale                        The language used for the response. If not specified, the default is returned.
-     * @param matchedSince                  If you ask for orders, restricts the results to orders that have at least one fragment matched since
-     *                                      the specified date (all matched fragments of such an order will be returned even if some were matched before the specified date).
-     *                                      All EXECUTABLE orders will be returned regardless of matched date.
-     * @param betIds                        If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
-     *                                      parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be provided at a time.
-     * @return
-     * @throws ApiNgException
      */
     public List<MarketBook> listMarketBook(MarketBookParameterBuilder builder)
             throws ApiNgException, JsonProcessingException {
@@ -125,8 +104,6 @@ public class Operations {
      *
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
-     * @return
-     * @throws ApiNgException
      */
     public List<CountryCodeResult> listCountries(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -140,10 +117,6 @@ public class Operations {
      * Returns a list of Venues (i.e. Cheltenham, Ascot) associated with the
      * markets selected by the MarketFilter. Currently, only Horse Racing
      * markets are associated with a Venue
-     *
-     * @param filter
-     * @return
-     * @throws ApiNgException
      */
     public List<VenueResult> listVenues(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -162,8 +135,6 @@ public class Operations {
      *                    match the criteria in the filter are selected</u>
      * @param granularity <u>The granularity of time periods that correspond to markets
      *                    selected by the market filter</u>
-     * @return
-     * @throws ApiNgException
      */
     public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -190,8 +161,6 @@ public class Operations {
      *                         popular sports types and marketTypes are ranked in the following order: ODDS ASIAN LINE RANGE
      *                         If all other dimensions of the result are equal, then the results are ranked in MarketId order.
      * @param maxResult        limit on the total number of results returned, must be greater than 0 and less than or equal to 1000
-     * @return
-     * @throws ApiNgException
      */
     public List<MarketCatalogue> listMarketCatalogue(
             MarketFilter filter,
@@ -218,8 +187,6 @@ public class Operations {
      * @param filter <u>The filter to select desired markets. All markets that
      *               match
      *               the criteria in the filter are selected</u>
-     * @return
-     * @throws ApiNgException
      */
     public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -240,8 +207,6 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions. CustomerRef can contain: upper/lower chars,
      *                     digits, chars : - . _ + * : ; ~ only
-     * @return
-     * @throws ApiNgException
      */
     public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef)
             throws ApiNgException, JsonProcessingException {
@@ -265,8 +230,6 @@ public class Operations {
      * @param customerRef  Optional parameter allowing the client to pass a unique string
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
-     * @return
-     * @throws ApiNgException
      */
     public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef)
             throws ApiNgException, JsonProcessingException {
@@ -292,8 +255,6 @@ public class Operations {
      * @param customerRef  Optional parameter allowing the client to pass a unique string
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
-     * @return
-     * @throws ApiNgException
      */
     public ReplaceExecutionReport replaceOrders(
             String marketId,
@@ -317,8 +278,6 @@ public class Operations {
      * @param customerRef  Optional parameter allowing the client to pass a unique string
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
-     * @return
-     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
     public UpdateExecutionReport updateOrders(
             String marketId,
@@ -405,8 +364,6 @@ public class Operations {
      *
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
-     * @return
-     * @throws ApiNgException
      */
     public List<CompetitionResult> listCompetitions(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -422,8 +379,6 @@ public class Operations {
      *
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
-     * @return
-     * @throws ApiNgException
      */
     public List<EventResult> listEvents(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
@@ -442,8 +397,8 @@ public class Operations {
         return makeRequest(operation, null, Endpoint.ACCOUNT);
     }
 
-    protected String makeRequestHeartbeat(String operation) throws ApiNgException, JsonProcessingException {
-        return makeRequest(operation, null, Endpoint.HEARTBEAT);
+    protected String makeRequestHeartbeat(String operation, Map<String, Object> params) throws ApiNgException, JsonProcessingException {
+        return makeRequest(operation, params, Endpoint.HEARTBEAT);
     }
 
     private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException, JsonProcessingException {
@@ -490,11 +445,6 @@ public class Operations {
      *
      * @return List<DeveloperApp> A list of application keys owned by the given developer/vendor
      */
-//    public List<DeveloperApp> getDeveloperAppKeys()throws APINGException, JsonProcessingException {
-//        String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
-//        return om.readValue(response, new TypeToken<List<DeveloperApp>>() {
-//        }.getType());
-//    }
     public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException, JsonProcessingException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
         return om.readValue(response, new TypeReference<>() {
@@ -559,7 +509,10 @@ public class Operations {
      */
     public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException, JsonProcessingException {
         // You should be able to reset the heartbeat by passing a value of actualTimeoutSeconds":0 and then restarting it by setting the required value.
-        String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName());
+        var params = new HashMap<String, Object>();
+        params.put("preferredTimeoutSeconds", preferredTimeoutSeconds);
+
+        String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName(), params);
         return om.readValue(response, HeartbeatReport.class);
     }
 

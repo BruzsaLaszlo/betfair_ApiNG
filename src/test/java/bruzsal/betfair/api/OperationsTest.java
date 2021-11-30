@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +49,8 @@ class OperationsTest {
         MarketBookParameterBuilder mbpb = new MarketBookParameterBuilder().setMarketIds(mc.get(0).marketId()).validate();
 
         List<MarketBook> lmb = operations.listMarketBook(mbpb);
+
+        lmb.forEach(System.out::println);
 
         assertFalse(lmb.isEmpty());
 
@@ -233,13 +234,20 @@ class OperationsTest {
 
     }
 
-    public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException, JsonProcessingException {
-        return operations.createDeveloperAppKeys(appName);
-    }
 
+    @Test
+    void heartbeat() throws ApiNgException, JsonProcessingException {
 
-    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException, JsonProcessingException {
-        return operations.heartbeat(preferredTimeoutSeconds);
+        HeartbeatReport hbr =  operations.heartbeat(10);
+        System.out.println(hbr);
+
+        assertEquals(10,hbr.actualTimeoutSeconds());
+
+        hbr =  operations.heartbeat(0);
+        System.out.println(hbr);
+
+        assertEquals(0,hbr.actualTimeoutSeconds());
+
     }
 
 
