@@ -64,7 +64,8 @@ public class ApiNGJRescriptDemo {
 
             int maxResults = 1;
 
-            List<MarketCatalogue> marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResults);
+            List<MarketCatalogue> marketCatalogueResult =
+                    rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResults);
 
             System.out.println("5. Print static marketId, name and runners....\n");
             printMarketCatalogue(marketCatalogueResult.get(0));
@@ -75,7 +76,7 @@ public class ApiNGJRescriptDemo {
              *
              */
             System.out.println("6.(listMarketBook) Get volatile info for Market including best 3 exchange prices available...\n");
-            String marketIdChosen = marketCatalogueResult.get(0).getMarketId();
+            String marketIdChosen = marketCatalogueResult.get(0).marketId();
 
             PriceProjection priceProjection = new PriceProjection();
             Set<PriceData> priceData = new HashSet<>();
@@ -90,12 +91,8 @@ public class ApiNGJRescriptDemo {
             List<String> marketIds = new ArrayList<>();
             marketIds.add(marketIdChosen);
 
-            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(
-                    marketIds, priceProjection,
-                    orderProjection, matchProjection,
-                    false, false, null,
-                    currencyCode,
-                    null, null);
+            MarketBookParameterBuilder mbpb = new MarketBookParameterBuilder().setMarketIds(marketIds).validate();
+            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(mbpb);
 
             /**
              * PlaceOrders: we try to place a bet, based on the previous request we provide the following:
@@ -112,7 +109,7 @@ public class ApiNGJRescriptDemo {
 
             long selectionId;
             if (!marketBookReturn.isEmpty()) {
-                Runner runner = marketBookReturn.get(0).getRunners().get(0);
+                Runner runner = marketBookReturn.get(0).runners().get(0);
                 selectionId = runner.getSelectionId();
                 System.out.println("7. Place a bet below minimum stake to prevent the bet actually " +
                         "being placed for marketId: " + marketIdChosen + " with selectionId: " + selectionId + "...\n\n");
@@ -175,12 +172,12 @@ public class ApiNGJRescriptDemo {
         }
     }
 
-    private void printMarketCatalogue(MarketCatalogue mk) {
-        System.out.println("Market Name: " + mk.getMarketName() + "; Id: " + mk.getMarketId() + "\n");
-        List<RunnerCatalog> runners = mk.getRunners();
+    private void printMarketCatalogue(MarketCatalogue mc) {
+        System.out.println("Market Name: " + mc.marketName() + "; Id: " + mc.marketId() + "\n");
+        List<RunnerCatalog> runners = mc.runners();
         if (runners != null) {
-            for (RunnerCatalog rCat : runners) {
-                System.out.println("Runner Name: " + rCat.getRunnerName() + "; Selection Id: " + rCat.getSelectionId() + "\n");
+            for (RunnerCatalog rc : runners) {
+                System.out.println("Runner Name: " + rc.runnerName() + "; Selection Id: " + rc.selectionId() + "\n");
             }
         }
     }

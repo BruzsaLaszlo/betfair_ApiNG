@@ -106,25 +106,14 @@ public class Operations {
      * @return
      * @throws ApiNgException
      */
-    public List<MarketBook> listMarketBook(
-            List<String> marketIds,
-            PriceProjection priceProjection,
-            OrderProjection orderProjection,
-            MatchProjection matchProjection,
-            boolean includeOverallPosition,
-            boolean partitionMatchedByStrategyRef,
-            Set<String> customerStrategyRefs,
-            String currencyCode,
-            Date matchedSince,
-            Set<String> betIds)
-
+    public List<MarketBook> listMarketBook(MarketBookParameterBuilder builder)
             throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
-        params.put(MARKET_IDS, marketIds);
-        params.put(PRICEPROJECTION, priceProjection);
-        params.put(MATCHPROJECTION, matchProjection);
-        params.put(CURRENCYCODE, currencyCode);
+        params.put(MARKET_IDS, builder.getMarketIds());
+        params.put(PRICEPROJECTION, builder.getPriceProjection());
+        params.put(MATCHPROJECTION, builder.getMatchProjection());
+        params.put(CURRENCYCODE, builder.getCurrencyCode());
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
         return om.readValue(result, new TypeReference<>() {
         });

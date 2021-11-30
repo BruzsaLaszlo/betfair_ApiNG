@@ -16,7 +16,7 @@ public class PlaceInstruction {
      * The handicap associated with the runner in case of Asian handicap markets
      * (e.g. marketTypes ASIAN_HANDICAP_DOUBLE_LINE, ASIAN_HANDICAP_SINGLE_LINE) null otherwise.
      */
-    private double handicap;
+    private Double handicap;
 
     /**
      * Back or Lay
@@ -53,6 +53,7 @@ public class PlaceInstruction {
      * to 32 characters. If an empty string is provided it will be treated as null.
      */
     private String customerOrderRef;
+
 
     public PlaceInstruction validate() {
         if (orderType == null || selectionId == null || side == null)
@@ -98,5 +99,37 @@ public class PlaceInstruction {
     public PlaceInstruction setCustomerOrderRef(String customerOrderRef) {
         this.customerOrderRef = customerOrderRef;
         return this;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public Long getSelectionId() {
+        return selectionId;
+    }
+
+    public Double getHandicap() {
+        return handicap;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public LimitOrder getLimitOrder() {
+        return limitOrder;
+    }
+
+    public LimitOnCloseOrder getLimitOnCloseOrder() {
+        return limitOnCloseOrder;
+    }
+
+    public MarketOnCloseOrder getMarketOnCloseOrder() {
+        return marketOnCloseOrder;
+    }
+
+    public String getCustomerOrderRef() {
+        return customerOrderRef;
     }
 }

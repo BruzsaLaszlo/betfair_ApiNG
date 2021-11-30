@@ -1,39 +1,34 @@
 package bruzsal.betfair.entities;
 
-public class RunnerCatalog {
+import java.util.Map;
 
-    private Long selectionId;
-    private String runnerName;
-    private Double handicap;
+public record RunnerCatalog(
 
-    public Long getSelectionId() {
-        return selectionId;
-    }
+        /**
+         * The unique id for the selection.
+         * The same selectionId and runnerName pairs are used accross all Betfair markets which contain them.
+         * Please note: The selectionId can be mapped to the runner name using the output from listMarketCatalogue
+         */
+        Long selectionId,
 
-    public void setSelectionId(Long selectionId) {
-        this.selectionId = selectionId;
-    }
+        String runnerName,
 
-    public String getRunnerName() {
-        return runnerName;
-    }
+        Double handicap,
 
-    public void setRunnerName(String runnerName) {
-        this.runnerName = runnerName;
-    }
+        Integer sortPriority,
 
-    public Double getHandicap() {
-        return handicap;
-    }
+        /**
+         * Metadata associated with the runner.  For a description of this data for Horse Racing, please see Runner Metadata Description
+         */
+        Map<String,String> metadata
 
-    public void setHandicap(Double handicap) {
-        this.handicap = handicap;
-    }
+) {
 
+    @Override
     public String toString() {
-        return "{" + "" + "selectionId=" + getSelectionId() + ","
-                + "runnerName=" + getRunnerName() + "," + "handicap="
-                + getHandicap() + "," + "}";
+        return "RunnerCatalog{" + '\n' +
+                "    selectionId=" + selectionId + '\n' +
+                "    runnerName='" + runnerName + '\n' +
+                "    handicap=" + handicap + '\n';
     }
-
 }

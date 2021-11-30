@@ -3,176 +3,125 @@ package bruzsal.betfair.entities;
 import java.util.Date;
 import java.util.List;
 
-public class MarketBook {
-    private String marketId;
-    private Boolean isMarketDataDelayed;
-    private String status;
-    private int betDelay;
-    private Boolean bspReconciled;
-    private Boolean complete;
-    private Boolean inplay;
-    private int numberOfWinners;
-    private int numberOfRunners;
-    private int numberOfActiveRunners;
-    private Date lastMatchTime;
-    private Double totalMatched;
-    private Double totalAvailable;
-    private Boolean crossMatching;
-    private Boolean runnersVoidable;
-    private Long version;
-    private List<Runner> runners;
+public record MarketBook(
 
-    public List<Runner> getRunners() {
-        return runners;
-    }
+        /**
+         * The unique identifier for the market. MarketId's are prefixed with '1.'
+         */
+        String marketId,
 
-    public void setRunners(List<Runner> runners) {
-        this.runners = runners;
-    }
+        /**
+         * True if the data returned by listMarketBook will be delayed. 
+         * The data may be delayed because you are not logged in with a funded account or you are using an 
+         * Application Key that does not allow up to date data.
+         */
+        Boolean isMarketDataDelayed,
 
-    public String getMarketId() {
-        return marketId;
-    }
+        /**
+         * The status of the market    for example OPEN    SUSPENDED    CLOSED (settled)    etc.
+         */
+        String status,
 
-    public void setMarketId(String marketId) {
-        this.marketId = marketId;
-    }
+        /**
+         * The number of seconds an order is held until it is submitted into the market.
+         * Orders are usually delayed when the market is in-play
+         */
+        Integer betDelay,
 
-    public Boolean getIsMarketDataDelayed() {
-        return isMarketDataDelayed;
-    }
+        /**
+         * True if the market starting price has been reconciled
+         */
+        Boolean bspReconciled,
 
-    public void setIsMarketDataDelayed(Boolean isMarketDataDelayed) {
-        this.isMarketDataDelayed = isMarketDataDelayed;
-    }
+        /**
+         * If false    runners may be added to the market
+         */
+        Boolean complete,
 
-    public String getStatus() {
-        return status;
-    }
+        /**
+         * True if the market is currently in play
+         */
+        Boolean inplay,
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+        /**
+         * The number of selections that could be settled as winners
+         */
+        Integer numberOfWinners,
 
-    public int getBetDelay() {
-        return betDelay;
-    }
+        /**
+         * The number of runners in the market
+         */
+        Integer numberOfRunners,
 
-    public void setBetDelay(int betDelay) {
-        this.betDelay = betDelay;
-    }
+        /**
+         * The number of runners that are currently active. An active runner is a selection available for betting
+         */
+        Integer numberOfActiveRunners,
 
-    public Boolean getBspReconciled() {
-        return bspReconciled;
-    }
+        /**
+         * The most recent time an order was executed
+         */
+        Date lastMatchTime,
 
-    public void setBspReconciled(Boolean bspReconciled) {
-        this.bspReconciled = bspReconciled;
-    }
+        /**
+         * The total amount matched
+         */
+        Double totalMatched,
 
-    public Boolean getComplete() {
-        return complete;
-    }
+        /**
+         * The total amount of orders that remain unmatched
+         */
+        Double totalAvailable,
 
-    public void setComplete(Boolean complete) {
-        this.complete = complete;
-    }
+        /**
+         * True if cross matching is enabled for this market.
+         */
+        Boolean crossMatching,
 
-    public Boolean getInplay() {
-        return inplay;
-    }
+        /**
+         *True if runners in the market can be voided. Please note - this doesn't include horse racing markets under
+         * which bets are voided on non-runners with any applicable reduction factor applied
+         */
+        Boolean runnersVoidable,
 
-    public void setInplay(Boolean inplay) {
-        this.inplay = inplay;
-    }
+        /**
+         *The version of the market. The version increments whenever the market status changes    for example    turning in-play    or suspended when a goal is scored.
+         */
+        Long version,
 
-    public int getNumberOfWinners() {
-        return numberOfWinners;
-    }
+        /**
+         * Information about the runners (selections) in the market.
+         */
+        List<Runner> runners,
 
-    public void setNumberOfWinners(int numberOfWinners) {
-        this.numberOfWinners = numberOfWinners;
-    }
+        /**
+         * Description of a markets key line for valid market types
+         */
+        KeyLineDescription keyLineDescription
 
-    public int getNumberOfRunners() {
-        return numberOfRunners;
-    }
+) {
 
-    public void setNumberOfRunners(int numberOfRunners) {
-        this.numberOfRunners = numberOfRunners;
-    }
-
-    public int getNumberOfActiveRunners() {
-        return numberOfActiveRunners;
-    }
-
-    public void setNumberOfActiveRunners(int numberOfActiveRunners) {
-        this.numberOfActiveRunners = numberOfActiveRunners;
-    }
-
-    public Date getLastMatchTime() {
-        return lastMatchTime;
-    }
-
-    public void setLastMatchTime(Date lastMatchTime) {
-        this.lastMatchTime = lastMatchTime;
-    }
-
-    public Double getTotalMatched() {
-        return totalMatched;
-    }
-
-    public void setTotalMatched(Double totalMatched) {
-        this.totalMatched = totalMatched;
-    }
-
-    public Double getTotalAvailable() {
-        return totalAvailable;
-    }
-
-    public void setTotalAvailable(Double totalAvailable) {
-        this.totalAvailable = totalAvailable;
-    }
-
-    public Boolean getCrossMatching() {
-        return crossMatching;
-    }
-
-    public void setCrossMatching(Boolean crossMatching) {
-        this.crossMatching = crossMatching;
-    }
-
-    public Boolean getRunnersVoidable() {
-        return runnersVoidable;
-    }
-
-    public void setRunnersVoidable(Boolean runnersVoidable) {
-        this.runnersVoidable = runnersVoidable;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
+    @Override
     public String toString() {
-        return "{" + "" + "marketId=" + getMarketId() + ","
-                + "isMarketDataDelayed=" + getIsMarketDataDelayed() + ","
-                + "status=" + getStatus() + "," + "betDelay=" + getBetDelay()
-                + "," + "bspReconciled=" + getBspReconciled() + ","
-                + "complete=" + getComplete() + "," + "inplay=" + getInplay()
-                + "," + "numberOfWinners=" + getNumberOfWinners() + ","
-                + "numberOfRunners=" + getNumberOfRunners() + ","
-                + "numberOfActiveRunners=" + getNumberOfActiveRunners() + ","
-                + "lastMatchTime=" + getLastMatchTime() + "," + "totalMatched="
-                + getTotalMatched() + "," + "totalAvailable="
-                + getTotalAvailable() + "," + "crossMatching="
-                + getCrossMatching() + "," + "runnersVoidable="
-                + getRunnersVoidable() + "," + "version=" + getVersion() + ","
-                + "runners=" + getRunners() + "," + "}";
+        return "MarketBook{" +
+                "    marketId = " + marketId + '\n' +
+                "    isMarketDataDelayed = " + isMarketDataDelayed + '\n' +
+                "    status = " + status + '\n' +
+                "    betDelay = " + betDelay + '\n' +
+                "    bspReconciled = " + bspReconciled + '\n' +
+                "    complete = " + complete + '\n' +
+                "    inplay = " + inplay + '\n' +
+                "    numberOfWinners = " + numberOfWinners + '\n' +
+                "    numberOfRunners = " + numberOfRunners + '\n' +
+                "    numberOfActiveRunners = " + numberOfActiveRunners + '\n' +
+                "    lastMatchTime = " + lastMatchTime + '\n' +
+                "    totalMatched = " + totalMatched + '\n' +
+                "    totalAvailable = " + totalAvailable + '\n' +
+                "    crossMatching = " + crossMatching + '\n' +
+                "    runnersVoidable = " + runnersVoidable + '\n' +
+                "    version = " + version + '\n' +
+                "    runners = " + runners + '\n' +
+                "    keyLineDescription = " + keyLineDescription + '\n' +
+                '}';
     }
-
 }

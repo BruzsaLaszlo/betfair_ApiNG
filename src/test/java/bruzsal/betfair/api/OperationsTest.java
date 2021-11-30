@@ -36,8 +36,23 @@ class OperationsTest {
 
     }
 
-    public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection, MatchProjection matchProjection, boolean includeOverallPosition, boolean partitionMatchedByStrategyRef, Set<String> customerStrategyRefs, String currencyCode, Date matchedSince, Set<String> betIds) throws ApiNgException, JsonProcessingException {
-        return operations.listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, includeOverallPosition, partitionMatchedByStrategyRef, customerStrategyRefs, currencyCode, matchedSince, betIds);
+    @Test
+    void listMarketBook() throws ApiNgException, JsonProcessingException {
+
+        var mf = new MarketFilterBuilder()
+                .setMarketCountries(UNITED_KINGDOM)
+                .setEventTypeId(SOCCER)
+                .build();
+        var mp = Set.of(MarketProjection.RUNNER_DESCRIPTION);
+
+        List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 1);
+
+        MarketBookParameterBuilder mbpb = new MarketBookParameterBuilder().setMarketIds(mc.get(0).marketId()).validate();
+
+        List<MarketBook> lmb = operations.listMarketBook(mbpb);
+
+        assertFalse(lmb.isEmpty());
+
     }
 
     @Test
@@ -49,7 +64,7 @@ class OperationsTest {
                 .build();
 
         List<CountryCodeResult> list = operations.listCountries(marketFilter);
-        list.sort((o1, o2) -> o2.marketCount() < o1.marketCount() ? -1 : 1);
+        list.sort(Comparator.comparing(CountryCodeResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -74,11 +89,14 @@ class OperationsTest {
     void listMarketCatalogue() throws ApiNgException, JsonProcessingException {
 
         var mf = new MarketFilterBuilder()
-                .setMarketCountries(HUNGARY)
+                .setMarketCountries(UNITED_KINGDOM)
+                .setEventTypeId(SOCCER)
                 .build();
-        var mp = Set.of(MarketProjection.EVENT);
+        var mp = Set.of(MarketProjection.RUNNER_DESCRIPTION);
 
-        List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_AVAILABLE,10);
+        List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 10);
+
+        mc.forEach(System.out::println);
 
         assertFalse(mc.isEmpty());
 
@@ -107,36 +125,45 @@ class OperationsTest {
         assertTrue(list.size() > 0);
     }
 
-    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws ApiNgException, JsonProcessingException {
-        return operations.placeOrders(marketId, instructions, customerRef);
-    }
+    @Test
+    void placeOrders() {
 
-    public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef) throws ApiNgException, JsonProcessingException {
-        return operations.cancelOrders(marketId, instructions, customerRef);
+        PlaceInstruction pi = new PlaceInstruction()
+                .setOrderType(OrderType.LIMIT)
+                .setSide(Side.BACK)
+                .setSelectionId(4234234L);
+
+        assertThrows(ApiNgException.class, () -> operations.placeOrders("1.183689747", List.of(pi), "1.183689747L"));
+
     }
 
     @Test
-    void replaceOrders() throws ApiNgException, JsonProcessingException {
+    void cancelOrders() {
 
-        var ri = new ReplaceInstruction("251188825177", 5);
+        CancelInstruction ci = new CancelInstruction("231231", 0.1);
 
-        assertThrows(ApiNgException.class, () -> {
-            ReplaceExecutionReport report = operations.replaceOrders(
-                    "1.190116217", List.of(ri), "customerRefReplaceTest");
-        });
+        assertThrows(ApiNgException.class, () -> operations.cancelOrders("1.183689747", List.of(ci), "1.183689747L"));
+
+    }
+
+    @Test
+    void replaceOrders() {
+
+        var ri = new ReplaceInstruction("251188825177", 5d);
+
+        assertThrows(ApiNgException.class, () ->
+                operations.replaceOrders("1.190116217", List.of(ri), "customerRefReplaceTest"));
 
     }
 
     @Test
     @Description("csak akkor müxik,ha valós marketId-t és betId-t adok meg")
-    void updateOrders() throws ApiNgException, JsonProcessingException {
+    void updateOrders() {
 
         UpdateInstruction updateInstruction = new UpdateInstruction("251188825177", PersistenceType.MARKET_ON_CLOSE);
 
-        assertThrows(ApiNgException.class, () -> {
-            UpdateExecutionReport updateExecutionReport = operations.updateOrders(
-                    "1.190116217", List.of(updateInstruction), "customerRefUpdateTest");
-        });
+        assertThrows(ApiNgException.class, () ->
+                operations.updateOrders("1.190116217", List.of(updateInstruction), "customerRefUpdateTest"));
 
     }
 
@@ -244,7 +271,7 @@ class OperationsTest {
 
     @Test
     @Disabled("csak egyéni tesztre")
-    void getSessionToken() throws Exception {
+    void getSessionToken() {
         assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
     }
 
