@@ -1,8 +1,12 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.text.NumberFormat;
 import java.time.Month;
 import java.util.Calendar;
@@ -10,10 +14,6 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -142,11 +142,11 @@ class HackerRank {
 //        String pattern = "[2]*[5][0-5]|[2]*[0-4]\\d|[0-1]\\d\\d|\\d\\d|\\d";
         String one = "[2]*[5][0-5]|[2]*[0-4]\\d|[0-1]\\d{2}|\\d{1,2}";
 
-        Pattern p = Pattern.compile(one,Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile(one, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(one);
 
 
-        String pattern = one + "[.]" + one + "[.]" +one + "[.]" +one;
+        String pattern = one + "[.]" + one + "[.]" + one + "[.]" + one;
         assertTrue("093".matches(one));
         assertTrue("93".matches(one));
         assertTrue("3".matches(one));
@@ -158,6 +158,75 @@ class HackerRank {
 
     }
 
+
+    @Test
+    void sdfsa() {
+        // String to be scanned to find the pattern.
+        String line = "This order was placed for QT3000! OK?";
+        String pattern = "(.*)(\\d+)(.*)";
+
+        // Create a Pattern object
+        Pattern r = Pattern.compile(pattern);
+
+        // Now create matcher object.
+        Matcher m = r.matcher(line);
+        if (m.find()) {
+            System.out.println("Found value: " + m.group(0));
+            System.out.println("Found value: " + m.group(1));
+            System.out.println("Found value: " + m.group(2));
+        } else {
+            System.out.println("NO MATCH");
+        }
+    }
+
+    @Test
+    void url() {
+
+        String url = "https://earthquake.usgs.gov:80/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
+
+        String dp = ".*://(.+):.*\1";
+
+        System.out.println(url.replaceFirst(dp, "sdfsf"));
+
+        dp = "(\\w+)://([\\w.]+)(.*)";
+        Pattern p = Pattern.compile(dp, Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(url);
+
+
+        assertTrue(m.matches());
+
+        System.out.println("Found 0value: " + m.group(0));
+        System.out.println("protocol: " + m.group(1));
+        System.out.println("domain: " + m.group(2));
+//        System.out.println("Found 3value: " + m.group(3) );
+
+        p = Pattern.compile(":(\\d+)(.*)");
+        m = p.matcher(m.group(3));
+        assertTrue(m.matches());
+
+        System.out.println("port: " + m.group(1));
+
+//        p = Pattern.compile("/(.+)\\?(.*)");
+//        m = p.matcher(m.group(2));
+        assertTrue(Pattern.compile("/(.+)\\?(.*)").matcher(m.group(2)).matches());
+        System.out.println("path: " + m.group(1));
+        System.out.println("parameters: " + m.group(2));
+
+//        if (m.group(3).startsWith(":"))
+//            System.out.println(
+//                    Pattern.compile(":(\\d+).*")
+//                            .matcher(m.group(3))
+//                            .group(0));
+
+
+
+    }
+
+    @Test
+    void json() {
+        ObjectMapper mapper = new ObjectMapper();
+//        mapper.readValue("",)
+    }
 
     @Test
     void ingatlanCom() throws URISyntaxException, IOException, InterruptedException {

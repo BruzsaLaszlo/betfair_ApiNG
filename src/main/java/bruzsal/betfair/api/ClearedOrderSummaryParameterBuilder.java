@@ -22,7 +22,7 @@ public class ClearedOrderSummaryParameterBuilder {
     /**
      *Optionally restricts the results to the specified Event IDs.
      */
-    private java.util.Set<String> eventIds;
+    private Set<String> eventIds;
 
     /**
      *Optionally restricts the results to the specified market IDs.

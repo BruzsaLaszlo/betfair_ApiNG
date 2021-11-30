@@ -4,14 +4,11 @@ import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.APINGException;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.navigation.Root;
 import bruzsal.betfair.util.HttpUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
@@ -166,18 +163,6 @@ class OperationsTest {
 
         assertTrue(list.size() > 0);
 
-    }
-
-    @Test
-    void getCountryCodes() throws IOException {
-        List<String> listOfCodes = Files.readAllLines(Path.of("c:\\Users\\Laci\\IdeaProjects\\Betfair_APING\\iso_code.txt"));
-        for (String s : listOfCodes) {
-            var sa = s.split(";");
-            sa[0] = sa[0].split(",")[0];
-            sa[0] = sa[0].replaceAll("([(].+[)]|[-])", "");
-            sa[0] = sa[0].replaceAll("\\s+", "_");
-            System.out.printf("%s(\"%s\"),%n", sa[0], sa[1]);
-        }
     }
 
     @Test

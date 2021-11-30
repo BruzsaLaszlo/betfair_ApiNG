@@ -99,7 +99,7 @@ public enum CountryCodes {
     GUYANA("GY"),
     HAITI("HT"),
     HEARD_ISLAND_AND_MCDONALD_ISLANDS("HM"),
-    HOLY_SEE_("VA"),
+    VATICAN("VA"),
     HONDURAS("HN"),
     HONG_KONG("HK"),
     HUNGARY("HU"),

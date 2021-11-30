@@ -9,12 +9,34 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class NavigationDataTest {
 
     static NavigationData ND = new NavigationData();
+
+    @Test
+    void getCountryCodes() throws IOException {
+        List<String> listOfCodes = Files.readAllLines(Path.of("./src/main/resources/iso_code.txt"));
+        for (String s : listOfCodes) {
+            if (s.startsWith("\"")) {
+                var ss = s.split("\"");
+                String name = ss[1].replace(",", "").replaceAll("\\s+", "_");
+                var sa = ss[2].split(",");
+                String a2 = sa[1];
+                String a3 = sa[2];
+                System.out.printf("%s(\"%s\", \"%s\"),%n", name, a2, a3);
+            } else {
+                var sa = s.split(",");
+                sa[0] = sa[0].replaceAll("[ ,-]", "_").replaceAll("([(].+[)]|[-])", "");
+//            sa[0] = sa[0].replaceAll("([(].+[)]|[-])", "");
+//            sa[0] = sa[0].replaceAll("\\s+", "_");
+                System.out.printf("%s(\"%s\", \"%s\"),%n", sa[0], sa[1], sa[2]);
+            }
+        }
+    }
 
     @BeforeAll
     static void createTree() {
