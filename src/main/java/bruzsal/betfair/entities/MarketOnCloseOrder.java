@@ -1,14 +1,8 @@
 package bruzsal.betfair.entities;
 
-public class MarketOnCloseOrder {
-    private double liability;
+public record MarketOnCloseOrder (
 
-    public double getLiability() {
-        return liability;
-    }
+        double liability
 
-    public void setLiability(double liability) {
-        this.liability = liability;
-    }
-
+){
 }

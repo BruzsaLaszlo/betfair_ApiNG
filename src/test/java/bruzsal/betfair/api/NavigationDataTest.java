@@ -1,7 +1,9 @@
 package bruzsal.betfair.api;
 
+import bruzsal.betfair.enums.CountryCodes;
 import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.navigation.NavigationDataBase;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static bruzsal.betfair.enums.CountryCodes.*;
 
 class NavigationDataTest {
 
@@ -39,7 +42,7 @@ class NavigationDataTest {
     }
 
     @BeforeAll
-    static void createTree() {
+    static void createTree() throws JsonProcessingException {
         String dataJson = ND.getNavigationDataFromFile();
         ND.createTree(dataJson);
     }
@@ -86,14 +89,14 @@ class NavigationDataTest {
     void hungaryExists() {
 
         long count = NavigationDataBase.MARKETS.stream()
-                .filter(market -> market.getEvent().getCountryCode().equals("HU"))
+                .filter(market -> market.getEvent().getCountryCode().equals(HUNGARY.CODE))
                 .peek(System.out::println)
                 .count();
 
         assertTrue(count > 0);
 
         count = NavigationDataBase.MARKETS.stream()
-                .filter(market -> market.getEvent().getName().contains("Hungary"))
+                .filter(market -> market.getEvent().getName().contains(HUNGARY.name()))
                 .peek(market -> {
                     System.out.println(market.getEvent());
                     System.out.println("    " + market);

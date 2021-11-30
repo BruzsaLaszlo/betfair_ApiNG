@@ -1,23 +1,9 @@
 package bruzsal.betfair.entities;
 
-public class LimitOnCloseOrder {
-    private double liability;
-    private double price;
+public record LimitOnCloseOrder(
 
-    public double getLiability() {
-        return liability;
-    }
+        double liability,
+        double price
 
-    public void setLiability(double liability) {
-        this.liability = liability;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
+) {
 }

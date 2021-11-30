@@ -2,72 +2,20 @@ package bruzsal.betfair.entities;
 
 import bruzsal.betfair.enums.InstructionReportErrorCode;
 import bruzsal.betfair.enums.InstructionReportStatus;
+import bruzsal.betfair.enums.OrderStatus;
 
 import java.util.Date;
 
-public class PlaceInstructionReport {
-    private InstructionReportStatus status;
-    private InstructionReportErrorCode errorCode;
-    private PlaceInstruction instructionl;
-    private String betId;
-    private Date placedDate;
-    private double averagePriceMatched;
-    private double sizeMatched;
+public record PlaceInstructionReport (
 
-    public InstructionReportStatus getStatus() {
-        return status;
-    }
+     InstructionReportStatus status,
+     InstructionReportErrorCode errorCode,
+     OrderStatus orderStatus,
+     PlaceInstruction instruction,
+     String betId,
+     Date placedDate,
+     double averagePriceMatched,
+     double sizeMatched
 
-    public void setStatus(InstructionReportStatus status) {
-        this.status = status;
-    }
-
-    public InstructionReportErrorCode getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(InstructionReportErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public PlaceInstruction getInstructionl() {
-        return instructionl;
-    }
-
-    public void setInstructionl(PlaceInstruction instructionl) {
-        this.instructionl = instructionl;
-    }
-
-    public String getBetId() {
-        return betId;
-    }
-
-    public void setBetId(String betId) {
-        this.betId = betId;
-    }
-
-    public Date getPlacedDate() {
-        return placedDate;
-    }
-
-    public void setPlacedDate(Date placedDate) {
-        this.placedDate = placedDate;
-    }
-
-    public double getAveragePriceMatched() {
-        return averagePriceMatched;
-    }
-
-    public void setAveragePriceMatched(double averagePriceMatched) {
-        this.averagePriceMatched = averagePriceMatched;
-    }
-
-    public double getSizeMatched() {
-        return sizeMatched;
-    }
-
-    public void setSizeMatched(double sizeMatched) {
-        this.sizeMatched = sizeMatched;
-    }
-
+){
 }

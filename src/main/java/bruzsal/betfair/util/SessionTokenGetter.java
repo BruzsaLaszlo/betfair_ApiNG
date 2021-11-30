@@ -1,6 +1,7 @@
 package bruzsal.betfair.util;
 
 import bruzsal.betfair.api.Operations;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -119,10 +120,14 @@ public class SessionTokenGetter {
         private String loginStatus;
 
         public static String getSessionToken(String dataJson) {
-            SessionToken st = Operations.GSON.fromJson(dataJson, SessionToken.class);
-            if (st.loginStatus.equals("SUCCESS"))
-                return st.sessionToken;
-            else throw new IllegalStateException("Sikertelen");
+            try {
+                SessionToken st = Operations.om.readValue(dataJson, SessionToken.class);
+                if (st.loginStatus.equals("SUCCESS"))
+                    return st.sessionToken;
+                return "";
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException("Sikertelen a session token megszerzése");
+            }
         }
     }
 

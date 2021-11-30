@@ -1,19 +1,12 @@
 package bruzsal.betfair.entities;
 
-public class TimeRangeResult {
+public record TimeRangeResult (
 
-    private TimeRange timeRange;
+        TimeRange timeRange,
 
-    private int marketCount;
+        int marketCount
 
-
-    public TimeRange getTimeRange() {
-        return timeRange;
-    }
-
-    public int getMarketCount() {
-        return marketCount;
-    }
+){
 
 
     @Override

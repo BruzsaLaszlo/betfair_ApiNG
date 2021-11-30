@@ -6,67 +6,97 @@ import bruzsal.betfair.enums.Side;
 public class PlaceInstruction {
 
     private OrderType orderType;
-    private long selectionId;
+
+    /**
+     * The selection_id.
+     */
+    private Long selectionId;
+
+    /**
+     * The handicap associated with the runner in case of Asian handicap markets
+     * (e.g. marketTypes ASIAN_HANDICAP_DOUBLE_LINE, ASIAN_HANDICAP_SINGLE_LINE) null otherwise.
+     */
     private double handicap;
+
+    /**
+     * Back or Lay
+     */
     private Side side;
+
+    /**
+     * A simple exchange bet for immediate execution
+     */
     private LimitOrder limitOrder;
+
+    /**
+     * Bets are matched if, and only if, the returned starting price is better than a specified price.
+     * In the case of back bets, LOC bets are matched if the calculated starting price is greater than the
+     * specified price. In the case of lay bets, LOC bets are matched if the starting price is less than the
+     * specified price. If the specified limit is equal to the starting price, then it may be matched,
+     * partially matched, or may not be matched at all, depending on how much is needed to balance all bets
+     * against each other (MOC, LOC and normal exchange bets)
+     */
     private LimitOnCloseOrder limitOnCloseOrder;
+
+    /**
+     * Bets remain unmatched until the market is reconciled.
+     * They are matched and settled at a price that is representative of the market at the point the market is
+     * turned in-play. The market is reconciled to find a starting price and MOC bets are settled at whatever
+     * starting price is returned. MOC bets are always matched and settled, unless a starting price is not available
+     * for the selection. Market on Close bets can only be placed before the starting price is determined
+     */
     private MarketOnCloseOrder marketOnCloseOrder;
 
-    public OrderType getOrderType() {
-        return orderType;
+    /**
+     * An optional reference customers can set to identify instructions.
+     * No validation will be done on uniqueness and the string is limited
+     * to 32 characters. If an empty string is provided it will be treated as null.
+     */
+    private String customerOrderRef;
+
+    public PlaceInstruction validate() {
+        if (orderType == null || selectionId == null || side == null)
+            throw new IllegalStateException("a kötelezö paraméterk hiányoznak");
+        return this;
     }
 
-    public void setOrderType(OrderType orderType) {
+    public PlaceInstruction setOrderType(OrderType orderType) {
         this.orderType = orderType;
+        return this;
     }
 
-    public long getSelectionId() {
-        return selectionId;
-    }
-
-    public void setSelectionId(long selectionId) {
+    public PlaceInstruction setSelectionId(Long selectionId) {
         this.selectionId = selectionId;
+        return this;
     }
 
-    public double getHandicap() {
-        return handicap;
-    }
-
-    public void setHandicap(double handicap) {
+    public PlaceInstruction setHandicap(double handicap) {
         this.handicap = handicap;
+        return this;
     }
 
-    public Side getSide() {
-        return side;
-    }
-
-    public void setSide(Side side) {
+    public PlaceInstruction setSide(Side side) {
         this.side = side;
+        return this;
     }
 
-    public LimitOrder getLimitOrder() {
-        return limitOrder;
-    }
-
-    public void setLimitOrder(LimitOrder limitOrder) {
+    public PlaceInstruction setLimitOrder(LimitOrder limitOrder) {
         this.limitOrder = limitOrder;
+        return this;
     }
 
-    public LimitOnCloseOrder getLimitOnCloseOrder() {
-        return limitOnCloseOrder;
-    }
-
-    public void setLimitOnCloseOrder(LimitOnCloseOrder limitOnCloseOrder) {
+    public PlaceInstruction setLimitOnCloseOrder(LimitOnCloseOrder limitOnCloseOrder) {
         this.limitOnCloseOrder = limitOnCloseOrder;
+        return this;
     }
 
-    public MarketOnCloseOrder getMarketOnCloseOrder() {
-        return marketOnCloseOrder;
-    }
-
-    public void setMarketOnCloseOrder(MarketOnCloseOrder marketOnCloseOrder) {
+    public PlaceInstruction setMarketOnCloseOrder(MarketOnCloseOrder marketOnCloseOrder) {
         this.marketOnCloseOrder = marketOnCloseOrder;
+        return this;
     }
 
+    public PlaceInstruction setCustomerOrderRef(String customerOrderRef) {
+        this.customerOrderRef = customerOrderRef;
+        return this;
+    }
 }

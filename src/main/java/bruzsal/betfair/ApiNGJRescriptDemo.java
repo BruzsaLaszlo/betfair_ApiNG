@@ -3,7 +3,8 @@ package bruzsal.betfair;
 import bruzsal.betfair.api.Operations;
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.exceptions.ApiNgException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.*;
 
@@ -33,9 +34,9 @@ public class ApiNGJRescriptDemo {
             List<EventTypeResult> r = rescriptOperations.listEventTypes(marketFilter);
             System.out.println("2. Extract Event Type Id for Horse Racing...\n");
             for (EventTypeResult eventTypeResult : r) {
-                if (eventTypeResult.getEventType().getName().equals("Soccer")) {
-                    System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.getEventType().getId() + "\n");
-                    eventTypeIds.add(eventTypeResult.getEventType().getId());
+                if (eventTypeResult.eventType().name().equals("Soccer")) {
+                    System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.eventType().id() + "\n");
+                    eventTypeIds.add(eventTypeResult.eventType().id());
                 }
             }
 
@@ -115,22 +116,23 @@ public class ApiNGJRescriptDemo {
                 selectionId = runner.getSelectionId();
                 System.out.println("7. Place a bet below minimum stake to prevent the bet actually " +
                         "being placed for marketId: " + marketIdChosen + " with selectionId: " + selectionId + "...\n\n");
-                List<PlaceInstruction> instructions = new ArrayList<>();
-                PlaceInstruction instruction = new PlaceInstruction();
-                instruction.setHandicap(0);
-                instruction.setSide(Side.BACK);
-                instruction.setOrderType(OrderType.LIMIT);
 
-                LimitOrder limitOrder = new LimitOrder();
-                limitOrder.setPersistenceType(PersistenceType.LAPSE);
-                //API-NG will return an error with the default size=0.01. This is an expected behaviour.
                 //You can adjust the size and price value in the "apingdemo.properties" file
-                limitOrder.setPrice(getPrice());
-                limitOrder.setSize(getSize());
+                LimitOrder limitOrder = new LimitOrder()
+                        .setPersistenceType(PersistenceType.LAPSE)
+                        .setPrice(getPrice())
+                        .setSize(getSize())
+                        .validate();
 
-                instruction.setLimitOrder(limitOrder);
-                instruction.setSelectionId(selectionId);
-                instructions.add(instruction);
+                PlaceInstruction instruction = new PlaceInstruction()
+                        .setHandicap(0)
+                        .setSide(Side.BACK)
+                        .setOrderType(OrderType.LIMIT)
+                        .setLimitOrder(limitOrder)
+                        .setSelectionId(selectionId)
+                        .validate();
+
+                var instructions = List.of(instruction);
 
                 String customerRef = "1";
 
@@ -148,7 +150,7 @@ public class ApiNGJRescriptDemo {
                 System.out.println("Sorry, no runners found\n\n");
             }
 
-        } catch (APINGException apiExc) {
+        } catch (ApiNgException | JsonProcessingException apiExc) {
             apiExc.printStackTrace();
         }
     }

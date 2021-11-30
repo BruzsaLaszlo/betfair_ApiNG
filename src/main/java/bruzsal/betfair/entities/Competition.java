@@ -1,19 +1,12 @@
 package bruzsal.betfair.entities;
 
-public class Competition {
+public record Competition(
 
-    private String id;
-    private String name;
+        String id,
 
+        String name
 
-    public String getId() {
-        return id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
+) {
 
 
     @Override

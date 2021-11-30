@@ -18,10 +18,9 @@ public class TimeRange {
         this.from = from;
     }
 
-    public final void setFrom(LocalDateTime from) {
+    public final void setLFrom(LocalDateTime from) {
         this.from = Timestamp.valueOf(from);
     }
-
 
     public final Date getTo() {
         return to;
@@ -31,7 +30,7 @@ public class TimeRange {
         this.to = to;
     }
 
-    public final void setTo(LocalDateTime to) {
+    public final void setLTo(LocalDateTime to) {
         this.to = Timestamp.valueOf(to);
     }
 

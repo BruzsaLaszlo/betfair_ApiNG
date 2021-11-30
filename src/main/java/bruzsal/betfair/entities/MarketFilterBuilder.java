@@ -111,7 +111,7 @@ public class MarketFilterBuilder {
         TimeRange timeRange = new TimeRange();
         timeRange.setFrom(Timestamp.valueOf(from));
         if (to != null)
-            timeRange.setTo(Timestamp.valueOf(to));
+            timeRange.setLTo(to);
         marketFilter.setMarketStartTime(timeRange);
         return this;
     }
@@ -129,9 +129,9 @@ public class MarketFilterBuilder {
         return new MarketFilter();
     }
 
-//    public MarketFilterBuilder setRaceTypes(Set<String> raceTypes) {
-//        marketFilter.setRaceTypes(raceTypes);
-//        return this;
-//    }
+    public MarketFilterBuilder setRaceTypes(Set<String> raceTypes) {
+        marketFilter.setRaceTypes(raceTypes);
+        return this;
+    }
 
 }

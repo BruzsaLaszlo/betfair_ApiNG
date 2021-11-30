@@ -1,13 +1,10 @@
 package bruzsal.betfair.entities;
 
-public class ReplaceInstruction {
+public record ReplaceInstruction(
 
-    private String betId;
-    private double newPrice;
+        String betId,
 
+        double newPrice
 
-    public ReplaceInstruction(String betId, double newPrice) {
-        this.betId = betId;
-        this.newPrice = newPrice;
-    }
+) {
 }

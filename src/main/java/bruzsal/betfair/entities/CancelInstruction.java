@@ -1,22 +1,10 @@
 package bruzsal.betfair.entities;
 
-public class CancelInstruction {
-    public void setBetId(String betId) {
-        this.betId = betId;
-    }
+public record CancelInstruction(
 
-    public String getBetId() {
-        return betId;
-    }
+        String betId,
 
-    public void setSizeReduction(double sizeReduction) {
-        this.sizeReduction = sizeReduction;
-    }
+        double sizeReduction
 
-    public double getSizeReduction() {
-        return sizeReduction;
-    }
-
-    private String betId;
-    private double sizeReduction;
+) {
 }

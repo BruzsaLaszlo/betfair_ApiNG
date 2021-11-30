@@ -2,17 +2,15 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.exceptions.FaultData;
 import bruzsal.betfair.util.HttpUtil;
-import bruzsal.betfair.util.ISO8601DateTypeAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.InaccessibleObjectException;
 import java.util.*;
 
 
@@ -46,12 +44,7 @@ public class Operations {
     private static final String ORDERBY = "orderBy";
     private static final String DEFAULT_LOCALE = Locale.getDefault().toString();
 
-    /**
-     * We needed to override the adapter for the Date class as Betfair's API-NG requires all dates to be serialized in ISO8601 UTC
-     * Just formatting the string to the ISO format does not adjust by the timezone on the Date instance during serialization.
-     */
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(Date.class, new ISO8601DateTypeAdapter()).create();
-
+    public static final ObjectMapper om = new ObjectMapper();
 
     /**
      * Returns a list of Event Types (i.e. Sports) associated with the markets
@@ -60,15 +53,15 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws APINGException {
+    public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         params.put(LOCALE, DEFAULT_LOCALE);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTTYPES.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<EventTypeResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -111,7 +104,7 @@ public class Operations {
      * @param betIds                        If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
      *                                      parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be provided at a time.
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
     public List<MarketBook> listMarketBook(
             List<String> marketIds,
@@ -125,7 +118,7 @@ public class Operations {
             Date matchedSince,
             Set<String> betIds)
 
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_IDS, marketIds);
@@ -133,8 +126,8 @@ public class Operations {
         params.put(MATCHPROJECTION, matchProjection);
         params.put(CURRENCYCODE, currencyCode);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<MarketBook>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -144,14 +137,14 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<CountryCodeResult> listCountries(MarketFilter filter) throws APINGException {
+    public List<CountryCodeResult> listCountries(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOUNTRIES.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<CountryCodeResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -161,14 +154,14 @@ public class Operations {
      *
      * @param filter
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<VenueResult> listVenues(MarketFilter filter) throws APINGException {
+    public List<VenueResult> listVenues(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTVENUES.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<VenueResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -181,15 +174,15 @@ public class Operations {
      * @param granularity <u>The granularity of time periods that correspond to markets
      *                    selected by the market filter</u>
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws APINGException {
+    public List<TimeRangeResult> listTimeRanges(MarketFilter filter, TimeGranularity granularity) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         params.put("granularity", granularity);
         String result = makeRequestBetting(ApiNgOperation.LISTTIMERANGES.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<TimeRangeResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -209,14 +202,14 @@ public class Operations {
      *                         If all other dimensions of the result are equal, then the results are ranked in MarketId order.
      * @param maxResult        limit on the total number of results returned, must be greater than 0 and less than or equal to 1000
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
     public List<MarketCatalogue> listMarketCatalogue(
             MarketFilter filter,
             Set<MarketProjection> marketProjection,
             MarketSort sort,
             int maxResult)
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
@@ -224,8 +217,8 @@ public class Operations {
         params.put(MAX_RESULT, maxResult);
         params.put(MARKETPROJECTION, marketProjection);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<MarketCatalogue>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -237,14 +230,14 @@ public class Operations {
      *               match
      *               the criteria in the filter are selected</u>
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws APINGException {
+    public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTMARKETTYPES.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<MarketTypeResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -259,17 +252,17 @@ public class Operations {
      *                     re-submissions. CustomerRef can contain: upper/lower chars,
      *                     digits, chars : - . _ + * : ; ~ only
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
     public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef)
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.PLACEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<PlaceExecutionReport>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -284,17 +277,17 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
     public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef)
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.CANCELORDERS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<CancelExecutionReport>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -311,19 +304,19 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
     public ReplaceExecutionReport replaceOrders(
             String marketId,
             List<ReplaceInstruction> instructions,
             String customerRef)
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
         params.put(INSTRUCTIONS, instructions);
         params.put(CUSTOMER_REF, customerRef);
         String result = makeRequestBetting(ApiNgOperation.REPLACEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, ReplaceExecutionReport.class);
+        return om.readValue(result, ReplaceExecutionReport.class);
     }
 
     /**
@@ -336,13 +329,13 @@ public class Operations {
      *                     (up to 32 chars) that is used to de-dupe mistaken
      *                     re-submissions
      * @return
-     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
+     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
     public UpdateExecutionReport updateOrders(
             String marketId,
             List<UpdateInstruction> instructions,
             String customerRef)
-            throws APINGException {
+            throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, marketId);
@@ -350,7 +343,7 @@ public class Operations {
         params.put(CUSTOMER_REF, customerRef);
 
         String result = makeRequestBetting(ApiNgOperation.UPDATEORDERS.getOperationName(), params);
-        return GSON.fromJson(result, UpdateExecutionReport.class);
+        return om.readValue(result, UpdateExecutionReport.class);
     }
 
     /**
@@ -368,9 +361,9 @@ public class Operations {
      * date and provide a list of betIds in the order which they are fully/partially matched from the date and
      * time specified in the dateRange field.
      *
-     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
+     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
-    public CurrentOrderSummaryReport listCurrentOrders(CurrentOrdersParametersBuilder copb) throws APINGException {
+    public CurrentOrderSummaryReport listCurrentOrders(CurrentOrdersParametersBuilder copb) throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
         params.put("betIds", copb.getBetIds());
@@ -385,7 +378,7 @@ public class Operations {
         params.put("recordCount", copb.getRecordCount());
         params.put("includeItemDescription", copb.isIncludeItemDescription());
         String result = makeRequestBetting(ApiNgOperation.LISTCURRENTORDERS.getOperationName(), params);
-        return GSON.fromJson(result, CurrentOrderSummaryReport.class);
+        return om.readValue(result, CurrentOrderSummaryReport.class);
     }
 
 
@@ -395,7 +388,7 @@ public class Operations {
      * By default the service will return all available data for the last 90 days (see Best Practice note below).
      * The fields available at each roll-up are available here: https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders+-+Roll-up+Fields+Available
      */
-    public ClearedOrderSummaryReport listClearedOrders(ClearedOrderSummaryParameterBuilder builder) throws APINGException {
+    public ClearedOrderSummaryReport listClearedOrders(ClearedOrderSummaryParameterBuilder builder) throws ApiNgException, JsonProcessingException {
 
         var params = new HashMap<String, Object>();
         params.put(MARKET_ID, builder.getMarketIds());
@@ -412,7 +405,7 @@ public class Operations {
         params.put("includeItemDescription", builder.isIncludeItemDescription());
 
         String result = makeRequestBetting(ApiNgOperation.LISTCLEAREDORDERS.getOperationName(), params);
-        return GSON.fromJson(result, ClearedOrderSummaryReport.class);
+        return om.readValue(result, ClearedOrderSummaryReport.class);
     }
 
 
@@ -424,14 +417,14 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws APINGException {
+    public List<CompetitionResult> listCompetitions(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTCOMPETITIONS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<CompetitionResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
     /**
@@ -441,32 +434,32 @@ public class Operations {
      * @param filter The filter to select desired markets. All markets that match
      *               the criteria in the filter are selected
      * @return
-     * @throws APINGException
+     * @throws ApiNgException
      */
-    public List<EventResult> listEvents(MarketFilter filter) throws APINGException {
+    public List<EventResult> listEvents(MarketFilter filter) throws ApiNgException, JsonProcessingException {
         var params = new HashMap<String, Object>();
         params.put(FILTER, filter);
         String result = makeRequestBetting(ApiNgOperation.LISTEVENTS.getOperationName(), params);
-        return GSON.fromJson(result, new TypeToken<List<EventResult>>() {
-        }.getType());
+        return om.readValue(result, new TypeReference<>() {
+        });
     }
 
-    protected String makeRequestBetting(String operation, Map<String, Object> params) throws APINGException {
+    protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException, JsonProcessingException {
         //params.put(LOCALE, DEFAULT_LOCALE);
         return makeRequest(operation, params, Endpoint.BETTING);
     }
 
-    protected String makeRequestAccount(String operation) throws APINGException {
+    protected String makeRequestAccount(String operation) throws ApiNgException, JsonProcessingException {
         return makeRequest(operation, null, Endpoint.ACCOUNT);
     }
 
-    protected String makeRequestHeartbeat(String operation) throws APINGException {
+    protected String makeRequestHeartbeat(String operation) throws ApiNgException, JsonProcessingException {
         return makeRequest(operation, null, Endpoint.HEARTBEAT);
     }
 
-    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws APINGException {
+    private String makeRequest(String operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException, JsonProcessingException {
 
-        String requestString = params == null ? null : GSON.toJson(params);
+        String requestString = params == null ? null : om.writeValueAsString(params);
 
         try {
 
@@ -476,10 +469,9 @@ public class Operations {
 
             try {
 
-                throw GSON.fromJson(exception.getMessage(), FaultData.class)
-                        .getDetail().getAPINGException();
+                throw om.readValue(exception.getMessage(), FaultData.class).detail().APINGException();
 
-            } catch (InaccessibleObjectException | JsonSyntaxException | IllegalStateException jsonException) {
+            } catch (JsonSyntaxException jsonException) {
                 jsonException.printStackTrace();
             }
 
@@ -499,9 +491,9 @@ public class Operations {
      * @return DeveloperApp A map of application keys, one marked ACTIVE, and
      * the other DELAYED
      */
-    public DeveloperApp createDeveloperAppKeys(String appName) throws APINGException {
+    public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException, JsonProcessingException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
-        return GSON.fromJson(response, DeveloperApp.class);
+        return om.readValue(response, DeveloperApp.class);
     }
 
     /**
@@ -509,10 +501,15 @@ public class Operations {
      *
      * @return List<DeveloperApp> A list of application keys owned by the given developer/vendor
      */
-    public List<DeveloperApp> getDeveloperAppKeys() throws APINGException {
+//    public List<DeveloperApp> getDeveloperAppKeys()throws APINGException, JsonProcessingException {
+//        String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
+//        return om.readValue(response, new TypeToken<List<DeveloperApp>>() {
+//        }.getType());
+//    }
+    public List<DeveloperApp> getDeveloperAppKeys() throws ApiNgException, JsonProcessingException {
         String response = makeRequestAccount(ApiNgOperation.DEVELOPERAPPKEYS.getOperationName());
-        return GSON.fromJson(response, new TypeToken<List<DeveloperApp>>() {
-        }.getType());
+        return om.readValue(response, new TypeReference<>() {
+        });
     }
 
     /**
@@ -520,9 +517,9 @@ public class Operations {
      *
      * @return Response for retrieving available to bet.
      */
-    public AccountFundsResponse getAccountFunds() throws APINGException {
+    public AccountFundsResponse getAccountFunds() throws ApiNgException, JsonProcessingException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTFUNDS.getOperationName());
-        return GSON.fromJson(response, AccountFundsResponse.class);
+        return om.readValue(response, AccountFundsResponse.class);
     }
 
     /**
@@ -535,11 +532,11 @@ public class Operations {
      * If both services fail, the error UNEXPECTED_ERROR will be returned.
      *
      * @return Response for retrieving account details.
-     * @throws APINGException Generic exception that is thrown if this operation fails for any reason.
+     * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
-    public AccountDetailsResponse getAccountDetails() throws APINGException {
+    public AccountDetailsResponse getAccountDetails() throws ApiNgException, JsonProcessingException {
         String response = makeRequestAccount(ApiNgOperation.ACCOUNTDETAILS.getOperationName());
-        return GSON.fromJson(response, AccountDetailsResponse.class);
+        return om.readValue(response, AccountDetailsResponse.class);
     }
 
 
@@ -569,12 +566,12 @@ public class Operations {
      *                                The minimum and maximum timeouts are subject to change, so your client should utilise the returned
      *                                actualTimeoutSeconds to set an appropriate frequency for your subsequent heartbeat requests.
      * @return Response from heartbeat operation
-     * @throws APINGException Thrown if the operation fails
+     * @throws ApiNgException Thrown if the operation fails
      */
-    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws APINGException {
+    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException, JsonProcessingException {
         // You should be able to reset the heartbeat by passing a value of actualTimeoutSeconds":0 and then restarting it by setting the required value.
         String response = makeRequestHeartbeat(ApiNgOperation.HEARTBEAT.getOperationName());
-        return GSON.fromJson(response, HeartbeatReport.class);
+        return om.readValue(response, HeartbeatReport.class);
     }
 
 }

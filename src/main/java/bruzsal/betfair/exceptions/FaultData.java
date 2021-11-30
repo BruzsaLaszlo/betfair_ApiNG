@@ -1,47 +1,22 @@
 package bruzsal.betfair.exceptions;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.annotation.Generated;
+public record FaultData(
 
-@Generated("jsonschema2pojo")
-public class FaultData {
+        String faultcode,
+        String faultstring,
+        Detail detail
 
-    @SerializedName("faultcode")
-    @Expose
-    private String faultcode;
-    @SerializedName("faultstring")
-    @Expose
-    private String faultstring;
-    @SerializedName("detail")
-    @Expose
-    private Detail detail;
+) {
+    public record Detail(
 
-    public String getFaultcode() {
-        return faultcode;
+            @JsonProperty("APINGException")
+            ApiNgException APINGException,
+            String exceptionname
+
+    ) {
     }
-
-    public void setFaultcode(String faultcode) {
-        this.faultcode = faultcode;
-    }
-
-    public String getFaultstring() {
-        return faultstring;
-    }
-
-    public void setFaultstring(String faultstring) {
-        this.faultstring = faultstring;
-    }
-
-    public Detail getDetail() {
-        return detail;
-    }
-
-    public void setDetail(Detail detail) {
-        this.detail = detail;
-    }
-
 }
 
 

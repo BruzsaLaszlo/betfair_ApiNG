@@ -1,21 +1,12 @@
 package bruzsal.betfair.entities;
 
-public class EventTypeResult {
+public record EventTypeResult (
 
+        EventType eventType,
 
-    private EventType eventType;
+        int marketCount
 
-    private int marketCount;
-
-
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public int getMarketCount() {
-        return marketCount;
-    }
-
+){
 
     @Override
     public String toString() {

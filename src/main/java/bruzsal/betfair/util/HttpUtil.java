@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.xml.Log4jEntityResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,6 @@ public final class HttpUtil {
 
     static {
         try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
-
             prop.load(in);
             DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
             SessionTokenGetter.getAndSetSessionTokenToProperety();
@@ -43,6 +43,11 @@ public final class HttpUtil {
         } catch (IOException e) {
             System.out.println("Error loading the properties file: " + e);
         }
+    }
+
+    static {
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("org.apache.http");
+        root.setLevel(ch.qos.logback.classic.Level.INFO);
     }
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {

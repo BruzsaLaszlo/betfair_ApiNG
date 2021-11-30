@@ -5,50 +5,17 @@ import bruzsal.betfair.enums.InstructionReportStatus;
 
 import java.util.Date;
 
-public class CancelInstructionReport {
-    public void setStatus(InstructionReportStatus status) {
-        this.status = status;
-    }
+public record CancelInstructionReport(
 
-    public InstructionReportStatus getStatus() {
-        return status;
-    }
+        InstructionReportStatus status,
 
-    public void setErrorCode(InstructionReportErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
+        InstructionReportErrorCode errorCode,
 
-    public InstructionReportErrorCode getErrorCode() {
-        return errorCode;
-    }
+        CancelInstruction instruction,
 
-    public void setInstruction(CancelInstruction instruction) {
-        this.instruction = instruction;
-    }
+        double sizeCancelled,
 
-    public CancelInstruction getInstruction() {
-        return instruction;
-    }
+        Date cancelledDate
 
-    public void setSizeCancelled(double sizeCancelled) {
-        this.sizeCancelled = sizeCancelled;
-    }
-
-    public double getSizeCancelled() {
-        return sizeCancelled;
-    }
-
-    public void setCancelledDate(Date cancelledDate) {
-        this.cancelledDate = cancelledDate;
-    }
-
-    public Date getCancelledDate() {
-        return cancelledDate;
-    }
-
-    private InstructionReportStatus status;
-    private InstructionReportErrorCode errorCode;
-    private CancelInstruction instruction;
-    private double sizeCancelled;
-    private Date cancelledDate;
+) {
 }

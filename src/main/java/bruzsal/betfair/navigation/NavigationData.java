@@ -2,6 +2,7 @@ package bruzsal.betfair.navigation;
 
 import bruzsal.betfair.enums.Endpoint;
 import bruzsal.betfair.util.HttpUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import static bruzsal.betfair.api.Operations.GSON;
+import static bruzsal.betfair.api.Operations.om;
 import static bruzsal.betfair.navigation.NavigationDataBase.*;
 
 /**
@@ -72,7 +73,7 @@ public class NavigationData {
         }
     }
 
-    public Path updateNavigationData() {
+    public Path updateNavigationData() throws JsonProcessingException {
         String dataJson = downLoadAndSaveNavigationData();
         createTree(dataJson);
         return NAVIGATION_DATA_JSON;
@@ -112,9 +113,9 @@ public class NavigationData {
 
     }
 
-    public void createTree(String dataJson) {
+    public void createTree(String dataJson) throws JsonProcessingException {
 
-        rawChild rootJson = GSON.fromJson(dataJson, rawChild.class);
+        rawChild rootJson = om.readValue(dataJson, rawChild.class);
 
         NavigationDataBase.clearLists();
 

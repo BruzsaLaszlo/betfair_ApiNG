@@ -2,13 +2,14 @@ package bruzsal.betfair.api;
 
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
-import bruzsal.betfair.exceptions.APINGException;
+import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.util.HttpUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import jdk.jfr.Description;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import static bruzsal.betfair.enums.CountryCodes.HUNGARY;
+import static bruzsal.betfair.enums.CountryCodes.UNITED_KINGDOM;
 import static bruzsal.betfair.enums.EventTypeIds.SOCCER;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +27,7 @@ class OperationsTest {
     Operations operations = Operations.getInstance();
 
     @Test
-    void listEventTypes() throws APINGException {
+    void listEventTypes() throws ApiNgException, JsonProcessingException {
 
         List<EventTypeResult> list = operations.listEventTypes(MarketFilterBuilder.empty());
         list.forEach(System.out::println);
@@ -34,12 +36,12 @@ class OperationsTest {
 
     }
 
-    public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection, MatchProjection matchProjection, boolean includeOverallPosition, boolean partitionMatchedByStrategyRef, Set<String> customerStrategyRefs, String currencyCode, Date matchedSince, Set<String> betIds) throws APINGException {
+    public List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection, MatchProjection matchProjection, boolean includeOverallPosition, boolean partitionMatchedByStrategyRef, Set<String> customerStrategyRefs, String currencyCode, Date matchedSince, Set<String> betIds) throws ApiNgException, JsonProcessingException {
         return operations.listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, includeOverallPosition, partitionMatchedByStrategyRef, customerStrategyRefs, currencyCode, matchedSince, betIds);
     }
 
     @Test
-    void listCountries() throws APINGException {
+    void listCountries() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setEventTypeId(SOCCER)
@@ -54,7 +56,7 @@ class OperationsTest {
     }
 
     @Test
-    void listTimeRanges() throws APINGException {
+    void listTimeRanges() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setEventTypeId(SOCCER)
@@ -62,22 +64,22 @@ class OperationsTest {
                 .build();
 
         List<TimeRangeResult> list = operations.listTimeRanges(marketFilter, TimeGranularity.HOURS);
-        list.sort(Comparator.comparing(TimeRangeResult::getMarketCount));
+        list.sort(Comparator.comparing(TimeRangeResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
     }
 
-    public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection, MarketSort sort, int maxResult) throws APINGException {
+    public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection, MarketSort sort, int maxResult) throws ApiNgException, JsonProcessingException {
         return operations.listMarketCatalogue(filter, marketProjection, sort, maxResult);
     }
 
     @Test
-    void listMarketTypes() throws APINGException {
+    void listMarketTypes() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setEventTypeId(SOCCER)
-                .setMarketCountries(HUNGARY)
+                .setMarketCountries(UNITED_KINGDOM)
                 .build();
 
         List<MarketTypeResult> list = operations.listMarketTypes(marketFilter);
@@ -87,40 +89,45 @@ class OperationsTest {
         assertTrue(list.size() > 0);
     }
 
-    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws APINGException {
+    public PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef) throws ApiNgException, JsonProcessingException {
         return operations.placeOrders(marketId, instructions, customerRef);
     }
 
-    public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef) throws APINGException {
+    public CancelExecutionReport cancelOrders(String marketId, List<CancelInstruction> instructions, String customerRef) throws ApiNgException, JsonProcessingException {
         return operations.cancelOrders(marketId, instructions, customerRef);
     }
 
     @Test
-    void replaceOrders() throws APINGException {
+    void replaceOrders() throws ApiNgException, JsonProcessingException {
 
-        ReplaceInstruction ri = new ReplaceInstruction("251188825177", 5);
+        var ri = new ReplaceInstruction("251188825177", 5);
 
-        ReplaceExecutionReport report = operations.replaceOrders(
-                "1.190116217", List.of(ri), "customerRefReplaceTest");
+        assertThrows(ApiNgException.class, () -> {
+            ReplaceExecutionReport report = operations.replaceOrders(
+                    "1.190116217", List.of(ri), "customerRefReplaceTest");
+        });
 
     }
 
     @Test
-    @Disabled("csak akkor müxik,ha valós marketId-t és betId-t adok meg")
-    void updateOrders() throws APINGException {
+    @Description("csak akkor müxik,ha valós marketId-t és betId-t adok meg")
+    void updateOrders() throws ApiNgException, JsonProcessingException {
 
         UpdateInstruction updateInstruction = new UpdateInstruction("251188825177", PersistenceType.MARKET_ON_CLOSE);
 
-        UpdateExecutionReport updateExecutionReport = operations.updateOrders(
-                "1.190116217", List.of(updateInstruction), "customerRefUpdateTest");
+        assertThrows(ApiNgException.class, () -> {
+            UpdateExecutionReport updateExecutionReport = operations.updateOrders(
+                    "1.190116217", List.of(updateInstruction), "customerRefUpdateTest");
+        });
+
     }
 
     @Test
-    void listCurrentOrders() throws APINGException {
+    void listCurrentOrders() throws ApiNgException, JsonProcessingException {
 
         TimeRange timeRange = new TimeRange();
-        timeRange.setFrom(LocalDateTime.now().minusDays(1));
-        timeRange.setTo(LocalDateTime.now());
+        timeRange.setLFrom(LocalDateTime.now().minusDays(1));
+        timeRange.setLTo(LocalDateTime.now());
 
         CurrentOrdersParametersBuilder copb = new CurrentOrdersParametersBuilder()
                 .setPlacedDateRange(timeRange);
@@ -135,10 +142,10 @@ class OperationsTest {
     }
 
     @Test
-    void listClearedOrders() throws APINGException {
+    void listClearedOrders() throws ApiNgException, JsonProcessingException {
         TimeRange timeRange = new TimeRange();
-        timeRange.setFrom(LocalDateTime.now().minusDays(1));
-        timeRange.setTo(LocalDateTime.now());
+        timeRange.setLFrom(LocalDateTime.now().minusDays(1));
+        timeRange.setLTo(LocalDateTime.now());
 
         ClearedOrderSummaryParameterBuilder builder = ClearedOrderSummaryParameterBuilder.getDefault();
 
@@ -149,16 +156,16 @@ class OperationsTest {
     }
 
     @Test
-    void listCompetitions() throws APINGException {
+    void listCompetitions() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setEventTypeId(SOCCER)
-                .setMarketCountries(HUNGARY)
+                .setMarketCountries(UNITED_KINGDOM)
                 .build();
 
         List<CompetitionResult> list = operations.listCompetitions(marketFilter);
 
-        list.sort(Comparator.comparing(CompetitionResult::getMarketCount));
+        list.sort(Comparator.comparing(CompetitionResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -166,7 +173,7 @@ class OperationsTest {
     }
 
     @Test
-    void publiclistEvents() throws APINGException {
+    void publiclistEvents() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setMarketCountries(HUNGARY)
@@ -180,52 +187,51 @@ class OperationsTest {
 
     }
 
-    public DeveloperApp createDeveloperAppKeys(String appName) throws APINGException {
+    public DeveloperApp createDeveloperAppKeys(String appName) throws ApiNgException, JsonProcessingException {
         return operations.createDeveloperAppKeys(appName);
     }
 
 
-    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws APINGException {
+    public HeartbeatReport heartbeat(int preferredTimeoutSeconds) throws ApiNgException, JsonProcessingException {
         return operations.heartbeat(preferredTimeoutSeconds);
     }
 
 
     @Test
-    void getAccountFunds() throws APINGException {
+    void getAccountFunds() throws ApiNgException, JsonProcessingException {
 
         AccountFundsResponse acr = operations.getAccountFunds();
         assertNotNull(acr);
         System.out.println(acr);
-        assertTrue(acr.getExposureLimit() < 0);
+        assertTrue(acr.exposureLimit() < 0);
 
     }
 
     @Test
-    void getAccountDetails() throws APINGException {
+    void getAccountDetails() throws ApiNgException, JsonProcessingException {
         AccountDetailsResponse adr = operations.getAccountDetails();
         assertNotNull(adr);
         System.out.println(adr);
-        assertEquals("Laszlo", adr.getFirstName());
+        assertEquals("Laszlo", adr.firstName());
     }
 
     @Test
-    void getDeveloperAppKeys() throws APINGException {
+    void getDeveloperAppKeys() throws ApiNgException, JsonProcessingException {
         List<DeveloperApp> list = operations.getDeveloperAppKeys();
         assertNotNull(list);
         list.forEach(System.out::println);
-        assertEquals("bruzsal", list.get(0).getAppVersions().get(0).getOwner());
+        assertEquals("bruzsal", list.get(0).appVersions().get(0).owner());
     }
 
     @Test
-    @Disabled("")
+    @Disabled("csak egyéni tesztre")
     void getSessionToken() throws Exception {
         assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
     }
 
     @Test
     @Disabled("túl nagy file-t tölt le")
-    void getNavigationData() throws IOException {
-//        String data = HttpUtil.getNavigationData();
+    void getNavigationData() throws JsonProcessingException {
         new NavigationData().updateNavigationData();
         assertFalse(LocalDateTime.now().isEqual(NavigationData.lastUpdateTime));
     }
