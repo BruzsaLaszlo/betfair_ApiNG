@@ -45,6 +45,7 @@ class HistoricData {
 
     @Description("az adott mappába lévö öszzes filet kiírja az all.txt fájlba")
     @Test
+    @Disabled
     void writeAllFileNameToFile() throws IOException {
 
         bejaras(dir, 0);
@@ -65,7 +66,7 @@ class HistoricData {
 
     }
 
-
+    @Disabled
     public void listFiles(File file, int depth) throws IOException {
 
         for (File f : file.listFiles()) {
@@ -96,6 +97,7 @@ class HistoricData {
     }
 
     @Execution(CONCURRENT)
+    @Disabled
     void deleteFiles(File targetDir, String extension) {
 
         for (File f : targetDir.listFiles()) {

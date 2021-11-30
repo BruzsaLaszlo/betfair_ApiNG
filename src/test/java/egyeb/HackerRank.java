@@ -1,6 +1,6 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+package egyeb;
+
+
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.net.http.HttpResponse;
 import java.text.NumberFormat;
 import java.time.Month;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -224,75 +223,6 @@ class HackerRank {
 
     }
 
-    @Test
-    void json() throws JsonProcessingException {
-        String json = """
-                {
-                  "sessionToken":"3W7G9J+7dvc1X6BdZzAIwzRp/wOmRaydQ1H/KZ9aj24=",
-                  "loginStatus":"SUCCESS",
-                  "list":["Ford", "BMW", "Fiat"]
-                }
-                """;
-        record St(String sessionToken, String loginStatus, List<String> list) {
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        St st = mapper.readValue(json, St.class);
-        System.out.println(st.list);
-    }
-
-    @Test
-    void json2() throws JsonProcessingException {
-
-        String json = """
-                [{
-                    "list":["Ford", "BMW", "Fiat"]
-                }]
-                """;
-
-        String jsonApp = """
-                [
-                  {
-                	"appName":"brzslck",
-                	"appId":6222,
-                	"appVersions":[
-                	                {
-                	                    "owner":"bruzsal",
-                					    "versionId":5156,"version":"1.0-DELAY",
-                					    "applicationKey":"PWXyR1ihpVYw4dFe",
-                					    "delayData":true,"subscriptionRequired":true,
-                					    "ownerManaged":false,"active":true
-                					},
-                				    {
-                				        "owner":"bruzsal",
-                					    "versionId":5155,"version":"1.0",
-                					    "applicationKey":"MB8aoL9masmFkTCF",
-                					    "delayData":false,
-                					    "subscriptionRequired":true,
-                					    "ownerManaged":false,"active":false
-                				    }
-                				   ]
-                	}
-                ]
-                """;
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<String> list = mapper.readValue(json, List.class);
-
-
-        record DeveloperAppVersion(String owner, long versionId, String version, String applicationKey,
-                                   boolean delayData,
-                                   boolean subscriptionRequired, boolean ownerManaged, boolean active) {
-        }
-
-        record DeveloperApp(String appName, long appId, List<DeveloperAppVersion> appVersions) {
-        }
-
-
-        List<DeveloperApp> listApp = mapper.readValue(jsonApp, new TypeReference<>() {
-        });
-        System.out.println(listApp.get(0).appVersions.get(0).ownerManaged());
-
-    }
 
     @Test
     void ingatlanCom() throws URISyntaxException, IOException, InterruptedException {

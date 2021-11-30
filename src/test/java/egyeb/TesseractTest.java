@@ -1,3 +1,5 @@
+package egyeb;
+
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.junit.jupiter.api.Test;
