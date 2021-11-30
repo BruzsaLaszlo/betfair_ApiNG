@@ -9,8 +9,8 @@ public record PriceProjection(
 
         Set<PriceData> priceData,
         ExBestOfferOverRides exBestOfferOverRides,
-        boolean virtualise,
-        boolean rolloverStakes
+        Boolean virtualise,
+        Boolean rolloverStakes
 
 ) {
 }

@@ -219,20 +219,20 @@ public class MarketFilter {
     @Override
     public String toString() {
         return "MarketFilter :" +
-                "\n    textQuery='" + textQuery + '\'' +
-                "\n    eventTypeIds=" + eventTypeIds +
-                "\n    eventIds=" + eventIds +
-                "\n    competitionIds=" + competitionIds +
-                "\n    marketIds=" + marketIds +
-                "\n    venues=" + venues +
-                "\n    bspOnly=" + bspOnly +
-                "\n    inPlayOnly=" + inPlayOnly +
-                "\n    turnInPlayEnabled=" + turnInPlayEnabled +
-                "\n    marketBettingTypes=" + marketBettingTypes +
-                "\n    marketCountries=" + marketCountries +
-                "\n    marketTypeCodes=" + marketTypeCodes +
-                "\n    marketStartTime=" + marketStartTime +
-                "\n    withOrders=" + withOrders +
-                "\n    raceTypes=" + raceTypes;
+                "\n    textQuery = " + textQuery +
+                "\n    eventTypeIds = " + eventTypeIds +
+                "\n    eventIds = " + eventIds +
+                "\n    competitionIds = " + competitionIds +
+                "\n    marketIds = " + marketIds +
+                "\n    venues = " + venues +
+                "\n    bspOnly = " + bspOnly +
+                "\n    inPlayOnly = " + inPlayOnly +
+                "\n    turnInPlayEnabled = " + turnInPlayEnabled +
+                "\n    marketBettingTypes = " + marketBettingTypes +
+                "\n    marketCountries = " + marketCountries +
+                "\n    marketTypeCodes = " + marketTypeCodes +
+                "\n    marketStartTime = " + marketStartTime +
+                "\n    withOrders = " + withOrders +
+                "\n    raceTypes = " + raceTypes;
     }
 }

@@ -37,7 +37,7 @@ public class LimitOrder {
      * The minFillSize cannot be greater than the order's size.
      * If specified for a BetTargetType and FILL_OR_KILL order, then this value will be ignored
      */
-    private double minFillSize;
+    private Double minFillSize;
 
 
     /**
@@ -55,7 +55,7 @@ public class LimitOrder {
      * The requested outcome size of either the payout or profit.
      * This is named from the backer's perspective. For Lay bets the profit represents the bet's liability
      */
-    private double betTargetSize;
+    private Double betTargetSize;
 
     public LimitOrder validate() {
         if (size == null || price == null || persistenceType == null)

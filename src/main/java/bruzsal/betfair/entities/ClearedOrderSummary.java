@@ -96,7 +96,7 @@ public record ClearedOrderSummary(
         /**
          * The number of actual bets within this grouping (will be 1 for BET groupBy)
          */
-        int betCount,
+        Integer betCount,
 
         /**
          * The cumulative amount of commission paid by the customer across all bets under this Item, in the account currency.

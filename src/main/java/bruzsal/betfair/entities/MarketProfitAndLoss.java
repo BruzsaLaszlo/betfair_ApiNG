@@ -5,7 +5,7 @@ import java.util.List;
 public record MarketProfitAndLoss(
 
         String marketId,
-        double commissionApplied,
+        Double commissionApplied,
         List<RunnerProfitAndLoss> profitAndLosses
 
 ) {
