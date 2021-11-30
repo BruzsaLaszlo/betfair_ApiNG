@@ -1,8 +1,8 @@
 package bruzsal.betfair.entities;
 
-public record MarketOnCloseOrder (
+public record MarketOnCloseOrder(
 
         Double liability
 
-){
+) {
 }

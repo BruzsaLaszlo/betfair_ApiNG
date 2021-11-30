@@ -1,12 +1,12 @@
 package bruzsal.betfair.entities;
 
-public record EventTypeResult (
+public record EventTypeResult(
 
         EventType eventType,
 
         Integer marketCount
 
-){
+) {
 
     @Override
     public String toString() {

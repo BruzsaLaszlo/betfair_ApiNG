@@ -1,6 +1,5 @@
 package bruzsal.betfair.util;
 
-import bruzsal.betfair.enums.CountryCodes;
 import bruzsal.betfair.enums.Endpoint;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -8,7 +7,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.xml.Log4jEntityResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,12 +29,12 @@ public final class HttpUtil {
     private static final String CHARSET_UTF8 = "UTF-8";
 
     public static final Properties prop = new Properties();
-    private static boolean DEBUG;
+    private static boolean debug;
 
     static {
         try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
             prop.load(in);
-            DEBUG = Boolean.parseBoolean(prop.getProperty("DEBUG"));
+            debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
             SessionTokenGetter.getAndSetSessionTokenToProperety();
 
         } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
@@ -75,7 +73,7 @@ public final class HttpUtil {
                 post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
         }
 
-        if (DEBUG) {
+        if (debug) {
             System.out.println("Request headers: " + Arrays.toString(post.getAllHeaders()));
             System.out.println("URL: " + post.getURI().toString());
             System.out.println("jsonRequest: " + jsonRequest);
@@ -90,7 +88,7 @@ public final class HttpUtil {
         HttpEntity entity = httpResponse.getEntity();
         String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
 
-        if (DEBUG)
+        if (debug)
             if (entityString.length() > 100_000)
                 System.out.println("Response IS TOO BIG  { " + entityString.length() + " byte }");
             else

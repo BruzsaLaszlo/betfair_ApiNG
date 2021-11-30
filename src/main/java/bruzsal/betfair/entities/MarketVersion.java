@@ -1,12 +1,11 @@
 package bruzsal.betfair.entities;
 
+/**
+ * @param version A non-monotonically increasing number indicating market changes
+ */
+public record MarketVersion(
 
-public record MarketVersion (
+        Long version
 
-    /**
-     * A non-monotonically increasing number indicating market changes
-     */
-     Long version
-
-){
+) {
 }

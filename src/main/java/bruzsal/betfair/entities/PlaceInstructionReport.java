@@ -6,16 +6,16 @@ import bruzsal.betfair.enums.OrderStatus;
 
 import java.util.Date;
 
-public record PlaceInstructionReport (
+public record PlaceInstructionReport(
 
-     InstructionReportStatus status,
-     InstructionReportErrorCode errorCode,
-     OrderStatus orderStatus,
-     PlaceInstruction instruction,
-     String betId,
-     Date placedDate,
-     Double averagePriceMatched,
-     Double sizeMatched
+        InstructionReportStatus status,
+        InstructionReportErrorCode errorCode,
+        OrderStatus orderStatus,
+        PlaceInstruction instruction,
+        String betId,
+        Date placedDate,
+        Double averagePriceMatched,
+        Double sizeMatched
 
-){
+) {
 }

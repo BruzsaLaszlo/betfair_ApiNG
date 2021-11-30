@@ -13,7 +13,7 @@ public abstract class Child {
 
     protected Child parent;
 
-    protected Child(int depth,String id, String name) {
+    protected Child(int depth, String id, String name) {
         this.depth = depth;
         this.id = id;
         this.name = name;

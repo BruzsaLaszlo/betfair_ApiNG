@@ -2,23 +2,18 @@ package bruzsal.betfair.entities;
 
 import java.util.List;
 
+/**
+ * @param appName The unique name of the application
+ * @param appId A unique id of this application
+ * @param appVersions The application versions (including application keys)
+ */
+public record DeveloperApp(
 
-public record DeveloperApp (
-        /**
-         * The unique name of the application
-         */
         String appName,
-
-        /**
-         * A unique id of this application
-         */
         Long appId,
-
-        /**
-         * The application versions (including application keys)
-         */
         List<DeveloperAppVersion> appVersions
-){
+
+) {
 
     @Override
     public String toString() {

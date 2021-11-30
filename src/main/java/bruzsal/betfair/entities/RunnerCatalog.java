@@ -2,13 +2,15 @@ package bruzsal.betfair.entities;
 
 import java.util.Map;
 
+/**
+ * @param selectionId The unique id for the selection.
+ *                     The same selectionId and runnerName pairs are used accross all Betfair markets which contain them.
+ *                     Please note: The selectionId can be mapped to the runner name using the output from listMarketCatalogue
+ * @param metadata Metadata associated with the runner.
+ *                 For a description of this data for Horse Racing, please see Runner Metadata Description
+ */
 public record RunnerCatalog(
 
-        /**
-         * The unique id for the selection.
-         * The same selectionId and runnerName pairs are used accross all Betfair markets which contain them.
-         * Please note: The selectionId can be mapped to the runner name using the output from listMarketCatalogue
-         */
         Long selectionId,
 
         String runnerName,
@@ -17,10 +19,7 @@ public record RunnerCatalog(
 
         Integer sortPriority,
 
-        /**
-         * Metadata associated with the runner.  For a description of this data for Horse Racing, please see Runner Metadata Description
-         */
-        Map<String,String> metadata
+        Map<String, String> metadata
 
 ) {
 

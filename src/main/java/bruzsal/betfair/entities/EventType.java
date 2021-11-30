@@ -1,6 +1,6 @@
 package bruzsal.betfair.entities;
 
-public record EventType (
+public record EventType(
 
         String id,
 

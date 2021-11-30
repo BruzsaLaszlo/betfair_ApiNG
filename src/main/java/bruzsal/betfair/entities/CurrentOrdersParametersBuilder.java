@@ -185,5 +185,4 @@ public class CurrentOrdersParametersBuilder {
         return new CurrentOrdersParametersBuilder();
     }
 
-    public CurrentOrdersParametersBuilder(){}
 }
