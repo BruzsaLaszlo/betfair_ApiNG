@@ -5,50 +5,13 @@ import bruzsal.betfair.enums.ExecutionReportStatus;
 
 import java.util.List;
 
-public class CancelExecutionReport {
-    public void setCustomerRef(String customerRef) {
-        this.customerRef = customerRef;
-    }
+public record CancelExecutionReport(
 
-    public String getCustomerRef() {
-        return customerRef;
-    }
+        String customerRef,
+        ExecutionReportStatus status,
+        ExecutionReportErrorCode errorCode,
+        String marketId,
+        List<CancelInstructionReport> instructionReports
 
-    public void setStatus(ExecutionReportStatus status) {
-        this.status = status;
-    }
-
-    public ExecutionReportStatus getStatus() {
-        return status;
-    }
-
-    public void setErrorCode(ExecutionReportErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public ExecutionReportErrorCode getErrorCode() {
-        return errorCode;
-    }
-
-    public void setMarketId(String marketId) {
-        this.marketId = marketId;
-    }
-
-    public String getMarketId() {
-        return marketId;
-    }
-
-    public void setInstructionReports(List<CancelInstructionReport> instructionReports) {
-        this.instructionReports = instructionReports;
-    }
-
-    public List<CancelInstructionReport> getInstructionReports() {
-        return instructionReports;
-    }
-
-    private String customerRef;
-    private ExecutionReportStatus status;
-    private ExecutionReportErrorCode errorCode;
-    private String marketId;
-    private List<CancelInstructionReport> instructionReports;
+) {
 }

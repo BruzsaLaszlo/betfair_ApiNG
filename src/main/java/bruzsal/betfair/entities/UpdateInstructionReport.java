@@ -3,32 +3,11 @@ package bruzsal.betfair.entities;
 import bruzsal.betfair.enums.InstructionReportErrorCode;
 import bruzsal.betfair.enums.InstructionReportStatus;
 
-public class UpdateInstructionReport {
-    public void setStatus(InstructionReportStatus status) {
-        this.status = status;
-    }
+public record UpdateInstructionReport(
 
-    public InstructionReportStatus getStatus() {
-        return status;
-    }
+        InstructionReportStatus status,
+        InstructionReportErrorCode errorCode,
+        UpdateInstruction instruction
 
-    public void setErrorCode(InstructionReportErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public InstructionReportErrorCode getErrorCode() {
-        return errorCode;
-    }
-
-    public void setInstruction(UpdateInstruction instruction) {
-        this.instruction = instruction;
-    }
-
-    public UpdateInstruction getInstruction() {
-        return instruction;
-    }
-
-    private InstructionReportStatus status;
-    private InstructionReportErrorCode errorCode;
-    private UpdateInstruction instruction;
+) {
 }

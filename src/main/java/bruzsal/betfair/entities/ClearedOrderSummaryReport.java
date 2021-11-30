@@ -2,21 +2,12 @@ package bruzsal.betfair.entities;
 
 import java.util.List;
 
-public class ClearedOrderSummaryReport {
+public record ClearedOrderSummaryReport(
 
-    private boolean moreAvailable;
+        boolean moreAvailable,
 
-    private List<ClearedOrderSummary> clearedOrders;
+        List<ClearedOrderSummary> clearedOrders
 
-
-    public boolean isMoreAvailable() {
-        return moreAvailable;
-    }
-
-    public List<ClearedOrderSummary> getClearedOrders() {
-        return clearedOrders;
-    }
-
-
+) {
 }
 

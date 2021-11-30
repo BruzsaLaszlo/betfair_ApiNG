@@ -1,23 +1,15 @@
 package bruzsal.betfair.entities;
 
-public class CountryCodeResult {
+public record CountryCodeResult(
 
-    private String countryCode;
+        String countryCode,
+        int marketCount
 
-    private int marketCount;
-
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public int getMarketCount() {
-        return marketCount;
-    }
-
+) {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", countryCode,marketCount);
+        return String.format("%s - %s", countryCode, marketCount);
     }
+
 }

@@ -1,23 +1,10 @@
 package bruzsal.betfair.entities;
 
-public class CurrencyRate {
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
+public record CurrencyRate(
 
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
+        String currencyCode,
+        double rate
 
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
-    public double getRate() {
-        return rate;
-    }
-
-    private String currencyCode;
-    private double rate;
+) {
 }
 

@@ -1,22 +1,9 @@
 package bruzsal.betfair.entities;
 
-public class VenueResult {
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
+public record VenueResult(
 
-    public String getVenue() {
-        return venue;
-    }
+        String venue,
+        int marketCount
 
-    public void setMarketCount(int marketCount) {
-        this.marketCount = marketCount;
-    }
-
-    public int getMarketCount() {
-        return marketCount;
-    }
-
-    private String venue;
-    private int marketCount;
+) {
 }

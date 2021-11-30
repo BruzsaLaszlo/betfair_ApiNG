@@ -1,16 +1,12 @@
 package bruzsal.betfair.entities;
 
 
-public class MarketVersion {
+public record MarketVersion (
 
     /**
      * A non-monotonically increasing number indicating market changes
      */
-    private long version;
+     long version
 
-    public long getVersion() {
-        return version;
-    }
-
-
+){
 }

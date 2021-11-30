@@ -16,7 +16,7 @@ public class MarketFilter {
     /**
      * DEPRECATED
      */
-    @Deprecated
+    @Deprecated(since = "régen")
     private Set<String> exchangeIds;
 
     /**

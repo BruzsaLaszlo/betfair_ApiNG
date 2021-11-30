@@ -139,12 +139,12 @@ public class ApiNGJRescriptDemo {
                 PlaceExecutionReport placeBetResult = rescriptOperations.placeOrders(marketIdChosen, instructions, customerRef);
 
                 // Handling the operation result
-                if (placeBetResult.getStatus() == ExecutionReportStatus.SUCCESS) {
+                if (placeBetResult.status() == ExecutionReportStatus.SUCCESS) {
                     System.out.println("Your bet has been placed!!");
-                    System.out.println(placeBetResult.getInstructionReports());
-                } else if (placeBetResult.getStatus() == ExecutionReportStatus.FAILURE) {
+                    System.out.println(placeBetResult.instructionReports());
+                } else if (placeBetResult.status() == ExecutionReportStatus.FAILURE) {
                     System.out.println("Your bet has NOT been placed :*( ");
-                    System.out.println("The error is: " + placeBetResult.getErrorCode() + ": " + placeBetResult.getErrorCode().getMessage());
+                    System.out.println("The error is: " + placeBetResult.errorCode() + ": " + placeBetResult.errorCode().getMessage());
                 }
             } else {
                 System.out.println("Sorry, no runners found\n\n");

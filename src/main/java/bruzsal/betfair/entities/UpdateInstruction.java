@@ -2,15 +2,10 @@ package bruzsal.betfair.entities;
 
 import bruzsal.betfair.enums.PersistenceType;
 
-public class UpdateInstruction {
+public record UpdateInstruction(
 
-    private String betId;
-    private PersistenceType newPersistenceType;
+        String betId,
+        PersistenceType newPersistenceType
 
-    public UpdateInstruction(String betId, PersistenceType newPersistenceType) {
-        this.betId = betId;
-        this.newPersistenceType = newPersistenceType;
-    }
-
-
+) {
 }

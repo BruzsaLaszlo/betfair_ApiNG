@@ -2,23 +2,10 @@ package bruzsal.betfair.entities;
 
 import java.util.List;
 
-public class AccountStatementReport {
-    public void setAccountStatement(List<StatementItem> accountStatement) {
-        this.accountStatement = accountStatement;
-    }
+public record AccountStatementReport(
 
-    public List<StatementItem> getAccountStatement() {
-        return accountStatement;
-    }
+        List<StatementItem> accountStatement,
+        boolean moreAvailable
 
-    public void setMoreAvailable(boolean moreAvailable) {
-        this.moreAvailable = moreAvailable;
-    }
-
-    public boolean getMoreAvailable() {
-        return moreAvailable;
-    }
-
-    private List<StatementItem> accountStatement;
-    private boolean moreAvailable;
+) {
 }

@@ -1,10 +1,8 @@
 package bruzsal.betfair.entities;
 
-public class CurrentItemDescription {
+public record CurrentItemDescription(
 
-    private MarketVersion marketVersion;
+        MarketVersion marketVersion
 
-    public MarketVersion getMarketVersion() {
-        return marketVersion;
-    }
+) {
 }

@@ -49,7 +49,7 @@ class OperationsTest {
                 .build();
 
         List<CountryCodeResult> list = operations.listCountries(marketFilter);
-        list.sort((o1, o2) -> o2.getMarketCount() < o1.getMarketCount() ? -1 : 1);
+        list.sort((o1, o2) -> o2.marketCount() < o1.marketCount() ? -1 : 1);
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -138,7 +138,7 @@ class OperationsTest {
 
         assertNotNull(cosr);
 
-        assertFalse(cosr.isMoreAvailable());
+        assertFalse(cosr.moreAvailable());
     }
 
     @Test
@@ -181,9 +181,10 @@ class OperationsTest {
 
         List<EventResult> listEvents = operations.listEvents(marketFilter);
 
-        listEvents.sort(Comparator.comparing(o -> o.getEvent().getOpenDate()));
-
+        listEvents.sort(Comparator.comparing(o -> o.event().getOpenDate()));
         listEvents.forEach(System.out::println);
+
+        assertFalse(listEvents.isEmpty());
 
     }
 

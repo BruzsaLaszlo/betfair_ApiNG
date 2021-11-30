@@ -1,13 +1,8 @@
 package bruzsal.betfair.entities;
 
-public class TransferResponse {
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
+public record TransferResponse(
 
-    public String getTransactionId() {
-        return transactionId;
-    }
+        String transactionId
 
-    private String transactionId;
+) {
 }

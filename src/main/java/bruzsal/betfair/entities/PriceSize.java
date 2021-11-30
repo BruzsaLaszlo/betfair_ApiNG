@@ -1,23 +1,9 @@
 package bruzsal.betfair.entities;
 
-public class PriceSize {
-    private Double price;
-    private Double size;
+public record PriceSize(
 
-    public Double getPrice() {
-        return price;
-    }
+        Double price,
+        Double size
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getSize() {
-        return size;
-    }
-
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
+) {
 }
