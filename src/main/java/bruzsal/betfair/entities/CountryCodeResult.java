@@ -3,7 +3,7 @@ package bruzsal.betfair.entities;
 public record CountryCodeResult(
 
         String countryCode,
-        int marketCount
+        Integer marketCount
 
 ) {
 

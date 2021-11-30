@@ -70,8 +70,18 @@ class OperationsTest {
         assertTrue(list.size() > 0);
     }
 
-    public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection, MarketSort sort, int maxResult) throws ApiNgException, JsonProcessingException {
-        return operations.listMarketCatalogue(filter, marketProjection, sort, maxResult);
+    @Test
+    void listMarketCatalogue() throws ApiNgException, JsonProcessingException {
+
+        var mf = new MarketFilterBuilder()
+                .setMarketCountries(HUNGARY)
+                .build();
+        var mp = Set.of(MarketProjection.EVENT);
+
+        List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_AVAILABLE,10);
+
+        assertFalse(mc.isEmpty());
+
     }
 
     @Test
@@ -83,7 +93,15 @@ class OperationsTest {
                 .build();
 
         List<MarketTypeResult> list = operations.listMarketTypes(marketFilter);
-        list.sort((o1, o2) -> o2.getMarketCount() < o1.getMarketCount() ? -1 : 1);
+        list.sort((o1, o2) -> {
+            if (o2.marketCount() < o1.marketCount()) {
+                return -1;
+            } else if (o2.marketCount() > o1.marketCount()) {
+                return 1;
+            } else {
+                return o1.marketType().compareTo(o2.marketType());
+            }
+        });
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);

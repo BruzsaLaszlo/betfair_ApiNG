@@ -16,7 +16,7 @@ public record HeartbeatReport(
         /**
          * The actual timeout applied to your heartbeat request, see timeout request parameter description for details.
          */
-        int actualTimeoutSeconds
+        Integer actualTimeoutSeconds
 
 ) {
 }

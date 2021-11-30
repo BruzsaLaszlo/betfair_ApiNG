@@ -3,8 +3,7 @@ package bruzsal.betfair.entities;
 public record TimeRangeResult (
 
         TimeRange timeRange,
-
-        int marketCount
+        Integer marketCount
 
 ){
 

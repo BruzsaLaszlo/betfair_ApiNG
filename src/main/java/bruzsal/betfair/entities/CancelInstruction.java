@@ -4,7 +4,7 @@ public record CancelInstruction(
 
         String betId,
 
-        double sizeReduction
+        Double sizeReduction
 
 ) {
 }

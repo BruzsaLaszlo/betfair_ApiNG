@@ -5,7 +5,7 @@ import java.util.List;
 public record CurrentOrderSummaryReport(
 
         List<CurrentOrderSummary> currentOrders,
-        boolean moreAvailable
+        Boolean moreAvailable
 
 ) {
 

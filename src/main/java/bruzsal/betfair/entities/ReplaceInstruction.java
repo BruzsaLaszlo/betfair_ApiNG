@@ -4,7 +4,7 @@ public record ReplaceInstruction(
 
         String betId,
 
-        double newPrice
+        Double newPrice
 
 ) {
 }

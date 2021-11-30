@@ -4,7 +4,7 @@ import java.util.List;
 
 public record ClearedOrderSummaryReport(
 
-        boolean moreAvailable,
+        Boolean moreAvailable,
 
         List<ClearedOrderSummary> clearedOrders
 

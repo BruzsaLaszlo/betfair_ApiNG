@@ -10,7 +10,7 @@ public record DeveloperAppVersion(
         /**
          * The unique Id of the application version
          */
-        long versionId,
+        Long versionId,
 
         /**
          * The version identifier string such as 1.0    2.0. Unique for a given
@@ -27,24 +27,24 @@ public record DeveloperAppVersion(
          * Indicates whether the data exposed by platform services as seen by this
          * application key is delayed or realtime.
          */
-        boolean delayData,
+        Boolean delayData,
 
         /**
          * Indicates whether the application version needs explicit subscription
          */
-        boolean subscriptionRequired,
+        Boolean subscriptionRequired,
 
         /**
          * Indicates whether the application version needs explicit management by
          * producers. A value of false indicates    this is a version meant for
          * developer use.
          */
-        boolean ownerManaged,
+        Boolean ownerManaged,
 
         /**
          * Indicates whether the application version is currently active
          */
-        boolean active
+        Boolean active
 ) {
 
     @Override

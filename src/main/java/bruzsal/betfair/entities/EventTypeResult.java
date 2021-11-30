@@ -4,7 +4,7 @@ public record EventTypeResult (
 
         EventType eventType,
 
-        int marketCount
+        Integer marketCount
 
 ){
 

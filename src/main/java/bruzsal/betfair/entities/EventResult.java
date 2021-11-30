@@ -3,7 +3,7 @@ package bruzsal.betfair.entities;
 public record EventResult(
 
         Event event,
-        int marketCount
+        Integer marketCount
 
 ) {
 

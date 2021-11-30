@@ -1,6 +1,7 @@
 package bruzsal.betfair.enums;
 
 public enum ApiNgOperation {
+
     HEARTBEAT("heartbeat"),
     LISTEVENTTYPES("listEventTypes"),
     LISTCOMPETITIONS("listCompetitions"),

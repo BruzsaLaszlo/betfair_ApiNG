@@ -53,14 +53,14 @@ public class HTTPUTIL2 {
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException, URISyntaxException, InterruptedException {
 
-        String url;
+        String url = prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
         switch (endpoint) {
-            case ACCOUNT -> url = prop.getProperty("ACCOUNT_APING_URL");
-            case BETTING -> url = prop.getProperty("SPORT_APING_URL");
-            case HEARTBEAT -> url = prop.getProperty("HEARTBEAT_URL");
+            case ACCOUNT -> url = prop.getProperty("ACCOUNT_APING_URL") + url;
+            case BETTING -> url = prop.getProperty("SPORT_APING_URL") + url;
+            case HEARTBEAT -> url = prop.getProperty("HEARTBEAT_URL") + url;
+            case NAVIGATION -> url = prop.getProperty(("NAVIGATION_URL"));
             default -> url = "";
         }
-        url += prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

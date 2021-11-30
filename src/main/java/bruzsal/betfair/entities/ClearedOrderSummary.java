@@ -27,13 +27,13 @@ public record ClearedOrderSummary(
         /**
          * The id of the selection bet on. Available at RUNNER groupBy level or lower.
          */
-        long selectionId,
+        Long selectionId,
 
         /**
          * The handicap.  Enter the specific handicap value (returned by RUNNER in listMaketBook)
          * if the market is an Asian handicap market. Available at MARKET groupBy level or lower.
          */
-        double handicap,
+        Double handicap,
 
         /**
          * The id of the bet. Available at BET groupBy level.
@@ -81,7 +81,7 @@ public record ClearedOrderSummary(
          * Available at SIDE groupBy level or lower. For LINE markets this is the line position requested.
          * For LINE markets this is the line position requested.
          */
-        double priceRequested,
+        Double priceRequested,
 
         /**
          * The date and time the bet order was settled by Betfair. Available at SIDE groupBy level or lower.
@@ -102,34 +102,34 @@ public record ClearedOrderSummary(
          * The cumulative amount of commission paid by the customer across all bets under this Item, in the account currency.
          * Available at EXCHANGE, EVENT_TYPE, EVENT and MARKET level groupings only.
          */
-        double commission,
+        Double commission,
 
         /**
          * The average matched price across all settled bets or bet fragments under this Item.
          * Available at SIDE groupBy level or lower. For LINE markets this is the line position matched at.
          */
-        double priceMatched,
+        Double priceMatched,
 
         /**
          * If true, then the matched price was affected by a reduction factor due to of a runner removal from this Horse Racing market.
          */
-        boolean priceReduced,
+        Boolean priceReduced,
 
         /**
          * The cumulative bet size that was settled as matched or voided under this Item, in the account currency.
          * Available at SIDE groupBy level or lower.
          */
-        double sizeSettled,
+        Double sizeSettled,
 
         /**
          * The profit or loss (negative profit) gained on this line, in the account currency
          */
-        double profit,
+        Double profit,
 
         /**
          * The amount of the bet that was available to be matched, before cancellation or lapsing, in the account currency
          */
-        double sizeCancelled,
+        Double sizeCancelled,
 
         /**
          * The order reference defined by the customer for the bet order

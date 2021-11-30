@@ -14,8 +14,8 @@ public record PlaceInstructionReport (
      PlaceInstruction instruction,
      String betId,
      Date placedDate,
-     double averagePriceMatched,
-     double sizeMatched
+     Double averagePriceMatched,
+     Double sizeMatched
 
 ){
 }

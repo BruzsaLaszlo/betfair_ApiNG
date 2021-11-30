@@ -1,11 +1,13 @@
 package bruzsal.betfair.entities;
 
+import java.util.Date;
 import java.util.List;
 
 public class MarketCatalogue {
 
     private String marketId;
     private String marketName;
+    private Date marketStartTime;
     private MarketDescription description;
     private List<RunnerCatalog> runners = null;
     private EventType eventType;

@@ -12,7 +12,7 @@ public record DeveloperApp (
         /**
          * A unique id of this application
          */
-        long appId,
+        Long appId,
 
         /**
          * The application versions (including application keys)

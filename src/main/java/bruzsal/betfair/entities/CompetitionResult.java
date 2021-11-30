@@ -4,7 +4,7 @@ public record CompetitionResult(
 
         Competition competition,
 
-        int marketCount,
+        Integer marketCount,
 
         String competitionRegion
 

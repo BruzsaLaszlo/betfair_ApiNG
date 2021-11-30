@@ -2,12 +2,12 @@ package bruzsal.betfair.entities;
 
 public record AccountFundsResponse(
 
-        double availableToBetBalance,
-        double exposure,
-        double retainedCommission,
-        double exposureLimit,
-        double discountRate,
-        double pointsBalance,
+        Double availableToBetBalance,
+        Double exposure,
+        Double retainedCommission,
+        Double exposureLimit,
+        Double discountRate,
+        Double pointsBalance,
         String wallet
 
 ) {

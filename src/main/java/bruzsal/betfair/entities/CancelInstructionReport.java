@@ -13,7 +13,7 @@ public record CancelInstructionReport(
 
         CancelInstruction instruction,
 
-        double sizeCancelled,
+        Double sizeCancelled,
 
         Date cancelledDate
 

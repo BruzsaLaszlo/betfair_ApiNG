@@ -8,8 +8,8 @@ public record AccountDetailsResponse(
         String localeCode,
         String region,
         String timezone,
-        double discountRate,
-        int pointsBalance,
+        Double discountRate,
+        Integer pointsBalance,
         String countryCode
 
 ) {
