@@ -1,5 +1,7 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
+import bruzsal.betfair.entities.MarketFilter;
+import bruzsal.betfair.entities.TimeRange;
 import bruzsal.betfair.enums.CountryCodes;
 import bruzsal.betfair.enums.EventTypeIds;
 import bruzsal.betfair.enums.MarketBettingType;

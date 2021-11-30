@@ -1,5 +1,6 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
+import bruzsal.betfair.entities.TimeRange;
 import bruzsal.betfair.enums.OrderBy;
 import bruzsal.betfair.enums.OrderProjection;
 import bruzsal.betfair.enums.SortDir;

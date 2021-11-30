@@ -1,5 +1,6 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
+import bruzsal.betfair.entities.PriceProjection;
 import bruzsal.betfair.enums.MatchProjection;
 import bruzsal.betfair.enums.OrderProjection;
 
