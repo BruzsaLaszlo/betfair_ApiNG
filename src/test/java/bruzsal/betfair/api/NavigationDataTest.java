@@ -1,6 +1,5 @@
 package bruzsal.betfair.api;
 
-import bruzsal.betfair.navigation.Market;
 import bruzsal.betfair.navigation.NavigationData;
 import bruzsal.betfair.navigation.NavigationDataBase;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,11 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NavigationBejarasTest {
+class NavigationDataTest {
 
     static NavigationData ND = new NavigationData();
 
@@ -25,11 +23,20 @@ class NavigationBejarasTest {
     }
 
     @Test
+    void databaseTest() {
+
+        String s = NavigationDataBase.getSizeOfLists();
+        System.out.println(s);
+        assertFalse(s.isEmpty());
+
+    }
+
+    @Test
     @DisplayName("NavigationDataTest.test készítés")
     void updateNavigationData() throws IOException {
 
         var data = ND.getAllData(100);
-        ND.getRoot().printToConsole(2);
+
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, data);
 
@@ -93,14 +100,11 @@ class NavigationBejarasTest {
     @DisplayName("Magyar meccsek")
     void hungaryMatch() {
 
-        Optional<Market> m = NavigationDataBase.MARKETS.stream()
+        NavigationDataBase.MARKETS.stream()
                 .filter(market -> market.getEvent() != null)
                 .filter(market -> market.getEvent().getName().contains("Hungary"))
-                .findFirst();
-
-        if (m.isPresent())
-            assertFalse(m.get().getEvent().getMarkets().isEmpty());
-
+                .findFirst()
+                .ifPresent(market -> assertFalse(market.getEvent().getMarkets().isEmpty()));
 
     }
 

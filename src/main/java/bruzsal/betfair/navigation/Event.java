@@ -13,14 +13,9 @@ public class Event extends Child {
 
     private final List<Group> groups = new ArrayList<>();
 
-    public Event(String id, String name, String countryCode) {
-        super(id, name);
+    public Event(int depth, String id, String name, String countryCode) {
+        super(depth, id, name);
         this.countryCode = countryCode;
-    }
-
-    @Override
-    List<List<? extends Child>> getLists() {
-        return List.of(markets, events, groups);
     }
 
     @Override

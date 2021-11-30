@@ -12,20 +12,18 @@ public interface NavigationDataBase {
     List<Race> RACES = new ArrayList<>(600);
 
     static void clearLists() {
-        EVENTS.clear();
         MARKETS.clear();
+        EVENTS.clear();
         EVENT_TYPES.clear();
         GROUPS.clear();
         RACES.clear();
     }
 
     static String getSizeOfLists() {
-        return new StringBuilder()
-                .append("allEvent: ").append(EVENTS.size()).append("\n")
-                .append("allEventType: ").append(EVENT_TYPES.size()).append("\n")
-                .append("allGroups: ").append(GROUPS.size()).append("\n")
-                .append("allRace: ").append(RACES.size()).append("\n")
-                .append("allMarket: ").append(MARKETS.size()).append("\n")
-                .toString();
+        return "allEvent: " + EVENTS.size() + "\n" +
+                "allEventType: " + EVENT_TYPES.size() + "\n" +
+                "allGroups: " + GROUPS.size() + "\n" +
+                "allRace: " + RACES.size() + "\n" +
+                "allMarket: " + MARKETS.size() + "\n";
     }
 }

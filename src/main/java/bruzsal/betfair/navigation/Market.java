@@ -3,9 +3,7 @@ package bruzsal.betfair.navigation;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 public class Market extends Child {
 
@@ -17,8 +15,8 @@ public class Market extends Child {
 
     private Event event;
 
-    public Market(String id, Date martketStartTime, String marketType, String numberOfWinners, String name) {
-        super(id, name);
+    public Market(int depth, String id, String name, Date martketStartTime, String marketType, String numberOfWinners) {
+        super(depth, id, name);
         this.martketStartTime = new Timestamp(martketStartTime.getTime()).toLocalDateTime();
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
@@ -30,11 +28,6 @@ public class Market extends Child {
 
     public void setEvent(Event event) {
         this.event = event;
-    }
-
-    @Override
-    List<List<? extends Child>> getLists() {
-        return Collections.emptyList();
     }
 
     @Override

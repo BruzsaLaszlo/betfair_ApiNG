@@ -5,8 +5,8 @@ import java.util.List;
 
 public class EventType extends Child {
 
-    public EventType(String id, String name) {
-        super(id, name);
+    public EventType(int depth, String id, String name) {
+        super(depth, id, name);
     }
 
     private final List<Group> groups = new ArrayList<>();
@@ -25,11 +25,6 @@ public class EventType extends Child {
 
     public List<Race> getRaces() {
         return races;
-    }
-
-    @Override
-    List<List<? extends Child>> getLists() {
-        return List.of(events, groups);
     }
 
     public String toString() {

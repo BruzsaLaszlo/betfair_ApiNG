@@ -64,7 +64,6 @@ public class NavigationData {
     }
 
 
-
     public String getNavigationDataFromFile() {
         try {
             return Files.readString(NAVIGATION_DATA_JSON);
@@ -162,8 +161,8 @@ public class NavigationData {
             case "EVENT_TYPE" -> {
                 if (root.id.equals("7") && root.name.equals("Horse Racing") && HORSE_RACING_OFF)
                     break;
-                nd = new EventType(root.id, root.name);
-                ((Root)o).getEventTypes().add((EventType) nd);
+                nd = new EventType(depth,root.id, root.name);
+                ((Root) o).getEventTypes().add((EventType) nd);
                 EVENT_TYPES.add((EventType) nd);
             }
             case "GROUP" -> {
@@ -171,24 +170,24 @@ public class NavigationData {
                     nd = o;
                     break;
                 }
-                nd = new Group(root.id, root.name);
+                nd = new Group(depth,root.id, root.name);
                 add(o, (Group) nd);
                 GROUPS.add((Group) nd);
             }
             case "EVENT" -> {
-                nd = new Event(root.id, root.name, root.countryCode);
+                nd = new Event(depth,root.id, root.name, root.countryCode);
                 add(o, (Event) nd);
                 EVENTS.add((Event) nd);
             }
             case "RACE" -> {
                 if (HORSE_RACING_OFF)
                     break;
-                nd = new Race(root.id, root.name, root.venue, root.startTime, root.raceNumber, root.countryCode);
+                nd = new Race(depth,root.id, root.name, root.venue, root.startTime, root.raceNumber, root.countryCode);
                 ((EventType) o).getRaces().add((Race) nd);
                 RACES.add((Race) nd);
             }
             case "MARKET" -> {
-                nd = new Market(root.id, root.marketStartTime, root.marketType, root.numberOfWinners, root.name);
+                nd = new Market(depth,root.id, root.name, root.marketStartTime, root.marketType, root.numberOfWinners);
                 add(o, (Market) nd);
                 MARKETS.add((Market) nd);
             }
@@ -198,7 +197,6 @@ public class NavigationData {
         if (nd != null)
             nd.parent = o;
         if ((o = nd) == null) return;
-        nd.setDepth(depth);
 
 
         if (root.children != null)

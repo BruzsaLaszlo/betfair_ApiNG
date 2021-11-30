@@ -9,13 +9,8 @@ public class Group extends Child {
 
     private final List<Group> groups = new ArrayList<>();
 
-    public Group(String id, String name) {
-        super(id, name);
-    }
-
-    @Override
-    List<List<? extends Child>> getLists() {
-        return List.of(events, groups);
+    public Group(int depth, String id, String name) {
+        super(depth, id, name);
     }
 
     @Override

@@ -15,18 +15,12 @@ public class Race extends Child {
 
     private final List<Market> markets = new ArrayList<>();
 
-    public Race(String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
-        super(id, name);
+    public Race(int depth, String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
+        super(depth, id, name);
         this.venue = venue;
         this.startTime = new Timestamp(startTime.getTime()).toLocalDateTime();
         this.raceNumber = raceNumber;
         this.countryCode = countryCode;
-    }
-
-
-    @Override
-    List<List<? extends Child>> getLists() {
-        return List.of(markets);
     }
 
     @Override
