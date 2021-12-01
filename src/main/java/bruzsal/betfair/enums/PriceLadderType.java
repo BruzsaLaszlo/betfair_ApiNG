@@ -1,4 +1,4 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.enums;
 
 public enum PriceLadderType {
 
