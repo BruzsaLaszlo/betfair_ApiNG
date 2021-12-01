@@ -8,7 +8,6 @@ import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.*;
@@ -389,7 +388,6 @@ public class Operations {
     }
 
     protected String makeRequestBetting(String operation, Map<String, Object> params) throws ApiNgException, JsonProcessingException {
-        //params.put(LOCALE, DEFAULT_LOCALE);
         return makeRequest(operation, params, Endpoint.BETTING);
     }
 
@@ -409,22 +407,9 @@ public class Operations {
 
             return HttpUtil.sendPostRequest(operation, requestString, endpoint);
 
-        } catch (IllegalStateException exception) {
-
-            try {
-
-                throw om.readValue(exception.getMessage(), FaultData.class).detail().APINGException();
-
-            } catch (JsonSyntaxException jsonException) {
-                jsonException.printStackTrace();
-            }
-
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (IllegalStateException | IOException exception) {
+            throw om.readValue(exception.getMessage(), FaultData.class).detail().APINGException();
         }
-
-        return null;
-
     }
 
     /**

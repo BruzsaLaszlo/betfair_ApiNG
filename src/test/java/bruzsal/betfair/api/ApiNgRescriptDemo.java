@@ -1,11 +1,11 @@
-package bruzsal.betfair;
+package bruzsal.betfair.api;
 
-import bruzsal.betfair.api.MarketBookParameterBuilder;
-import bruzsal.betfair.api.Operations;
+
 import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -15,11 +15,12 @@ import java.util.*;
  * UK)</li> <li>get prices and runners on this market</li> <li>place a bet on 1
  * runner</li> <li>handle the error</li>
  */
-public class ApiNGJRescriptDemo {
+class ApiNgRescriptDemo {
 
     private final Operations rescriptOperations = Operations.getInstance();
 
-    public void start() {
+    @Test
+    void start() {
 
         try {
 
@@ -177,3 +178,4 @@ public class ApiNGJRescriptDemo {
     }
 
 }
+

@@ -221,7 +221,7 @@ class OperationsTest {
     }
 
     @Test
-    void publiclistEvents() throws ApiNgException, JsonProcessingException {
+    void listEvents() throws ApiNgException, JsonProcessingException {
 
         var marketFilter = new MarketFilterBuilder()
                 .setMarketCountries(HUNGARY)
@@ -294,6 +294,7 @@ class OperationsTest {
 
     @Test
     void json() throws JsonProcessingException {
+
         String json = """
                 {
                   "sessionToken":"3W7G9J+7dvc1X6BdZzAIwzRp/wOmRaydQ1H/KZ9aj24=",
@@ -301,11 +302,16 @@ class OperationsTest {
                   "list":["Ford", "BMW", "Fiat"]
                 }
                 """;
+
         record St(String sessionToken, String loginStatus, List<String> list) {
         }
+
         ObjectMapper mapper = new ObjectMapper();
         St st = mapper.readValue(json, St.class);
         System.out.println(st.list);
+
+        assertEquals("SUCCESS",st.loginStatus);
+
     }
 
     @Test
@@ -358,8 +364,9 @@ class OperationsTest {
 
         List<DeveloperApp> listApp = mapper.readValue(jsonApp, new TypeReference<>() {
         });
-        System.out.println(listApp.get(0).appVersions.get(0).ownerManaged());
+        System.out.println(listApp);
 
+        assertTrue(listApp.get(0).appVersions.get(0).subscriptionRequired);
     }
 
 }

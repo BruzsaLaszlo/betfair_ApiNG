@@ -97,4 +97,32 @@ public class LimitOrder {
         this.betTargetSize = betTargetSize;
         return this;
     }
+
+    public Double getSize() {
+        return size;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public PersistenceType getPersistenceType() {
+        return persistenceType;
+    }
+
+    public TimeInForce getTimeInForce() {
+        return timeInForce;
+    }
+
+    public Double getMinFillSize() {
+        return minFillSize;
+    }
+
+    public BetTargetType getBetTargetType() {
+        return betTargetType;
+    }
+
+    public Double getBetTargetSize() {
+        return betTargetSize;
+    }
 }
