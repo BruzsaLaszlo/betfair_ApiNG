@@ -5,6 +5,8 @@ import bruzsal.betfair.enums.BetStatus;
 import bruzsal.betfair.enums.GroupBy;
 import bruzsal.betfair.enums.Side;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ClearedOrderSummaryParameterBuilder {
@@ -12,7 +14,7 @@ public class ClearedOrderSummaryParameterBuilder {
     /**
      * Restricts the results to the specified status.
      */
-    private BetStatus betStatus = BetStatus.CANCELLED;
+    private BetStatus betStatus;
 
     /**
      * Optionally restricts the results to the specified Event Type IDs.
@@ -70,7 +72,7 @@ public class ClearedOrderSummaryParameterBuilder {
      * How to aggregate the lines, if not supplied then the lowest level is returned,
      * i.e. bet by bet This is only applicable to SETTLED BetStatus.
      */
-    private GroupBy groupBy = GroupBy.MARKET;
+    private GroupBy groupBy;
 
     /**
      * If true then an ItemDescription object is included in the response.
@@ -95,23 +97,26 @@ public class ClearedOrderSummaryParameterBuilder {
     private int recordCount = 0;
 
 
-    public static ClearedOrderSummaryParameterBuilder getDefault() {
-        return new ClearedOrderSummaryParameterBuilder();
+    public Map<String, Object> build() {
+        var params = new HashMap<String, Object>();
+        params.put("marketIds", marketIds);
+        params.put("eventTypeIds", eventTypeIds);
+        params.put("eventIds", eventIds);
+        params.put("runnerIds", runnerIds);
+        params.put("side", side);
+        params.put("betIds", betIds);
+        params.put("settledDateRange", settledDateRange);
+        params.put("betStatus", betStatus);
+        params.put("groupBy", groupBy);
+        params.put("fromRecord", fromRecord);
+        params.put("recordCount", recordCount);
+        params.put("includeItemDescription", includeItemDescription);
+        return params;
     }
-
-
-    public BetStatus getBetStatus() {
-        return betStatus;
-    }
-
 
     public ClearedOrderSummaryParameterBuilder setBetStatus(BetStatus betStatus) {
         this.betStatus = betStatus;
         return this;
-    }
-
-    public Set<String> getEventTypeIds() {
-        return eventTypeIds;
     }
 
     public ClearedOrderSummaryParameterBuilder setEventTypeIds(Set<String> eventTypeIds) {
@@ -119,117 +124,78 @@ public class ClearedOrderSummaryParameterBuilder {
         return this;
     }
 
-    public Set<String> getEventIds() {
-        return eventIds;
-    }
 
     public ClearedOrderSummaryParameterBuilder setEventIds(Set<String> eventIds) {
         this.eventIds = eventIds;
         return this;
     }
 
-    public Set<String> getMarketIds() {
-        return marketIds;
-    }
 
     public ClearedOrderSummaryParameterBuilder setMarketIds(Set<String> marketIds) {
         this.marketIds = marketIds;
         return this;
     }
 
-    public Set<String> getRunnerIds() {
-        return runnerIds;
-    }
 
     public ClearedOrderSummaryParameterBuilder setRunnerIds(Set<String> runnerIds) {
         this.runnerIds = runnerIds;
         return this;
     }
 
-    public Set<String> getBetIds() {
-        return betIds;
-    }
 
     public ClearedOrderSummaryParameterBuilder setBetIds(Set<String> betIds) {
         this.betIds = betIds;
         return this;
     }
 
-    public Set<String> getCustomerOrderRefs() {
-        return customerOrderRefs;
-    }
 
     public ClearedOrderSummaryParameterBuilder setCustomerOrderRefs(Set<String> customerOrderRefs) {
         this.customerOrderRefs = customerOrderRefs;
         return this;
     }
 
-    public Set<String> getCustomerStrategyRefs() {
-        return customerStrategyRefs;
-    }
 
     public ClearedOrderSummaryParameterBuilder setCustomerStrategyRefs(Set<String> customerStrategyRefs) {
         this.customerStrategyRefs = customerStrategyRefs;
         return this;
     }
 
-    public Side getSide() {
-        return side;
-    }
 
     public ClearedOrderSummaryParameterBuilder setSide(Side side) {
         this.side = side;
         return this;
     }
 
-    public TimeRange getSettledDateRange() {
-        return settledDateRange;
-    }
 
     public ClearedOrderSummaryParameterBuilder setSettledDateRange(TimeRange settledDateRange) {
         this.settledDateRange = settledDateRange;
         return this;
     }
 
-    public GroupBy getGroupBy() {
-        return groupBy;
-    }
 
     public ClearedOrderSummaryParameterBuilder setGroupBy(GroupBy groupBy) {
         this.groupBy = groupBy;
         return this;
     }
 
-    public boolean isIncludeItemDescription() {
-        return includeItemDescription;
-    }
 
     public ClearedOrderSummaryParameterBuilder setIncludeItemDescription(boolean includeItemDescription) {
         this.includeItemDescription = includeItemDescription;
         return this;
     }
 
-    public String getLocale() {
-        return locale;
-    }
 
     public ClearedOrderSummaryParameterBuilder setLocale(String locale) {
         this.locale = locale;
         return this;
     }
 
-    public int getFromRecord() {
-        return fromRecord;
-    }
 
     public ClearedOrderSummaryParameterBuilder setFromRecord(int fromRecord) {
         this.fromRecord = fromRecord;
         return this;
     }
 
-    public int getRecordCount() {
-        return recordCount;
-    }
 
     public ClearedOrderSummaryParameterBuilder setRecordCount(int recordCount) {
         this.recordCount = recordCount;

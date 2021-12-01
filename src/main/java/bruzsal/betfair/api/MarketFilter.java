@@ -1,9 +1,15 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
+import bruzsal.betfair.entities.TimeRange;
+import bruzsal.betfair.enums.CountryCodes;
+import bruzsal.betfair.enums.EventTypeIds;
 import bruzsal.betfair.enums.MarketBettingType;
 import bruzsal.betfair.enums.OrderStatus;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class MarketFilter {
@@ -13,11 +19,6 @@ public class MarketFilter {
      */
     private String textQuery;
 
-    /**
-     * DEPRECATED
-     */
-    @Deprecated(since = "régen")
-    private Set<String> exchangeIds;
 
     /**
      * Restrict markets by event type associated with the market. (i.e.\n    Football\n    Hockey\n    etc)
@@ -96,124 +97,142 @@ public class MarketFilter {
 //    ##############  END OF FIELDS ##############
 
 
-    public String getTextQuery() {
-        return textQuery;
+    public static MarketFilter empty() {
+        return new MarketFilter();
     }
 
-    public void setTextQuery(String textQuery) {
+    public MarketFilter setTextQuery(String textQuery) {
         this.textQuery = textQuery;
+        return this;
     }
 
-    public Set<String> getEventTypeIds() {
-        return eventTypeIds;
-    }
-
-    public void setEventTypeIds(Set<String> eventTypeIds) {
+    public MarketFilter setEventTypeIds(Set<String> eventTypeIds) {
         this.eventTypeIds = eventTypeIds;
+        return this;
     }
 
-    public Set<String> getEventIds() {
-        return eventIds;
+    public MarketFilter setEventTypeId(long eventTypeId) {
+        return setEventTypeIds(Set.of(String.valueOf(eventTypeId)));
     }
 
-    public void setEventIds(Set<String> eventIds) {
+    public MarketFilter setEventTypeId(EventTypeIds eventTypeIds) {
+        switch (eventTypeIds) {
+            case SOCCER -> {
+                return setEventTypeId(1);
+            }
+            default -> throw new IllegalStateException(eventTypeIds.name());
+        }
+    }
+
+
+    public MarketFilter setEventIds(Set<String> eventIds) {
         this.eventIds = eventIds;
+        return this;
     }
 
-    public Set<String> getCompetitionIds() {
-        return competitionIds;
+    public MarketFilter setEventIds(String... eventIds) {
+        return setEventIds(Set.of(eventIds));
     }
 
-    public void setCompetitionIds(Set<String> competitionIds) {
+
+    public MarketFilter setCompetitionIds(Set<String> competitionIds) {
         this.competitionIds = competitionIds;
+        return this;
     }
 
-    public Set<String> getMarketIds() {
-        return marketIds;
+    public MarketFilter setCompetitionIds(String... competitionIds) {
+        return setCompetitionIds(Set.of(competitionIds));
     }
 
-    public void setMarketIds(Set<String> marketIds) {
+
+    public MarketFilter setMarketIds(Set<String> marketIds) {
         this.marketIds = marketIds;
+        return this;
     }
 
-    public Set<String> getVenues() {
-        return venues;
+    public MarketFilter setMarketIds(String... marketIds) {
+        return setMarketIds(Set.of(marketIds));
     }
 
-    public void setVenues(Set<String> venues) {
+
+    public MarketFilter setVenues(Set<String> venues) {
         this.venues = venues;
+        return this;
     }
 
-    public Boolean getBspOnly() {
-        return bspOnly;
-    }
-
-    public void setBspOnly(Boolean bspOnly) {
+    public MarketFilter setBspOnly(Boolean bspOnly) {
         this.bspOnly = bspOnly;
+        return this;
     }
 
-    public Boolean getInPlayOnly() {
-        return inPlayOnly;
-    }
-
-    public void setInPlayOnly(Boolean inPlayOnly) {
+    public MarketFilter setInPlayOnly(Boolean inPlayOnly) {
         this.inPlayOnly = inPlayOnly;
+        return this;
     }
 
-    public Boolean getTurnInPlayEnabled() {
-        return turnInPlayEnabled;
-    }
-
-    public void setTurnInPlayEnabled(Boolean turnInPlayEnabled) {
+    public MarketFilter setTurnInPlayEnabled(Boolean turnInPlayEnabled) {
         this.turnInPlayEnabled = turnInPlayEnabled;
+        return this;
     }
 
-    public Set<MarketBettingType> getMarketBettingTypes() {
-        return marketBettingTypes;
-    }
-
-    public void setMarketBettingTypes(Set<MarketBettingType> marketBettingTypes) {
+    public MarketFilter setMarketBettingTypes(Set<MarketBettingType> marketBettingTypes) {
         this.marketBettingTypes = marketBettingTypes;
+        return this;
     }
 
-    public Set<String> getMarketCountries() {
-        return marketCountries;
+    public MarketFilter setMarketBettingTypes(MarketBettingType... marketBettingTypes) {
+        return setMarketBettingTypes(Set.of(marketBettingTypes));
     }
 
-    public void setMarketCountries(Set<String> marketCountries) {
+
+    public MarketFilter setMarketCountries(Set<String> marketCountries) {
         this.marketCountries = marketCountries;
+        return this;
     }
 
-    public Set<String> getMarketTypeCodes() {
-        return marketTypeCodes;
+    public MarketFilter setMarketCountries(CountryCodes... countryCodes) {
+        return setMarketCountries(Arrays.stream(countryCodes).map(cc -> cc.CODE).collect(Collectors.toSet()));
     }
 
-    public void setMarketTypeCodes(Set<String> marketTypeCodes) {
+
+    public MarketFilter setMarketTypeCodes(Set<String> marketTypeCodes) {
         this.marketTypeCodes = marketTypeCodes;
+        return this;
     }
 
-    public TimeRange getMarketStartTime() {
-        return marketStartTime;
+    public MarketFilter setMarketTypeCodes(String... marketTypeCodes) {
+        return setMarketTypeCodes(Set.of(marketTypeCodes));
     }
 
-    public void setMarketStartTime(TimeRange marketStartTime) {
+
+    public MarketFilter setMarketStartTime(TimeRange marketStartTime) {
         this.marketStartTime = marketStartTime;
+        return this;
     }
 
-    public Set<OrderStatus> getWithOrders() {
-        return withOrders;
+
+    public MarketFilter setMarketStartTime(LocalDateTime from, LocalDateTime to) {
+        return setMarketStartTime(new TimeRange(from, to));
     }
 
-    public void setWithOrders(Set<OrderStatus> withOrders) {
+    public MarketFilter setMarketStartTime(LocalDateTime from) {
+        return setMarketStartTime(from, null);
+    }
+
+
+    public MarketFilter setWithOrders(Set<OrderStatus> withOrders) {
         this.withOrders = withOrders;
+        return this;
     }
 
-    public Set<String> getRaceTypes() {
-        return raceTypes;
+    public MarketFilter setWithOrders(OrderStatus... orderStatuses) {
+        return setWithOrders(Set.of(orderStatuses));
     }
 
-    public void setRaceTypes(Set<String> raceTypes) {
+
+    public MarketFilter setRaceTypes(Set<String> raceTypes) {
         this.raceTypes = raceTypes;
+        return this;
     }
 
     @Override
@@ -234,5 +253,65 @@ public class MarketFilter {
                 "\n    marketStartTime = " + marketStartTime +
                 "\n    withOrders = " + withOrders +
                 "\n    raceTypes = " + raceTypes;
+    }
+
+    public String getTextQuery() {
+        return textQuery;
+    }
+
+    public Set<String> getEventTypeIds() {
+        return eventTypeIds;
+    }
+
+    public Set<String> getEventIds() {
+        return eventIds;
+    }
+
+    public Set<String> getCompetitionIds() {
+        return competitionIds;
+    }
+
+    public Set<String> getMarketIds() {
+        return marketIds;
+    }
+
+    public Set<String> getVenues() {
+        return venues;
+    }
+
+    public Boolean getBspOnly() {
+        return bspOnly;
+    }
+
+    public Boolean getInPlayOnly() {
+        return inPlayOnly;
+    }
+
+    public Boolean getTurnInPlayEnabled() {
+        return turnInPlayEnabled;
+    }
+
+    public Set<MarketBettingType> getMarketBettingTypes() {
+        return marketBettingTypes;
+    }
+
+    public Set<String> getMarketCountries() {
+        return marketCountries;
+    }
+
+    public Set<String> getMarketTypeCodes() {
+        return marketTypeCodes;
+    }
+
+    public TimeRange getMarketStartTime() {
+        return marketStartTime;
+    }
+
+    public Set<OrderStatus> getWithOrders() {
+        return withOrders;
+    }
+
+    public Set<String> getRaceTypes() {
+        return raceTypes;
     }
 }

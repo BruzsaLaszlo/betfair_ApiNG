@@ -5,7 +5,8 @@ import bruzsal.betfair.enums.OrderBy;
 import bruzsal.betfair.enums.OrderProjection;
 import bruzsal.betfair.enums.SortDir;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class CurrentOrdersParametersBuilder {
@@ -14,13 +15,13 @@ public class CurrentOrdersParametersBuilder {
      * Optionally restricts the results to the specified bet IDs.
      * A maximum of 250 betId's, or a combination of 250 betId's & marketId's are permitted.
      */
-    private Set<String> betIds = new HashSet<>();
+    private Set<String> betIds;
 
     /**
      * Optionally restricts the results to the specified market IDs.
      * A maximum of 250 marketId's, or a combination of 250 marketId's & betId's are permitted.
      */
-    private Set<String> marketIds = new HashSet<>();
+    private Set<String> marketIds;
 
     /**
      * Optionally restricts the results to the specified order status.
@@ -83,6 +84,26 @@ public class CurrentOrdersParametersBuilder {
      */
     private boolean includeItemDescription = true;
 
+    public static Map<String, Object> empty() {
+        return new HashMap<>();
+    }
+
+    public Map<String, Object> build() {
+        var params = new HashMap<String, Object>();
+        params.put("betIds", betIds);
+        params.put("marketId", marketIds);
+        params.put("customerOrderRefs", customerOrderRefs);
+        params.put("customerStrategyRefs", customerStrategyRefs);
+        params.put("placedDateRange", placedDateRange);
+        params.put("orderProjection", orderProjection);
+        params.put("orderBy", orderBy);
+        params.put("sortDir", sortDir);
+        params.put("fromRecord", fromRecord);
+        params.put("recordCount", recordCount);
+        params.put("includeItemDescription", includeItemDescription);
+        return params;
+    }
+
     public CurrentOrdersParametersBuilder setBetIds(Set<String> betIds) {
         this.betIds = betIds;
         return this;
@@ -136,54 +157,6 @@ public class CurrentOrdersParametersBuilder {
     public CurrentOrdersParametersBuilder setIncludeItemDescription(boolean includeItemDescription) {
         this.includeItemDescription = includeItemDescription;
         return this;
-    }
-
-    public Set<String> getBetIds() {
-        return betIds;
-    }
-
-    public Set<String> getMarketIds() {
-        return marketIds;
-    }
-
-    public OrderProjection getOrderProjection() {
-        return orderProjection;
-    }
-
-    public Set<String> getCustomerOrderRefs() {
-        return customerOrderRefs;
-    }
-
-    public Set<String> getCustomerStrategyRefs() {
-        return customerStrategyRefs;
-    }
-
-    public TimeRange getPlacedDateRange() {
-        return placedDateRange;
-    }
-
-    public OrderBy getOrderBy() {
-        return orderBy;
-    }
-
-    public SortDir getSortDir() {
-        return sortDir;
-    }
-
-    public int getFromRecord() {
-        return fromRecord;
-    }
-
-    public int getRecordCount() {
-        return recordCount;
-    }
-
-    public boolean isIncludeItemDescription() {
-        return includeItemDescription;
-    }
-
-    public static CurrentOrdersParametersBuilder getDefault() {
-        return new CurrentOrdersParametersBuilder();
     }
 
 }

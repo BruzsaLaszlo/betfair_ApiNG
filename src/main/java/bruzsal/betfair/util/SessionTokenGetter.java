@@ -17,55 +17,55 @@ import java.util.List;
 
 public class SessionTokenGetter {
 
-    public static String getAndSetSessionTokenToProperety()
-            throws NoSuchAlgorithmException, KeyManagementException, IOException, UnrecoverableKeyException, CertificateException, KeyStoreException {
-        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-        URL console = new URL(HttpUtil.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
-        KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(HttpUtil.prop.getProperty("PKCS12_FILE")), HttpUtil.prop.getProperty("PKCS12_PASSWORD"));
-        sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
-        con.setSSLSocketFactory(sslContext.getSocketFactory());
-        con.setRequestMethod("POST");
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        con.setUseCaches(false);
-        con.setConnectTimeout(30 * 1000);
-        con.setReadTimeout(60 * 1000);
-        con.setRequestProperty("X-Application", "apikey");
-
-        List<NameValuePair> nvps = new ArrayList<>();
-        nvps.add(new BasicNameValuePair("username", HttpUtil.prop.getProperty("BETFAIR_USERNAME")));
-        nvps.add(new BasicNameValuePair("password", HttpUtil.prop.getProperty("BETFAIR_PASSWORD")));
-
-        OutputStream os = con.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(os, StandardCharsets.UTF_8));
-        writer.write(getQuery(nvps));
-        writer.flush();
-        writer.close();
-        os.close();
-
-        con.connect();
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()), 1024 * 1024);
-        StringBuilder sb = new StringBuilder();
-        while (true) {
-            String line = in.readLine();
-            if (line == null) {
-                break;
-            }
-            sb.append(line);
-        }
-        System.out.println(sb);
-        in.close();
-
-        String sessionToken;
+    public static String get() {
         try {
-            sessionToken = SessionToken.getSessionToken(sb.toString());
-        } catch (Exception exception) {
-            sessionToken = sb.toString().split("\"")[3];
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            URL console = new URL(HTTPUTIL2.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
+            KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(HTTPUTIL2.prop.getProperty("PKCS12_FILE")), HTTPUTIL2.prop.getProperty("PKCS12_PASSWORD"));
+            sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
+            con.setSSLSocketFactory(sslContext.getSocketFactory());
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.setUseCaches(false);
+            con.setConnectTimeout(30 * 1000);
+            con.setReadTimeout(60 * 1000);
+            con.setRequestProperty("X-Application", "apikey");
+
+            List<NameValuePair> nvps = new ArrayList<>();
+            nvps.add(new BasicNameValuePair("username", HTTPUTIL2.prop.getProperty("BETFAIR_USERNAME")));
+            nvps.add(new BasicNameValuePair("password", HTTPUTIL2.prop.getProperty("BETFAIR_PASSWORD")));
+
+            OutputStream os = con.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(getQuery(nvps));
+            writer.flush();
+            writer.close();
+            os.close();
+
+            con.connect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()), 1024 * 1024);
+            StringBuilder sb = new StringBuilder();
+            while (in.ready()) {
+                String line = in.readLine();
+                if (line == null) {
+                    break;
+                }
+                sb.append(line);
+            }
+            in.close();
+
+            String sessionToken = getSessionToken(sb.toString());
+
+            HTTPUTIL2.prop.setProperty("SESSION_TOKEN", sessionToken);
+            return sessionToken;
+        } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
+                | UnrecoverableKeyException | KeyManagementException | IOException exception) {
+            exception.printStackTrace();
+            throw new IllegalStateException("nincs session token", exception);
         }
-        HttpUtil.prop.setProperty("SESSION_TOKEN", sessionToken);
-        return sessionToken;
     }
 
     private static KeyManager[] getKeyManagers(String keyStoreType, InputStream keyStoreFile, String keyStorePassword)
@@ -115,19 +115,23 @@ public class SessionTokenGetter {
         return result.toString();
     }
 
-    private class SessionToken {
-        private String sessionToken;
-        private String loginStatus;
+    private record SessionToken(
+            String sessionToken,
+            String loginStatus
+    ) {
+    }
 
-        public static String getSessionToken(String dataJson) {
-            try {
-                SessionToken st = Operations.om.readValue(dataJson, SessionToken.class);
-                if (st.loginStatus.equals("SUCCESS"))
-                    return st.sessionToken;
-                return "";
-            } catch (JsonProcessingException e) {
-                throw new IllegalStateException("Sikertelen a session token megszerzése");
+    public static String getSessionToken(String dataJson) {
+        try {
+            SessionToken st = Operations.om.readValue(dataJson, SessionToken.class);
+            if (st.loginStatus.equals("SUCCESS")) {
+                if (HTTPUTIL2.debug)
+                    System.out.printf("LoginsStatus: %s%nSessionToken: %s%n", st.loginStatus, st.sessionToken);
+                return st.sessionToken;
             }
+            throw new IllegalStateException("nem sikerült megszerezni a sessiont token-t");
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Sikertelen a session token megszerzése");
         }
     }
 

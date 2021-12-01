@@ -4,15 +4,26 @@ import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.util.HttpUtil;
+import bruzsal.betfair.util.HTTPUTIL2;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mizosoft.methanol.MoreBodyHandlers;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +41,7 @@ class OperationsTest {
     @Test
     void listEventTypes() throws ApiNgException, JsonProcessingException {
 
-        List<EventTypeResult> list = operations.listEventTypes(MarketFilterBuilder.empty());
+        List<EventTypeResult> list = operations.listEventTypes(MarketFilter.empty());
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -40,10 +51,9 @@ class OperationsTest {
     @Test
     void listMarketBook() throws ApiNgException, JsonProcessingException {
 
-        var mf = new MarketFilterBuilder()
+        var mf = new MarketFilter()
                 .setMarketCountries(UNITED_KINGDOM)
-                .setEventTypeId(SOCCER)
-                .build();
+                .setEventTypeId(SOCCER);
         var mp = Set.of(MarketProjection.RUNNER_DESCRIPTION);
 
         List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 1);
@@ -61,10 +71,9 @@ class OperationsTest {
     @Test
     void listCountries() throws ApiNgException, JsonProcessingException {
 
-        var marketFilter = new MarketFilterBuilder()
+        var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(1))
-                .build();
+                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(1));
 
         List<CountryCodeResult> list = operations.listCountries(marketFilter);
         list.sort(Comparator.comparing(CountryCodeResult::marketCount));
@@ -76,25 +85,24 @@ class OperationsTest {
     @Test
     void listTimeRanges() throws ApiNgException, JsonProcessingException {
 
-        var marketFilter = new MarketFilterBuilder()
+        var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(1))
-                .build();
+                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(10));
 
-        List<TimeRangeResult> list = operations.listTimeRanges(marketFilter, TimeGranularity.HOURS);
+        List<TimeRangeResult> list = operations.listTimeRanges(marketFilter, TimeGranularity.DAYS);
         list.sort(Comparator.comparing(TimeRangeResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
+
     }
 
     @Test
     void listMarketCatalogue() throws ApiNgException, JsonProcessingException {
 
-        var mf = new MarketFilterBuilder()
+        var mf = new MarketFilter()
                 .setMarketCountries(UNITED_KINGDOM)
-                .setEventTypeId(SOCCER)
-                .build();
+                .setEventTypeId(SOCCER);
         var mp = Set.of(MarketProjection.RUNNER_DESCRIPTION);
 
         List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 10);
@@ -108,10 +116,9 @@ class OperationsTest {
     @Test
     void listMarketTypes() throws ApiNgException, JsonProcessingException {
 
-        var marketFilter = new MarketFilterBuilder()
+        var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketCountries(UNITED_KINGDOM)
-                .build();
+                .setMarketCountries(UNITED_KINGDOM);
 
         List<MarketTypeResult> list = operations.listMarketTypes(marketFilter);
         list.sort((o1, o2) -> {
@@ -173,14 +180,15 @@ class OperationsTest {
     @Test
     void listCurrentOrders() throws ApiNgException, JsonProcessingException {
 
-        TimeRange timeRange = new TimeRange();
-        timeRange.setLFrom(LocalDateTime.now().minusDays(1));
-        timeRange.setLTo(LocalDateTime.now());
+        TimeRange timeRange = new TimeRange(
+                LocalDateTime.now().minusDays(1)
+        );
 
-        CurrentOrdersParametersBuilder copb = new CurrentOrdersParametersBuilder()
-                .setPlacedDateRange(timeRange);
+        var params = new CurrentOrdersParametersBuilder()
+                .setPlacedDateRange(timeRange)
+                .build();
 
-        CurrentOrderSummaryReport cosr = operations.listCurrentOrders(copb);
+        CurrentOrderSummaryReport cosr = operations.listCurrentOrders(params);
 
         System.out.println(cosr);
 
@@ -191,13 +199,18 @@ class OperationsTest {
 
     @Test
     void listClearedOrders() throws ApiNgException, JsonProcessingException {
-        TimeRange timeRange = new TimeRange();
-        timeRange.setLFrom(LocalDateTime.now().minusDays(1));
-        timeRange.setLTo(LocalDateTime.now());
 
-        ClearedOrderSummaryParameterBuilder builder = ClearedOrderSummaryParameterBuilder.getDefault();
+        TimeRange timeRange = new TimeRange(
+                LocalDateTime.now().minusDays(1),
+                LocalDateTime.now()
+        );
 
-        ClearedOrderSummaryReport cosr = operations.listClearedOrders(builder);
+        var params = new ClearedOrderSummaryParameterBuilder()
+                .setSettledDateRange(timeRange)
+                .setBetStatus(BetStatus.SETTLED)
+                .build();
+
+        ClearedOrderSummaryReport cosr = operations.listClearedOrders(params);
 
         assertNotNull(cosr);
 
@@ -206,10 +219,9 @@ class OperationsTest {
     @Test
     void listCompetitions() throws ApiNgException, JsonProcessingException {
 
-        var marketFilter = new MarketFilterBuilder()
+        var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketCountries(UNITED_KINGDOM)
-                .build();
+                .setMarketCountries(UNITED_KINGDOM);
 
         List<CompetitionResult> list = operations.listCompetitions(marketFilter);
 
@@ -223,9 +235,8 @@ class OperationsTest {
     @Test
     void listEvents() throws ApiNgException, JsonProcessingException {
 
-        var marketFilter = new MarketFilterBuilder()
-                .setMarketCountries(HUNGARY)
-                .build();
+        var marketFilter = new MarketFilter()
+                .setMarketCountries(HUNGARY);
 
         List<EventResult> listEvents = operations.listEvents(marketFilter);
 
@@ -240,15 +251,15 @@ class OperationsTest {
     @Test
     void heartbeat() throws ApiNgException, JsonProcessingException {
 
-        HeartbeatReport hbr =  operations.heartbeat(10);
+        HeartbeatReport hbr = operations.heartbeat(10);
         System.out.println(hbr);
 
-        assertEquals(10,hbr.actualTimeoutSeconds());
+        assertEquals(10, hbr.actualTimeoutSeconds());
 
-        hbr =  operations.heartbeat(0);
+        hbr = operations.heartbeat(0);
         System.out.println(hbr);
 
-        assertEquals(0,hbr.actualTimeoutSeconds());
+        assertEquals(0, hbr.actualTimeoutSeconds());
 
     }
 
@@ -265,31 +276,37 @@ class OperationsTest {
 
     @Test
     void getAccountDetails() throws ApiNgException, JsonProcessingException {
+
         AccountDetailsResponse adr = operations.getAccountDetails();
         assertNotNull(adr);
         System.out.println(adr);
         assertEquals("Laszlo", adr.firstName());
+
     }
 
     @Test
     void getDeveloperAppKeys() throws ApiNgException, JsonProcessingException {
+
         List<DeveloperApp> list = operations.getDeveloperAppKeys();
         assertNotNull(list);
         list.forEach(System.out::println);
         assertEquals("bruzsal", list.get(0).appVersions().get(0).owner());
+
     }
 
     @Test
     @Disabled("csak egyéni tesztre")
     void getSessionToken() {
-        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
+        assertTrue(HTTPUTIL2.prop.getProperty("SESSION_TOKEN").endsWith("="));
     }
 
     @Test
     @Disabled("túl nagy file-t tölt le")
     void getNavigationData() throws JsonProcessingException {
+
         new NavigationData().updateNavigationData();
         assertFalse(LocalDateTime.now().isEqual(NavigationData.lastUpdateTime));
+
     }
 
     @Test
@@ -310,7 +327,7 @@ class OperationsTest {
         St st = mapper.readValue(json, St.class);
         System.out.println(st.list);
 
-        assertEquals("SUCCESS",st.loginStatus);
+        assertEquals("SUCCESS", st.loginStatus);
 
     }
 
@@ -367,6 +384,80 @@ class OperationsTest {
         System.out.println(listApp);
 
         assertTrue(listApp.get(0).appVersions.get(0).subscriptionRequired);
+    }
+
+    private static final String HTTP_HEADER_X_APPLICATION = "X-Application";
+    private static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
+    private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
+    private static final String HTTP_HEADER_ACCEPT = "Accept";
+    private static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
+    private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+    private static final String CHARSET_UTF8 = "UTF-8";
+
+    @Test
+    void htttp() throws IOException, InterruptedException, URISyntaxException {
+        String url = "https://api.betfair.com/exchange/account/rest/v1.0/getAccountDetails/";
+
+        HttpRequest requestIndex = HttpRequest.newBuilder()
+                .uri(new URI("https://index.hu"))
+                .GET()
+                .version(HttpClient.Version.HTTP_2)
+                .headers("key1", "value1", "key2", "value2")
+                .header("key1", "value1")
+                .header("key2", "value2")
+                .timeout(Duration.of(10, ChronoUnit.SECONDS))
+                .build();
+
+        HttpRequest requestAccount = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .headers(HTTP_HEADER_CONTENT_TYPE, HTTPUTIL2.prop.getProperty("APPLICATION_JSON"))
+                .headers(HTTP_HEADER_ACCEPT, HTTPUTIL2.prop.getProperty("APPLICATION_JSON"))
+//                .headers(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8)
+                .headers(HTTP_HEADER_X_APPLICATION, HTTPUTIL2.prop.getProperty("APPLICATION_KEY"))
+                .headers(HTTP_HEADER_X_AUTHENTICATION, HTTPUTIL2.prop.getProperty("SESSION_TOKEN"))
+                .headers(HTTP_HEADER_ACCEPT_ENCODING, "gzip,deflate")
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpRequest request2 = HttpRequest.newBuilder()
+                .uri(new URI("https://postman-echo.com/post"))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofString("Sample request body"))
+                .build();
+
+        byte[] sampleData = "Sample request body".getBytes();
+        HttpRequest requestInput = HttpRequest.newBuilder()
+                .uri(new URI("https://postman-echo.com/post"))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers
+                        .ofInputStream(() -> new ByteArrayInputStream(sampleData)))
+                .build();
+
+        HttpRequest requestByte = HttpRequest.newBuilder()
+                .uri(new URI("https://postman-echo.com/post"))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofByteArray(sampleData))
+                .build();
+
+//        HttpRequest requestFile = HttpRequest.newBuilder()
+//                .uri(new URI("https://postman-echo.com/post"))
+//                .headers("Content-Type", "text/plain;charset=UTF-8")
+//                .POST(HttpRequest.BodyPublishers.fromFile(
+//                        Paths.get("src/test/resources/sample.txt")))
+//                .build();
+
+        HttpResponse<String> response = HttpClient.newBuilder()
+                .build()
+                .send(requestAccount, MoreBodyHandlers.decoding(HttpResponse.BodyHandlers.ofString()));
+
+        HttpHeaders responseHeaders = response.headers();
+
+//        Methanol
+
+        System.out.println(responseHeaders.toString());
+        System.out.println(response);
+        System.out.println(response.body());
+
     }
 
 }

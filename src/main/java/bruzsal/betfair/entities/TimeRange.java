@@ -4,36 +4,27 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class TimeRange {
+public record TimeRange (
 
-    private Date from;
-    private Date to;
+     Date from,
+     Date to
 
+){
 
-    public final Date getFrom() {
-        return from;
+    public TimeRange(LocalDateTime from, LocalDateTime to) {
+        this(getDate(from), getDate(to));
     }
 
-    public final void setFrom(Date from) {
-        this.from = from;
+    public TimeRange(LocalDateTime from) {
+        this(getDate(from), null);
     }
 
-    public final void setLFrom(LocalDateTime from) {
-        this.from = Timestamp.valueOf(from);
+    private static Date getDate(LocalDateTime ldt) {
+        if (ldt == null)
+            return null;
+        else
+            return Timestamp.valueOf(ldt);
     }
-
-    public final Date getTo() {
-        return to;
-    }
-
-    public final void setTo(Date to) {
-        this.to = to;
-    }
-
-    public final void setLTo(LocalDateTime to) {
-        this.to = Timestamp.valueOf(to);
-    }
-
 
     @Override
     public String toString() {

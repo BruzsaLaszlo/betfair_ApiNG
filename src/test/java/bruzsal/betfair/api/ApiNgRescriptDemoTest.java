@@ -7,6 +7,7 @@ import bruzsal.betfair.exceptions.ApiNgException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -15,7 +16,7 @@ import java.util.*;
  * UK)</li> <li>get prices and runners on this market</li> <li>place a bet on 1
  * runner</li> <li>handle the error</li>
  */
-class ApiNgRescriptDemo {
+class ApiNgRescriptDemoTest {
 
     private final Operations rescriptOperations = Operations.getInstance();
 
@@ -50,8 +51,7 @@ class ApiNgRescriptDemo {
              * sort: FIRST_TO_START - specify sort order to first to start race
              */
             System.out.println("4.(listMarketCataloque) Get next horse racing market in the UK...\n");
-            TimeRange time = new TimeRange();
-            time.setFrom(new Date());
+            TimeRange time = new TimeRange(LocalDateTime.now());
 
             Set<String> countries = new HashSet<>();
             countries.add("GB");

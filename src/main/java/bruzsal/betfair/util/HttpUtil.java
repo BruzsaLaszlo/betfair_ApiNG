@@ -10,11 +10,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -32,21 +27,18 @@ public final class HttpUtil {
     private static boolean debug;
 
     static {
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("org.apache.http");
+        root.setLevel(ch.qos.logback.classic.Level.INFO);
+
         try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
+
             prop.load(in);
             debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
-            SessionTokenGetter.getAndSetSessionTokenToProperety();
+            SessionTokenGetter.get();
 
-        } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Error loading the properties file: " + e);
         }
-    }
-
-    static {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("org.apache.http");
-        root.setLevel(ch.qos.logback.classic.Level.INFO);
     }
 
     public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
