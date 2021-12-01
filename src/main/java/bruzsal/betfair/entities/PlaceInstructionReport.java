@@ -1,5 +1,6 @@
 package bruzsal.betfair.entities;
 
+import bruzsal.betfair.api.PlaceInstruction;
 import bruzsal.betfair.enums.InstructionReportErrorCode;
 import bruzsal.betfair.enums.InstructionReportStatus;
 import bruzsal.betfair.enums.OrderStatus;

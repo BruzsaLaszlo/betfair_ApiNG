@@ -1,4 +1,4 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
 import bruzsal.betfair.enums.BetTargetType;
 import bruzsal.betfair.enums.PersistenceType;

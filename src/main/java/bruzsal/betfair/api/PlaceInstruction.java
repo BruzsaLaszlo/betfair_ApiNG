@@ -1,5 +1,7 @@
-package bruzsal.betfair.entities;
+package bruzsal.betfair.api;
 
+import bruzsal.betfair.entities.LimitOnCloseOrder;
+import bruzsal.betfair.entities.MarketOnCloseOrder;
 import bruzsal.betfair.enums.OrderType;
 import bruzsal.betfair.enums.Side;
 
