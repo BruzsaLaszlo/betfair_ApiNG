@@ -4,7 +4,7 @@ import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.exceptions.FaultData;
-import bruzsal.betfair.util.HTTPUTIL2;
+import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,17 +87,12 @@ public class Operations {
      * in which you can track prices, traded volume, unmatched orders and your evolving matched position with a
      * reasonably fixed, minimally sized response.
      */
-    public List<MarketBook> listMarketBook(MarketBookParameterBuilder builder)
-            throws ApiNgException, JsonProcessingException {
+    public List<MarketBook> listMarketBook(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
 
-        var params = new HashMap<String, Object>();
-        params.put(MARKET_IDS, builder.getMarketIds());
-        params.put(PRICEPROJECTION, builder.getPriceProjection());
-        params.put(MATCHPROJECTION, builder.getMatchProjection());
-        params.put(CURRENCYCODE, builder.getCurrencyCode());
         String result = makeRequestBetting(LISTMARKETBOOK, params);
         return om.readValue(result, new TypeReference<>() {
         });
+
     }
 
     /**
@@ -382,7 +377,7 @@ public class Operations {
 
         try {
 
-            return HTTPUTIL2.sendPostRequest(operation, requestString, endpoint);
+            return HttpUtil.sendPostRequest(operation, requestString, endpoint);
 
         } catch (IllegalStateException exception) {
             FaultData faultData = om.readValue(exception.getMessage(), FaultData.class);

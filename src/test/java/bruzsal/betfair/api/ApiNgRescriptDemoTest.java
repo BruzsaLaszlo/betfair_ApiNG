@@ -86,8 +86,8 @@ class ApiNgRescriptDemoTest {
             List<String> marketIds = new ArrayList<>();
             marketIds.add(marketIdChosen);
 
-            MarketBookParameterBuilder mbpb = new MarketBookParameterBuilder().setMarketIds(marketIds).validate();
-            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(mbpb);
+            var params = new MarketBookParameterBuilder().setMarketIds(marketIds).build();
+            List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(params);
 
             /**
              * PlaceOrders: we try to place a bet, based on the previous request we provide the following:

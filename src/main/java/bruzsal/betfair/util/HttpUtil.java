@@ -1,101 +1,134 @@
 package bruzsal.betfair.util;
 
+import bruzsal.betfair.enums.ApiNgOperation;
 import bruzsal.betfair.enums.Endpoint;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import com.github.mizosoft.methanol.MoreBodyHandlers;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
-public final class HttpUtil {
+import static java.time.temporal.ChronoUnit.SECONDS;
 
-    private static final String HTTP_HEADER_X_APPLICATION = "X-Application";
-    private static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
-    private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
-    private static final String HTTP_HEADER_ACCEPT = "Accept";
-    private static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
-    private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-    private static final String CHARSET_UTF8 = "UTF-8";
+public class HttpUtil {
+
 
     public static final Properties prop = new Properties();
-    private static boolean debug;
+    public static boolean debug;
+
+    public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
+            .build();
 
     static {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("org.apache.http");
-        root.setLevel(ch.qos.logback.classic.Level.INFO);
-
+        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Connection");
         try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
 
             prop.load(in);
             debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
-            SessionTokenGetter.get();
+            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.get());
 
         } catch (IOException e) {
             System.out.println("Error loading the properties file: " + e);
         }
     }
 
-    public static String sendPostRequest(String operation, String jsonRequest, Endpoint endpoint) throws IOException {
 
-        String url = prop.getProperty("RESCRIPT_SUFFIX") + operation + "/";
+    public static String sendPostRequest(ApiNgOperation operation, String jsonRequest, Endpoint endpoint) {
+
+        String url = getUrl(endpoint, operation);
+
+        HttpRequest request = getHttpRequest(jsonRequest, url);
+
+        if (debug) System.out.println(getDebugMessage(jsonRequest, url, request));
+
+        try {
+
+            HttpResponse<String> response = HTTP_CLIENT
+                    .send(request, MoreBodyHandlers.decoding(HttpResponse.BodyHandlers.ofString()));
+
+            if (debug) System.out.println(getDebugMessage(response));
+
+            if (response.statusCode() != 200) throw new IllegalStateException(response.body());
+
+            return response.body();
+
+        } catch (InterruptedException | IOException exception) {
+            throw new IllegalStateException("http hiba", exception);
+        }
+
+    }
+
+    private static String getUrl(Endpoint endpoint, ApiNgOperation operation) {
+        String url;
         switch (endpoint) {
-            case ACCOUNT -> url = prop.getProperty("ACCOUNT_APING_URL") + url;
-            case BETTING -> url = prop.getProperty("SPORT_APING_URL") + url;
-            case HEARTBEAT -> url = prop.getProperty("HEARTBEAT_URL") + url;
-            case NAVIGATION -> url = prop.getProperty(("NAVIGATION_URL"));
-            default -> url = "";
+            case ACCOUNT -> url = "https://api.betfair.com/exchange/account/";
+            case BETTING -> url = "https://api.betfair.com/exchange/betting/";
+            case HEARTBEAT -> url = "https://api.betfair.com/exchange/heartbeat/";
+            case NAVIGATION -> {
+                return "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
+            }
+            default -> throw new IllegalStateException("nincs ilyen Endpoint, hibás lesz az url");
         }
-
-        HttpPost post = new HttpPost(url);
-        {
-            post.setHeader(HTTP_HEADER_CONTENT_TYPE, prop.getProperty("APPLICATION_JSON"));
-            post.setHeader(HTTP_HEADER_ACCEPT, prop.getProperty("APPLICATION_JSON"));
-            post.setHeader(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8);
-            post.setHeader(HTTP_HEADER_X_APPLICATION, prop.getProperty("APPLICATION_KEY"));
-            post.setHeader(HTTP_HEADER_X_AUTHENTICATION, prop.getProperty("SESSION_TOKEN"));
-            post.setHeader(HTTP_HEADER_ACCEPT_ENCODING, "gzip,deflate");
-            post.setHeader("Connection", "keep-alive");
-            if (jsonRequest != null)
-                post.setEntity(new StringEntity(jsonRequest, CHARSET_UTF8));
-        }
-
-        if (debug) {
-            System.out.println("Request headers: " + Arrays.toString(post.getAllHeaders()));
-            System.out.println("URL: " + post.getURI().toString());
-            System.out.println("jsonRequest: " + jsonRequest);
-        }
-
-        return HttpClientBuilder.create().build().execute(post, (HttpUtil::handleResponse));
-
+        return url + "rest/v1.0/" + operation.getOperationName() + "/";
     }
 
-    private static String handleResponse(HttpResponse httpResponse) throws IOException {
-
-        HttpEntity entity = httpResponse.getEntity();
-        String entityString = entity == null ? "null" : EntityUtils.toString(entity, CHARSET_UTF8);
-
-        if (debug)
-            if (entityString.length() > 100_000)
-                System.out.println("Response IS TOO BIG  { " + entityString.length() + " byte }");
-            else
-                System.out.println("Response: " + entityString);
-
-        var statusCode = httpResponse.getStatusLine().getStatusCode();
-        if (statusCode != 200) throw new IllegalStateException(entityString);
-
-        return entityString;
-
+    private static HttpRequest getHttpRequest(String jsonRequest, String url) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .headers("Content-Type", "application/json")
+                .headers("Accept", "application/json")
+                .headers("Accept-Charset", "UTF-8")
+                .headers("X-Application", prop.getProperty("APPLICATION_KEY"))
+                .headers("X-Authentication", prop.getProperty("SESSION_TOKEN"))
+                .headers("Accept-Encoding", "gzip,deflate")
+//                .headers("Connection", "keep-alive")
+                .timeout(Duration.of(10, SECONDS))
+                .POST(HttpRequest.BodyPublishers.ofString(jsonRequest == null ? "{}" : jsonRequest))
+                .build();
     }
 
 
-    private HttpUtil() {
+    private static String getDebugMessage(String jsonRequest, String url, HttpRequest request) {
+        return String.format("""
+                %n============================= HTTPUTIL =============================
+                URL:
+                    %s
+                Request headers:
+                %s
+                ============================== REQUEST ==============================
+                %s
+                """, url, headersToString(request.headers()), jsonRequest);
     }
 
+    private static String getDebugMessage(HttpResponse<String> response) {
+        if (response.body().length() > 100_000)
+            return "Response IS TOO BIG  { " + response.body().length() + " byte }";
+        else
+            return String.format("""
+                    =========================== RESPONSE: %s ===========================
+                    Response headers:
+                    %s
+                    %n=========================== RESPONSE BODY ==========================
+                    %s
+                    =========================== HTTPUTIL END ===========================
+                    """, response.statusCode(), headersToString(response.headers()), response.body());
+    }
 
+    @NotNull
+    private static String headersToString(HttpHeaders headers) {
+        return headers.map().entrySet().stream()
+                .map(entry -> "    " + entry.getKey() + " = " + entry.getValue())
+                .collect(Collectors.joining("\n"));
+    }
 }

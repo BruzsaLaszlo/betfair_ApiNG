@@ -4,9 +4,7 @@ import bruzsal.betfair.entities.PriceProjection;
 import bruzsal.betfair.enums.MatchProjection;
 import bruzsal.betfair.enums.OrderProjection;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MarketBookParameterBuilder {
 
@@ -69,10 +67,21 @@ public class MarketBookParameterBuilder {
     private Set<String> betIds;
 
 
-    public MarketBookParameterBuilder validate() {
+    public Map<String, Object> build() {
         if (marketIds == null || marketIds.isEmpty())
             throw new IllegalArgumentException("marketIds List kell hogy legyen");
-        return this;
+        var params = new HashMap<String, Object>();
+        params.put("marketIds", marketIds);
+        params.put("priceProjection", priceProjection);
+        params.put("orderProjection", orderProjection);
+        params.put("matchProjection", matchProjection);
+        params.put("includeOverallPosition", includeOverallPosition);
+        params.put("partitionMatchedByStrategyRef", partitionMatchedByStrategyRef);
+        params.put("customerStrategyRefs", customerStrategyRefs);
+        params.put("currencyCode", currencyCode);
+        params.put("matchedSince", matchedSince);
+        params.put("betIds", betIds);
+        return params;
     }
 
     public MarketBookParameterBuilder setMarketIds(List<String> marketIds) {
@@ -135,43 +144,4 @@ public class MarketBookParameterBuilder {
         return this;
     }
 
-    public List<String> getMarketIds() {
-        return marketIds;
-    }
-
-    public PriceProjection getPriceProjection() {
-        return priceProjection;
-    }
-
-    public OrderProjection getOrderProjection() {
-        return orderProjection;
-    }
-
-    public MatchProjection getMatchProjection() {
-        return matchProjection;
-    }
-
-    public Boolean getIncludeOverallPosition() {
-        return includeOverallPosition;
-    }
-
-    public Boolean getPartitionMatchedByStrategyRef() {
-        return partitionMatchedByStrategyRef;
-    }
-
-    public Set<String> getCustomerStrategyRefs() {
-        return customerStrategyRefs;
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    public Date getMatchedSince() {
-        return matchedSince;
-    }
-
-    public Set<String> getBetIds() {
-        return betIds;
-    }
 }

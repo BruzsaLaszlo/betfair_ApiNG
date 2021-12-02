@@ -20,8 +20,8 @@ public class SessionTokenGetter {
     public static String get() {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            URL console = new URL(HTTPUTIL2.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
-            KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(HTTPUTIL2.prop.getProperty("PKCS12_FILE")), HTTPUTIL2.prop.getProperty("PKCS12_PASSWORD"));
+            URL console = new URL(HttpUtil.prop.getProperty("BETFAIR_CERT_LOGIN_URL"));
+            KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(HttpUtil.prop.getProperty("PKCS12_FILE")), HttpUtil.prop.getProperty("PKCS12_PASSWORD"));
             sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
             con.setSSLSocketFactory(sslContext.getSocketFactory());
@@ -34,8 +34,8 @@ public class SessionTokenGetter {
             con.setRequestProperty("X-Application", "apikey");
 
             List<NameValuePair> nvps = new ArrayList<>();
-            nvps.add(new BasicNameValuePair("username", HTTPUTIL2.prop.getProperty("BETFAIR_USERNAME")));
-            nvps.add(new BasicNameValuePair("password", HTTPUTIL2.prop.getProperty("BETFAIR_PASSWORD")));
+            nvps.add(new BasicNameValuePair("username", HttpUtil.prop.getProperty("BETFAIR_USERNAME")));
+            nvps.add(new BasicNameValuePair("password", HttpUtil.prop.getProperty("BETFAIR_PASSWORD")));
 
             OutputStream os = con.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
@@ -59,7 +59,7 @@ public class SessionTokenGetter {
 
             String sessionToken = getSessionToken(sb.toString());
 
-            HTTPUTIL2.prop.setProperty("SESSION_TOKEN", sessionToken);
+            HttpUtil.prop.setProperty("SESSION_TOKEN", sessionToken);
             return sessionToken;
         } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
                 | UnrecoverableKeyException | KeyManagementException | IOException exception) {
@@ -125,7 +125,7 @@ public class SessionTokenGetter {
         try {
             SessionToken st = Operations.om.readValue(dataJson, SessionToken.class);
             if (st.loginStatus.equals("SUCCESS")) {
-                if (HTTPUTIL2.debug)
+                if (HttpUtil.debug)
                     System.out.printf("LoginsStatus: %s%nSessionToken: %s%n", st.loginStatus, st.sessionToken);
                 return st.sessionToken;
             }

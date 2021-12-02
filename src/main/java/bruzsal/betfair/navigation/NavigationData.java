@@ -1,7 +1,7 @@
 package bruzsal.betfair.navigation;
 
 import bruzsal.betfair.enums.Endpoint;
-import bruzsal.betfair.util.HTTPUTIL2;
+import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class NavigationData {
 
     private String downLoadAndSaveNavigationData() {
         try {
-            String dataJson = HTTPUTIL2.sendPostRequest(null, null, Endpoint.NAVIGATION);
+            String dataJson = HttpUtil.sendPostRequest(null, null, Endpoint.NAVIGATION);
             Files.writeString(NAVIGATION_DATA_JSON, dataJson);
             lastUpdateTime = LocalDateTime.now();
             return dataJson;

@@ -4,7 +4,7 @@ import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.util.HTTPUTIL2;
+import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,9 +58,11 @@ class OperationsTest {
 
         List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 1);
 
-        MarketBookParameterBuilder mbpb = new MarketBookParameterBuilder().setMarketIds(mc.get(0).marketId()).validate();
+        var params = new MarketBookParameterBuilder()
+                .setMarketIds(mc.get(0).marketId())
+                .build();
 
-        List<MarketBook> lmb = operations.listMarketBook(mbpb);
+        List<MarketBook> lmb = operations.listMarketBook(params);
 
         lmb.forEach(System.out::println);
 
@@ -297,7 +299,7 @@ class OperationsTest {
     @Test
     @Disabled("csak egyéni tesztre")
     void getSessionToken() {
-        assertTrue(HTTPUTIL2.prop.getProperty("SESSION_TOKEN").endsWith("="));
+        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
     }
 
     @Test
@@ -410,11 +412,11 @@ class OperationsTest {
 
         HttpRequest requestAccount = HttpRequest.newBuilder()
                 .uri(new URI(url))
-                .headers(HTTP_HEADER_CONTENT_TYPE, HTTPUTIL2.prop.getProperty("APPLICATION_JSON"))
-                .headers(HTTP_HEADER_ACCEPT, HTTPUTIL2.prop.getProperty("APPLICATION_JSON"))
+                .headers(HTTP_HEADER_CONTENT_TYPE, HttpUtil.prop.getProperty("APPLICATION_JSON"))
+                .headers(HTTP_HEADER_ACCEPT, HttpUtil.prop.getProperty("APPLICATION_JSON"))
 //                .headers(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8)
-                .headers(HTTP_HEADER_X_APPLICATION, HTTPUTIL2.prop.getProperty("APPLICATION_KEY"))
-                .headers(HTTP_HEADER_X_AUTHENTICATION, HTTPUTIL2.prop.getProperty("SESSION_TOKEN"))
+                .headers(HTTP_HEADER_X_APPLICATION, HttpUtil.prop.getProperty("APPLICATION_KEY"))
+                .headers(HTTP_HEADER_X_AUTHENTICATION, HttpUtil.prop.getProperty("SESSION_TOKEN"))
                 .headers(HTTP_HEADER_ACCEPT_ENCODING, "gzip,deflate")
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
