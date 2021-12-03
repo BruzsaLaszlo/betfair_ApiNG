@@ -4,7 +4,7 @@ import bruzsal.betfair.entities.*;
 import bruzsal.betfair.enums.*;
 import bruzsal.betfair.exceptions.ApiNgException;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.util.HttpUtil;
+import bruzsal.betfair.util.Properties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -297,9 +297,8 @@ class OperationsTest {
     }
 
     @Test
-    @Disabled("csak egyéni tesztre")
     void getSessionToken() {
-        assertTrue(HttpUtil.prop.getProperty("SESSION_TOKEN").endsWith("="));
+        assertTrue(Properties.sessionToken.endsWith("="));
     }
 
     @Test
@@ -410,17 +409,6 @@ class OperationsTest {
                 .timeout(Duration.of(10, ChronoUnit.SECONDS))
                 .build();
 
-        HttpRequest requestAccount = HttpRequest.newBuilder()
-                .uri(new URI(url))
-                .headers(HTTP_HEADER_CONTENT_TYPE, HttpUtil.prop.getProperty("APPLICATION_JSON"))
-                .headers(HTTP_HEADER_ACCEPT, HttpUtil.prop.getProperty("APPLICATION_JSON"))
-//                .headers(HTTP_HEADER_ACCEPT_CHARSET, CHARSET_UTF8)
-                .headers(HTTP_HEADER_X_APPLICATION, HttpUtil.prop.getProperty("APPLICATION_KEY"))
-                .headers(HTTP_HEADER_X_AUTHENTICATION, HttpUtil.prop.getProperty("SESSION_TOKEN"))
-                .headers(HTTP_HEADER_ACCEPT_ENCODING, "gzip,deflate")
-                .POST(HttpRequest.BodyPublishers.noBody())
-                .build();
-
         HttpRequest request2 = HttpRequest.newBuilder()
                 .uri(new URI("https://postman-echo.com/post"))
                 .headers("Content-Type", "text/plain;charset=UTF-8")
@@ -450,7 +438,7 @@ class OperationsTest {
 
         HttpResponse<String> response = HttpClient.newBuilder()
                 .build()
-                .send(requestAccount, MoreBodyHandlers.decoding(HttpResponse.BodyHandlers.ofString()));
+                .send(requestIndex, MoreBodyHandlers.decoding(HttpResponse.BodyHandlers.ofString()));
 
         HttpHeaders responseHeaders = response.headers();
 

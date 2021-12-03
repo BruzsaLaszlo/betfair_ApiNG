@@ -27,7 +27,7 @@ class NavigationDataTest {
     }
 
     @Test
-    void databaseTest() {
+    void sizeOfLists() {
 
         String s = NavigationDataBase.getSizeOfLists();
         System.out.println(s);

@@ -15,16 +15,13 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
+import static bruzsal.betfair.util.Properties.*;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class HttpUtil {
 
-
-    public static final Properties prop = new Properties();
-    public static boolean debug;
 
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
@@ -32,15 +29,6 @@ public class HttpUtil {
 
     static {
         System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Connection");
-        try (InputStream in = HttpUtil.class.getResourceAsStream("/apingdemo.properties")) {
-
-            prop.load(in);
-            debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
-            prop.setProperty("SESSION_TOKEN", SessionTokenGetter.get());
-
-        } catch (IOException e) {
-            System.out.println("Error loading the properties file: " + e);
-        }
     }
 
 
@@ -89,8 +77,8 @@ public class HttpUtil {
                 .headers("Content-Type", "application/json")
                 .headers("Accept", "application/json")
                 .headers("Accept-Charset", "UTF-8")
-                .headers("X-Application", prop.getProperty("APPLICATION_KEY"))
-                .headers("X-Authentication", prop.getProperty("SESSION_TOKEN"))
+                .headers("X-Application", APPLICATION_KEY.value())
+                .headers("X-Authentication", SESSION_TOKEN.value())
                 .headers("Accept-Encoding", "gzip,deflate")
 //                .headers("Connection", "keep-alive")
                 .timeout(Duration.of(10, SECONDS))
