@@ -24,13 +24,13 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import static bruzsal.betfair.enums.CountryCodes.HUNGARY;
 import static bruzsal.betfair.enums.CountryCodes.UNITED_KINGDOM;
 import static bruzsal.betfair.enums.EventTypeIds.SOCCER;
+import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OperationsTest {
@@ -78,7 +78,7 @@ class OperationsTest {
                 .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(1));
 
         List<CountryCodeResult> list = operations.listCountries(marketFilter);
-        list.sort(Comparator.comparing(CountryCodeResult::marketCount));
+        list.sort(comparing(CountryCodeResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -92,7 +92,7 @@ class OperationsTest {
                 .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(10));
 
         List<TimeRangeResult> list = operations.listTimeRanges(marketFilter, TimeGranularity.DAYS);
-        list.sort(Comparator.comparing(TimeRangeResult::marketCount));
+        list.sort(comparing(TimeRangeResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -123,15 +123,8 @@ class OperationsTest {
                 .setMarketCountries(UNITED_KINGDOM);
 
         List<MarketTypeResult> list = operations.listMarketTypes(marketFilter);
-        list.sort((o1, o2) -> {
-            if (o2.marketCount() < o1.marketCount()) {
-                return -1;
-            } else if (o2.marketCount() > o1.marketCount()) {
-                return 1;
-            } else {
-                return o1.marketType().compareTo(o2.marketType());
-            }
-        });
+        list.sort(comparing(MarketTypeResult::marketCount).thenComparing(MarketTypeResult::marketType).reversed());
+
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -227,7 +220,7 @@ class OperationsTest {
 
         List<CompetitionResult> list = operations.listCompetitions(marketFilter);
 
-        list.sort(Comparator.comparing(CompetitionResult::marketCount));
+        list.sort(comparing(CompetitionResult::marketCount));
         list.forEach(System.out::println);
 
         assertTrue(list.size() > 0);
@@ -242,7 +235,7 @@ class OperationsTest {
 
         List<EventResult> listEvents = operations.listEvents(marketFilter);
 
-        listEvents.sort(Comparator.comparing(o -> o.event().getOpenDate()));
+        listEvents.sort(comparing(o -> o.event().getOpenDate()));
         listEvents.forEach(System.out::println);
 
         assertFalse(listEvents.isEmpty());
