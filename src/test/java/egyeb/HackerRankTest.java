@@ -25,10 +25,9 @@ import java.util.stream.Stream;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class HackerRank {
+class HackerRankTest {
 
     @Test
     void JavaDataTypes() {
@@ -338,7 +337,7 @@ class HackerRank {
 
         var result = subStringArray(w, sb.toString());
         System.out.println(result);
-        assertTrue(result.equals("hcdk"));
+        assertEquals("hcdk", result);
 
 //        subs(w, w.length() - 2, 1);
 
