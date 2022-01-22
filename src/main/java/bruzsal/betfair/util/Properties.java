@@ -67,7 +67,6 @@ public enum Properties {
 
     };
 
-
     public abstract String value();
 
     public static boolean debug;
@@ -134,9 +133,7 @@ public enum Properties {
                 }
                 in.close();
 
-                String sessionToken = getSessionToken(sb.toString());
-
-                return sessionToken;
+                return getSessionToken(sb.toString());
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
                     | UnrecoverableKeyException | KeyManagementException | IOException exception) {
                 exception.printStackTrace();

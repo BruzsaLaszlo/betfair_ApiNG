@@ -8,11 +8,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static bruzsal.betfair.api.Operations.om;
-import static bruzsal.betfair.navigation.NavigationDataBase.*;
 
 /**
  * A ROOT group node has one or many EVENT_TYPE nodes
@@ -53,12 +54,34 @@ public class NavigationData {
         }
     }
 
-    public Root getRoot() {
-        return root;
+    private static final List<Market> MARKETS = new ArrayList<>(25_000);
+    private static final List<Event> EVENTS = new ArrayList<>(2_000);
+    private static final List<EventType> EVENT_TYPES = new ArrayList<>(50);
+    private static final List<Group> GROUPS = new ArrayList<>(600);
+    private static final List<Race> RACES = new ArrayList<>(600);
+
+
+    static void clearLists() {
+        MARKETS.clear();
+        EVENTS.clear();
+        EVENT_TYPES.clear();
+        GROUPS.clear();
+        RACES.clear();
     }
 
+    public static String getSizeOfLists() {
+        return "allEvent: " + EVENTS.size() + "\n" +
+                "allEventType: " + EVENT_TYPES.size() + "\n" +
+                "allGroups: " + GROUPS.size() + "\n" +
+                "allRace: " + RACES.size() + "\n" +
+                "allMarket: " + MARKETS.size() + "\n";
+    }
 
-    public String getAllData(int deep) {
+    public String getAllData() {
+        return getDataUntil(Integer.MAX_VALUE);
+    }
+
+    public String getDataUntil(int deep) {
         StringBuilder sb = new StringBuilder(5_000_000);
         root.getAllData(sb, deep);
         return sb.toString();
@@ -117,15 +140,12 @@ public class NavigationData {
 
         rawChild rootJson = om.readValue(dataJson, rawChild.class);
 
-        NavigationDataBase.clearLists();
+        clearLists();
 
         bejaras(rootJson, root, 0);
 
-//        allEvent.forEach(event -> event.getMarkets()
-//                .forEach(market -> market.setEvent(event)));
-        for (var event : EVENTS)
-            for (var market : event.getMarkets())
-                market.setEvent(event);
+        EVENTS.forEach(event -> event.getMarkets()
+                .forEach(market -> market.setEvent(event)));
 
     }
 
@@ -204,6 +224,27 @@ public class NavigationData {
             for (rawChild c : root.children)
                 bejaras(c, o, depth + 1);
 
+    }
+
+
+    public static Stream<Market> markets() {
+        return MARKETS.stream();
+    }
+
+    public static Stream<Event> events() {
+        return EVENTS.stream();
+    }
+
+    public static Stream<EventType> eventTypes() {
+        return EVENT_TYPES.stream();
+    }
+
+    public static Stream<Race> races() {
+        return RACES.stream();
+    }
+
+    public static Stream<Group> groups() {
+        return GROUPS.stream();
     }
 
 }

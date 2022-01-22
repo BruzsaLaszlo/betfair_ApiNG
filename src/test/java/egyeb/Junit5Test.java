@@ -1,3 +1,5 @@
+package egyeb;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -306,7 +308,7 @@ class Junit5Test {
         class ExternalCustomConditionDemo {
 
             @Test
-            @EnabledIf("bruzsal.betfairapingandriod.ExternalCondition#customCondition")
+            @EnabledIf("bruzsal.betfairapingandriod.egyeb.ExternalCondition#customCondition")
             void enabled() {
                 // ...
             }

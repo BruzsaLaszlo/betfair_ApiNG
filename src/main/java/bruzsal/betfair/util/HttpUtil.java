@@ -6,7 +6,6 @@ import com.github.mizosoft.methanol.MoreBodyHandlers;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.URI;
@@ -17,11 +16,14 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.stream.Collectors;
 
+import static bruzsal.betfair.enums.Endpoint.NAVIGATION;
 import static bruzsal.betfair.util.Properties.*;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-public class HttpUtil {
+public final class HttpUtil {
 
+    private HttpUtil() {
+    }
 
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
@@ -52,23 +54,21 @@ public class HttpUtil {
             return response.body();
 
         } catch (InterruptedException | IOException exception) {
+            Thread.currentThread().interrupt();
             throw new IllegalStateException("http hiba", exception);
         }
 
     }
 
     private static String getUrl(Endpoint endpoint, ApiNgOperation operation) {
-        String url;
-        switch (endpoint) {
-            case ACCOUNT -> url = "https://api.betfair.com/exchange/account/";
-            case BETTING -> url = "https://api.betfair.com/exchange/betting/";
-            case HEARTBEAT -> url = "https://api.betfair.com/exchange/heartbeat/";
-            case NAVIGATION -> {
-                return "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
-            }
+        if (endpoint == NAVIGATION) return "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
+        String url = switch (endpoint) {
+            case ACCOUNT -> "https://api.betfair.com/exchange/account/";
+            case BETTING -> "https://api.betfair.com/exchange/betting/";
+            case HEARTBEAT -> "https://api.betfair.com/exchange/heartbeat/";
             default -> throw new IllegalStateException("nincs ilyen Endpoint, hibás lesz az url");
-        }
-        return url + "rest/v1.0/" + operation.getOperationName() + "/";
+        };
+        return url + "rest/v1.0/" + operation.getName() + "/";
     }
 
     private static HttpRequest getHttpRequest(String jsonRequest, String url) {

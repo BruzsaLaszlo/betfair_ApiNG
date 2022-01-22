@@ -18,7 +18,6 @@ public enum ApiNgOperation {
     UPDATEORDERS("updateOrders"),
     LISTCLEAREDORDERS("listClearedOrders"),
     LISTCURRENTORDERS("listCurrentOrders"),
-    LISTCLEARORDERS("listClearedOrders"),
     CREATEDEVELOPERAPPKEYS("createDeveloperAppKeys"),
     DEVELOPERAPPKEYS("getDeveloperAppKeys"),
     ACCOUNTFUNDS("getAccountFunds"),
@@ -31,14 +30,14 @@ public enum ApiNgOperation {
     ACCOUNTSUBSCRIPTIONTOKENS("listAccountSubscriptionTokens"),
     APPLICATIONSUBSCRIPTIONHISTORY("getApplicationSubscriptionHistory");
 
-    private final String operationName;
+    private final String name;
 
-    ApiNgOperation(String operationName) {
-        this.operationName = operationName;
+    ApiNgOperation(String name) {
+        this.name = name;
     }
 
-    public String getOperationName() {
-        return operationName;
+    public String getName() {
+        return name;
     }
 
 

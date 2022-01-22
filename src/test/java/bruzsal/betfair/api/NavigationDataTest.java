@@ -1,8 +1,6 @@
 package bruzsal.betfair.api;
 
-import bruzsal.betfair.enums.CountryCodes;
 import bruzsal.betfair.navigation.NavigationData;
-import bruzsal.betfair.navigation.NavigationDataBase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
+import static bruzsal.betfair.enums.CountryCodes.UNITED_KINGDOM;
+import static bruzsal.betfair.navigation.NavigationData.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static bruzsal.betfair.enums.CountryCodes.*;
 
 class NavigationDataTest {
 
@@ -29,7 +27,7 @@ class NavigationDataTest {
     @Test
     void sizeOfLists() {
 
-        String s = NavigationDataBase.getSizeOfLists();
+        String s = getSizeOfLists();
         System.out.println(s);
         assertFalse(s.isEmpty());
 
@@ -39,7 +37,7 @@ class NavigationDataTest {
     @DisplayName("NavigationDataTest.test készítés")
     void updateNavigationData() throws IOException {
 
-        var data = ND.getAllData(100);
+        var data = ND.getAllData();
 
         Path path = Path.of("c:\\temp\\NavigationDataTest.test");
         Files.writeString(path, data);
@@ -53,29 +51,27 @@ class NavigationDataTest {
     @DisplayName("Van Soccer az EventType-ok között")
     void isSoccerPresent() {
 
-        boolean isPresent = NavigationDataBase.EVENT_TYPES.stream()
-                .filter(eventType -> eventType.getName().equals("Soccer"))
+        boolean isPresent = eventTypes()
                 .peek(System.out::println)
-                .findFirst()
-                .isPresent();
+                .anyMatch(eventType -> eventType.getName().equals("Soccer"));
 
         assertTrue(isPresent);
 
     }
 
     @Test
-    @DisplayName("Van HU és Hungary")
+    @DisplayName("Van GB és England")
     void hungaryExists() {
 
-        long count = NavigationDataBase.MARKETS.stream()
-                .filter(market -> market.getEvent().getCountryCode().equals(HUNGARY.CODE))
-                .peek(System.out::println)
+        long count = markets()
+                .filter(market -> market.getEvent().getCountryCode().equals(UNITED_KINGDOM.CODE))
+                .peek(market -> System.out.println(market.getEvent().getCountryCode()))
                 .count();
 
-        assertTrue(count > 0);
+        assertTrue(count > 100);
 
-        count = NavigationDataBase.MARKETS.stream()
-                .filter(market -> market.getEvent().getName().contains(HUNGARY.name()))
+        count = markets()
+                .filter(market -> market.getEvent().getName().contains("England"))
                 .peek(market -> {
                     System.out.println(market.getEvent());
                     System.out.println("    " + market);
@@ -90,7 +86,7 @@ class NavigationDataTest {
     @DisplayName("Null-vizsgálat")
     void nullE() {
 
-        long count = NavigationDataBase.MARKETS.stream()
+        long count = markets()
                 .filter(market -> market.getEvent() == null)
                 .peek(System.out::println)
                 .count();
@@ -104,7 +100,7 @@ class NavigationDataTest {
     @DisplayName("Magyar meccsek")
     void hungaryMatch() {
 
-        NavigationDataBase.MARKETS.stream()
+        markets()
                 .filter(market -> market.getEvent() != null)
                 .filter(market -> market.getEvent().getName().contains("Hungary"))
                 .findFirst()
@@ -116,7 +112,7 @@ class NavigationDataTest {
     @DisplayName("Szülö gyerek kapcsolat")
     void sameParentAndEvent() {
 
-        long count = NavigationDataBase.MARKETS.stream()
+        long count = markets()
                 .filter(market -> market.getEvent() != market.getParent())
                 .peek(System.out::println)
                 .count();

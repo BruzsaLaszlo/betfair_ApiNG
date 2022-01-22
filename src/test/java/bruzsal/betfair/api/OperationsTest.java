@@ -387,13 +387,6 @@ class OperationsTest {
         assertTrue(listApp.get(0).appVersions.get(0).subscriptionRequired);
     }
 
-    private static final String HTTP_HEADER_X_APPLICATION = "X-Application";
-    private static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
-    private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
-    private static final String HTTP_HEADER_ACCEPT = "Accept";
-    private static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
-    private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-    private static final String CHARSET_UTF8 = "UTF-8";
 
     @Test
     void htttp() throws IOException, InterruptedException, URISyntaxException {
