@@ -4,12 +4,14 @@ import bruzsal.betfair.entities.TimeRange;
 import bruzsal.betfair.enums.OrderBy;
 import bruzsal.betfair.enums.OrderProjection;
 import bruzsal.betfair.enums.SortDir;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-public class CurrentOrdersParametersBuilder {
+@Getter
+@Builder
+public class CurrentOrdersParameters {
 
     /**
      * Optionally restricts the results to the specified bet IDs.
@@ -84,79 +86,5 @@ public class CurrentOrdersParametersBuilder {
      */
     private boolean includeItemDescription = true;
 
-    public static Map<String, Object> empty() {
-        return new HashMap<>();
-    }
-
-    public Map<String, Object> build() {
-        var params = new HashMap<String, Object>();
-        params.put("betIds", betIds);
-        params.put("marketId", marketIds);
-        params.put("customerOrderRefs", customerOrderRefs);
-        params.put("customerStrategyRefs", customerStrategyRefs);
-        params.put("placedDateRange", placedDateRange);
-        params.put("orderProjection", orderProjection);
-        params.put("orderBy", orderBy);
-        params.put("sortDir", sortDir);
-        params.put("fromRecord", fromRecord);
-        params.put("recordCount", recordCount);
-        params.put("includeItemDescription", includeItemDescription);
-        return params;
-    }
-
-    public CurrentOrdersParametersBuilder setBetIds(Set<String> betIds) {
-        this.betIds = betIds;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setMarketIds(Set<String> marketIds) {
-        this.marketIds = marketIds;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setOrderProjection(OrderProjection orderProjection) {
-        this.orderProjection = orderProjection;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setCustomerOrderRefs(Set<String> customerOrderRefs) {
-        this.customerOrderRefs = customerOrderRefs;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setCustomerStrategyRefs(Set<String> customerStrategyRefs) {
-        this.customerStrategyRefs = customerStrategyRefs;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setPlacedDateRange(TimeRange placedDateRange) {
-        this.placedDateRange = placedDateRange;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setOrderBy(OrderBy orderBy) {
-        this.orderBy = orderBy;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setSortDir(SortDir sortDir) {
-        this.sortDir = sortDir;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setFromRecord(int fromRecord) {
-        this.fromRecord = fromRecord;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setRecordCount(int recordCount) {
-        this.recordCount = recordCount;
-        return this;
-    }
-
-    public CurrentOrdersParametersBuilder setIncludeItemDescription(boolean includeItemDescription) {
-        this.includeItemDescription = includeItemDescription;
-        return this;
-    }
 
 }
