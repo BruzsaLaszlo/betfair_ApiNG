@@ -4,14 +4,26 @@ import bruzsal.betfair.entities.LimitOnCloseOrder;
 import bruzsal.betfair.entities.MarketOnCloseOrder;
 import bruzsal.betfair.enums.OrderType;
 import bruzsal.betfair.enums.Side;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 
+/**
+ * kötelezö :      .orderType(OrderType.LIMIT)
+ * .side(Side.BACK)
+ * .selectionId(4234234L)
+ */
+@Getter
+@Builder
 public class PlaceInstruction {
 
+    @NonNull
     private OrderType orderType;
 
     /**
      * The selection_id.
      */
+    @NonNull
     private Long selectionId;
 
     /**
@@ -23,6 +35,7 @@ public class PlaceInstruction {
     /**
      * Back or Lay
      */
+    @NonNull
     private Side side;
 
     /**
@@ -56,82 +69,4 @@ public class PlaceInstruction {
      */
     private String customerOrderRef;
 
-
-    public PlaceInstruction validate() {
-        if (orderType == null || selectionId == null || side == null)
-            throw new IllegalStateException("a kötelezö paraméterk hiányoznak");
-        return this;
-    }
-
-    public PlaceInstruction setOrderType(OrderType orderType) {
-        this.orderType = orderType;
-        return this;
-    }
-
-    public PlaceInstruction setSelectionId(Long selectionId) {
-        this.selectionId = selectionId;
-        return this;
-    }
-
-    public PlaceInstruction setHandicap(double handicap) {
-        this.handicap = handicap;
-        return this;
-    }
-
-    public PlaceInstruction setSide(Side side) {
-        this.side = side;
-        return this;
-    }
-
-    public PlaceInstruction setLimitOrder(LimitOrder limitOrder) {
-        this.limitOrder = limitOrder;
-        return this;
-    }
-
-    public PlaceInstruction setLimitOnCloseOrder(LimitOnCloseOrder limitOnCloseOrder) {
-        this.limitOnCloseOrder = limitOnCloseOrder;
-        return this;
-    }
-
-    public PlaceInstruction setMarketOnCloseOrder(MarketOnCloseOrder marketOnCloseOrder) {
-        this.marketOnCloseOrder = marketOnCloseOrder;
-        return this;
-    }
-
-    public PlaceInstruction setCustomerOrderRef(String customerOrderRef) {
-        this.customerOrderRef = customerOrderRef;
-        return this;
-    }
-
-    public OrderType getOrderType() {
-        return orderType;
-    }
-
-    public Long getSelectionId() {
-        return selectionId;
-    }
-
-    public Double getHandicap() {
-        return handicap;
-    }
-
-    public Side getSide() {
-        return side;
-    }
-
-    public LimitOrder getLimitOrder() {
-        return limitOrder;
-    }
-
-    public LimitOnCloseOrder getLimitOnCloseOrder() {
-        return limitOnCloseOrder;
-    }
-
-    public MarketOnCloseOrder getMarketOnCloseOrder() {
-        return marketOnCloseOrder;
-    }
-
-    public String getCustomerOrderRef() {
-        return customerOrderRef;
-    }
 }

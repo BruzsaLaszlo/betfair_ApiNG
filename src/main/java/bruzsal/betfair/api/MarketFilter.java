@@ -5,13 +5,16 @@ import bruzsal.betfair.enums.CountryCodes;
 import bruzsal.betfair.enums.EventTypeIds;
 import bruzsal.betfair.enums.MarketBettingType;
 import bruzsal.betfair.enums.OrderStatus;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+@Getter
+@Setter
 public class MarketFilter {
 
     /**
@@ -101,27 +104,18 @@ public class MarketFilter {
         return new MarketFilter();
     }
 
-    public MarketFilter setTextQuery(String textQuery) {
-        this.textQuery = textQuery;
-        return this;
-    }
 
     public MarketFilter setEventTypeIds(Set<String> eventTypeIds) {
         this.eventTypeIds = eventTypeIds;
         return this;
     }
 
-    public MarketFilter setEventTypeId(long eventTypeId) {
-        return setEventTypeIds(Set.of(String.valueOf(eventTypeId)));
+    public MarketFilter setEventTypeId(String eventTypeId) {
+        return setEventTypeIds(Set.of(eventTypeId));
     }
 
     public MarketFilter setEventTypeId(EventTypeIds eventTypeIds) {
-        switch (eventTypeIds) {
-            case SOCCER -> {
-                return setEventTypeId(1);
-            }
-            default -> throw new IllegalStateException(eventTypeIds.name());
-        }
+        return setEventTypeId(eventTypeIds.id);
     }
 
 
@@ -154,26 +148,6 @@ public class MarketFilter {
         return setMarketIds(Set.of(marketIds));
     }
 
-
-    public MarketFilter setVenues(Set<String> venues) {
-        this.venues = venues;
-        return this;
-    }
-
-    public MarketFilter setBspOnly(Boolean bspOnly) {
-        this.bspOnly = bspOnly;
-        return this;
-    }
-
-    public MarketFilter setInPlayOnly(Boolean inPlayOnly) {
-        this.inPlayOnly = inPlayOnly;
-        return this;
-    }
-
-    public MarketFilter setTurnInPlayEnabled(Boolean turnInPlayEnabled) {
-        this.turnInPlayEnabled = turnInPlayEnabled;
-        return this;
-    }
 
     public MarketFilter setMarketBettingTypes(Set<MarketBettingType> marketBettingTypes) {
         this.marketBettingTypes = marketBettingTypes;
@@ -230,11 +204,6 @@ public class MarketFilter {
     }
 
 
-    public MarketFilter setRaceTypes(Set<String> raceTypes) {
-        this.raceTypes = raceTypes;
-        return this;
-    }
-
     @Override
     public String toString() {
         return "MarketFilter :" +
@@ -255,63 +224,4 @@ public class MarketFilter {
                 "\n    raceTypes = " + raceTypes;
     }
 
-    public String getTextQuery() {
-        return textQuery;
-    }
-
-    public Set<String> getEventTypeIds() {
-        return eventTypeIds;
-    }
-
-    public Set<String> getEventIds() {
-        return eventIds;
-    }
-
-    public Set<String> getCompetitionIds() {
-        return competitionIds;
-    }
-
-    public Set<String> getMarketIds() {
-        return marketIds;
-    }
-
-    public Set<String> getVenues() {
-        return venues;
-    }
-
-    public Boolean getBspOnly() {
-        return bspOnly;
-    }
-
-    public Boolean getInPlayOnly() {
-        return inPlayOnly;
-    }
-
-    public Boolean getTurnInPlayEnabled() {
-        return turnInPlayEnabled;
-    }
-
-    public Set<MarketBettingType> getMarketBettingTypes() {
-        return marketBettingTypes;
-    }
-
-    public Set<String> getMarketCountries() {
-        return marketCountries;
-    }
-
-    public Set<String> getMarketTypeCodes() {
-        return marketTypeCodes;
-    }
-
-    public TimeRange getMarketStartTime() {
-        return marketStartTime;
-    }
-
-    public Set<OrderStatus> getWithOrders() {
-        return withOrders;
-    }
-
-    public Set<String> getRaceTypes() {
-        return raceTypes;
-    }
 }
