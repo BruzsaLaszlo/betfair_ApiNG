@@ -291,7 +291,7 @@ class OperationsTest {
 
     @Test
     void getSessionToken() {
-        assertTrue(Properties.sessionToken.endsWith("="));
+        assertTrue(Properties.sessionToken().endsWith("="));
     }
 
     @Test
