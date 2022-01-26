@@ -25,10 +25,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 @Log4j2
 public final class HttpUtil {
 
-    private HttpUtil() {
-    }
-
-    public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
             .build();
 
@@ -37,7 +34,7 @@ public final class HttpUtil {
     }
 
 
-    public static String sendPostRequest(ApiNgOperation operation, String jsonRequest, Endpoint endpoint) {
+    public String sendPostRequest(ApiNgOperation operation, String jsonRequest, Endpoint endpoint) {
 
         String url = getUrl(endpoint, operation);
         HttpRequest request = getHttpRequest(jsonRequest, url);
@@ -54,7 +51,7 @@ public final class HttpUtil {
 
     }
 
-    private static String getUrl(Endpoint endpoint, ApiNgOperation operation) {
+    private String getUrl(Endpoint endpoint, ApiNgOperation operation) {
         if (endpoint == NAVIGATION) return "https://api.betfair.com/exchange/betting/rest/v1/en/navigation/menu.json";
         String url = switch (endpoint) {
             case ACCOUNT -> "https://api.betfair.com/exchange/account/";
@@ -65,7 +62,7 @@ public final class HttpUtil {
         return url + "rest/v1.0/" + operation.getName() + "/";
     }
 
-    private static HttpRequest getHttpRequest(String jsonRequest, String url) {
+    private HttpRequest getHttpRequest(String jsonRequest, String url) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .headers("Content-Type", "application/json")
@@ -84,7 +81,7 @@ public final class HttpUtil {
     }
 
 
-    private static String debugRequestHeaders(String url, HttpRequest request) {
+    private String debugRequestHeaders(String url, HttpRequest request) {
         return String.format("""
                 %n============================= HTTPUTIL =============================
                 URL:
@@ -94,11 +91,11 @@ public final class HttpUtil {
                 """, url, headersToString(request.headers()));
     }
 
-    private static String infoRequestBody(String jsonRequest) {
+    private String infoRequestBody(String jsonRequest) {
         return "\n============================== REQUEST ==============================\n" + jsonRequest;
     }
 
-    private static String debugReponseHeaders(HttpResponse<String> response) {
+    private String debugReponseHeaders(HttpResponse<String> response) {
         if (response.body().length() > 100_000)
             return "Response IS TOO BIG  { " + response.body().length() + " byte }";
         else
@@ -111,7 +108,7 @@ public final class HttpUtil {
                     """, response.statusCode(), headersToString(response.headers()), response.body());
     }
 
-    private static String headersToString(HttpHeaders headers) {
+    private String headersToString(HttpHeaders headers) {
         return headers.map().entrySet().stream()
                 .map(entry -> "    " + entry.getKey() + " = " + entry.getValue())
                 .collect(Collectors.joining("\n"));
