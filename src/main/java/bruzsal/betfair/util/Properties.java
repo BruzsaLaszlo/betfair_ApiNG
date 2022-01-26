@@ -2,6 +2,7 @@ package bruzsal.betfair.util;
 
 import bruzsal.betfair.api.Operations;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -12,50 +13,52 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+@Log4j2
 public enum Properties {
 
     BETFAIR_USERNAME {
         @Override
         public String value() {
-            return prop.getProperty("BETFAIR_USERNAME");
+            return PROP.getProperty("BETFAIR_USERNAME");
         }
     },
 
     BETFAIR_PASSWORD {
         @Override
         public String value() {
-            return prop.getProperty("BETFAIR_PASSWORD");
+            return PROP.getProperty("BETFAIR_PASSWORD");
         }
     },
 
     BETFAIR_CERT_LOGIN_URL {
         @Override
         public String value() {
-            return prop.getProperty("BETFAIR_CERT_LOGIN_URL");
+            return PROP.getProperty("BETFAIR_CERT_LOGIN_URL");
         }
     },
 
     PKCS12_FILE {
         @Override
         public String value() {
-            return prop.getProperty("PKCS12_FILE");
+            return PROP.getProperty("PKCS12_FILE");
         }
     },
 
     PKCS12_PASSWORD {
         @Override
         public String value() {
-            return prop.getProperty("PKCS12_PASSWORD");
+            return PROP.getProperty("PKCS12_PASSWORD");
         }
     },
 
     APPLICATION_KEY {
         @Override
         public String value() {
-            return prop.getProperty("APPLICATION_KEY");
+            return PROP.getProperty("APPLICATION_KEY");
         }
     },
 
@@ -69,29 +72,32 @@ public enum Properties {
 
     public abstract String value();
 
-    public static boolean debug;
+    private static final java.util.Properties PROP = new java.util.Properties();
 
-    private static final java.util.Properties prop = new java.util.Properties();
-
-    public static String sessionToken;
+    private static String sessionToken;
 
     static {
         try (InputStream in = Properties.class.getResourceAsStream("/apingdemo.properties")) {
 
-            prop.load(in);
-            debug = Boolean.parseBoolean(prop.getProperty("DEBUG"));
+            PROP.load(in);
             sessionToken = updateSessionToken();
 
         } catch (IOException e) {
-            System.out.println("Error loading the properties file: " + e);
+            log.fatal("Error loading the properties file: ", e);
+            System.exit(-1);
         }
     }
 
     public static String updateSessionToken() {
-        return sessionToken = SessionTokenGetter.get();
+        sessionToken = SessionTokenService.get();
+        return sessionToken;
     }
 
-    private static class SessionTokenGetter {
+    public static String sessionToken() {
+        return sessionToken;
+    }
+
+    private static class SessionTokenService {
 
         public static String get() {
             try {
@@ -109,35 +115,31 @@ public enum Properties {
                 con.setReadTimeout(60 * 1000);
                 con.setRequestProperty("X-Application", "apikey");
 
-                List<NameValuePair> nvps = new ArrayList<>();
-                nvps.add(new BasicNameValuePair("username", BETFAIR_USERNAME.value()));
-                nvps.add(new BasicNameValuePair("password", BETFAIR_PASSWORD.value()));
+                List<NameValuePair> nvps = List.of(
+                        new BasicNameValuePair("username", BETFAIR_USERNAME.value()),
+                        new BasicNameValuePair("password", BETFAIR_PASSWORD.value()));
 
-                OutputStream os = con.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, StandardCharsets.UTF_8));
-                writer.write(getQuery(nvps));
-                writer.flush();
-                writer.close();
-                os.close();
+                try (OutputStream os = con.getOutputStream();
+                     BufferedWriter writer = new BufferedWriter(
+                             new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
+                    writer.write(getQuery(nvps));
+                }
 
                 con.connect();
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()), 1024 * 1024);
-                StringBuilder sb = new StringBuilder();
-                while (in.ready()) {
-                    String line = in.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    sb.append(line);
-                }
-                in.close();
 
+                StringBuilder sb = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()), 1024 * 1024)) {
+                    while (in.ready()) {
+                        String line = in.readLine();
+                        if (line == null) break;
+                        sb.append(line);
+                    }
+                }
                 return getSessionToken(sb.toString());
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
                     | UnrecoverableKeyException | KeyManagementException | IOException exception) {
-                exception.printStackTrace();
-                throw new IllegalStateException("nincs session token", exception);
+                log.fatal("hiba a session token megszerzésekor", exception);
+                throw new NoSuchElementException("nincs meg session token", exception);
             }
         }
 
@@ -171,24 +173,14 @@ public enum Properties {
         };
 
         private static String getQuery(List<NameValuePair> params) {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-
-            for (NameValuePair pair : params) {
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
-
-                result.append(URLEncoder.encode(pair.getName(), StandardCharsets.UTF_8));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), StandardCharsets.UTF_8));
-            }
-
-            return result.toString();
+            return params.stream()
+                    .map(nameValuePair -> URLEncoder.encode(nameValuePair.getName(), StandardCharsets.UTF_8)
+                            + "="
+                            + URLEncoder.encode(nameValuePair.getValue(), StandardCharsets.UTF_8))
+                    .collect(Collectors.joining("&"));
         }
 
-        private record SessionToken(
+        private record Session(
                 String sessionToken,
                 String loginStatus
         ) {
@@ -196,19 +188,20 @@ public enum Properties {
 
         public static String getSessionToken(String dataJson) {
             try {
-                SessionToken st = Operations.om.readValue(dataJson, SessionToken.class);
-                if (st.loginStatus.equals("SUCCESS")) {
-                    if (Properties.debug)
-                        System.out.printf("LoginsStatus: %s%nSessionToken: %s%n", st.loginStatus, st.sessionToken);
-                    return st.sessionToken;
+                Session session = Operations.om.readValue(dataJson, Session.class);
+                if (session.loginStatus.equals("SUCCESS")) {
+                    log.info("LoginsStatus: " + session.loginStatus);
+                    log.info("SessionToken: " + session.sessionToken);
+                    return session.sessionToken;
                 }
+                log.fatal("NO SESSION TOKEN!");
                 throw new IllegalStateException("nem sikerült megszerezni a sessiont token-t");
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException("Sikertelen a session token megszerzése");
             }
         }
 
-        private SessionTokenGetter() {
+        private SessionTokenService() {
         }
     }
 

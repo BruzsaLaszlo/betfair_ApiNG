@@ -2,8 +2,7 @@ package bruzsal.betfair.util;
 
 import bruzsal.betfair.enums.ApiNgOperation;
 import bruzsal.betfair.enums.Endpoint;
-import com.github.mizosoft.methanol.MoreBodyHandlers;
-import org.jetbrains.annotations.NotNull;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -17,9 +16,13 @@ import java.time.Duration;
 import java.util.stream.Collectors;
 
 import static bruzsal.betfair.enums.Endpoint.NAVIGATION;
-import static bruzsal.betfair.util.Properties.*;
+import static bruzsal.betfair.util.Properties.APPLICATION_KEY;
+import static bruzsal.betfair.util.Properties.SESSION_TOKEN;
+import static com.github.mizosoft.methanol.MoreBodyHandlers.decoding;
+import static java.net.http.HttpResponse.BodyHandlers;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
+@Log4j2
 public final class HttpUtil {
 
     private HttpUtil() {
@@ -37,22 +40,13 @@ public final class HttpUtil {
     public static String sendPostRequest(ApiNgOperation operation, String jsonRequest, Endpoint endpoint) {
 
         String url = getUrl(endpoint, operation);
-
         HttpRequest request = getHttpRequest(jsonRequest, url);
 
-        if (debug) System.out.println(getDebugMessage(jsonRequest, url, request));
-
         try {
-
-            HttpResponse<String> response = HTTP_CLIENT
-                    .send(request, MoreBodyHandlers.decoding(HttpResponse.BodyHandlers.ofString()));
-
-            if (debug) System.out.println(getDebugMessage(response));
-
+            HttpResponse<String> response = HTTP_CLIENT.send(request, decoding(BodyHandlers.ofString()));
+            log.debug(debugReponseHeaders(response));
             if (response.statusCode() != 200) throw new IllegalStateException(response.body());
-
             return response.body();
-
         } catch (InterruptedException | IOException exception) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("http hiba", exception);
@@ -72,7 +66,7 @@ public final class HttpUtil {
     }
 
     private static HttpRequest getHttpRequest(String jsonRequest, String url) {
-        return HttpRequest.newBuilder()
+        var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .headers("Content-Type", "application/json")
                 .headers("Accept", "application/json")
@@ -84,36 +78,39 @@ public final class HttpUtil {
                 .timeout(Duration.of(10, SECONDS))
                 .POST(HttpRequest.BodyPublishers.ofString(jsonRequest == null ? "{}" : jsonRequest))
                 .build();
+        log.debug(debugRequestHeaders(url, request));
+        log.info(infoRequestBody(jsonRequest));
+        return request;
     }
 
 
-    private static String getDebugMessage(String jsonRequest, String url, HttpRequest request) {
+    private static String debugRequestHeaders(String url, HttpRequest request) {
         return String.format("""
                 %n============================= HTTPUTIL =============================
                 URL:
                     %s
                 Request headers:
                 %s
-                ============================== REQUEST ==============================
-                %s
-                """, url, headersToString(request.headers()), jsonRequest);
+                """, url, headersToString(request.headers()));
     }
 
-    private static String getDebugMessage(HttpResponse<String> response) {
+    private static String infoRequestBody(String jsonRequest) {
+        return "\n============================== REQUEST ==============================\n" + jsonRequest;
+    }
+
+    private static String debugReponseHeaders(HttpResponse<String> response) {
         if (response.body().length() > 100_000)
             return "Response IS TOO BIG  { " + response.body().length() + " byte }";
         else
             return String.format("""
-                    =========================== RESPONSE: %s ===========================
+                    %n=========================== RESPONSE: %s ===========================
                     Response headers:
                     %s
                     %n=========================== RESPONSE BODY ==========================
                     %s
-                    =========================== HTTPUTIL END ===========================
                     """, response.statusCode(), headersToString(response.headers()), response.body());
     }
 
-    @NotNull
     private static String headersToString(HttpHeaders headers) {
         return headers.map().entrySet().stream()
                 .map(entry -> "    " + entry.getKey() + " = " + entry.getValue())
