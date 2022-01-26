@@ -8,7 +8,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This is a demonstration class to show a quick demo of the new Betfair API-NG.
@@ -29,13 +31,11 @@ class ApiNgRescriptDemoTest {
              * ListEventTypes: Search for the event types and then for the "Horse Racing" in the returned list to finally get
              * the listEventTypeId
              */
-            MarketFilter marketFilter;
-            marketFilter = new MarketFilter();
-            Set<String> eventTypeIds = new HashSet<>();
 
             System.out.println("1.(listEventTypes) Get all Event Types...\n");
-            List<EventTypeResult> r = rescriptOperations.listEventTypes(marketFilter);
+            List<EventTypeResult> r = rescriptOperations.listEventTypes(MarketFilter.empty());
             System.out.println("2. Extract Event Type Id for Horse Racing...\n");
+            Set<String> eventTypeIds = new HashSet<>();
             for (EventTypeResult eventTypeResult : r) {
                 if (eventTypeResult.eventType().name().equals("Soccer")) {
                     System.out.println("3. EventTypeId for \"Horse Racing\" is: " + eventTypeResult.eventType().id() + "\n");
@@ -53,16 +53,14 @@ class ApiNgRescriptDemoTest {
             System.out.println("4.(listMarketCataloque) Get next horse racing market in the UK...\n");
             TimeRange time = new TimeRange(LocalDateTime.now());
 
-            Set<String> countries = new HashSet<>();
-            countries.add("GB");
+            Set<String> countries = Set.of("GB");
 
-            marketFilter = new MarketFilter();
-            marketFilter.setEventTypeIds(eventTypeIds);
-            marketFilter.setMarketStartTime(time);
-            marketFilter.setMarketCountries(countries);
+            MarketFilter marketFilter = new MarketFilter()
+                    .setEventTypeIds(eventTypeIds)
+                    .setMarketStartTime(time)
+                    .setMarketCountries(countries);
 
-            Set<MarketProjection> marketProjection = new HashSet<>();
-            marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+            Set<MarketProjection> marketProjection = Set.of(MarketProjection.RUNNER_DESCRIPTION);
 
             int maxResults = 1;
 
@@ -80,13 +78,13 @@ class ApiNgRescriptDemoTest {
             System.out.println("6.(listMarketBook) Get volatile info for Market including best 3 exchange prices available...\n");
             String marketIdChosen = marketCatalogueResult.get(0).marketId();
 
-            Set<PriceData> priceData = new HashSet<>();
-            priceData.add(PriceData.EX_BEST_OFFERS);
+            Set<PriceData> priceData = Set.of(PriceData.EX_BEST_OFFERS);
 
-            List<String> marketIds = new ArrayList<>();
-            marketIds.add(marketIdChosen);
+            List<String> marketIds = List.of(marketIdChosen);
 
-            var params = new MarketBookParameterBuilder().setMarketIds(marketIds).build();
+            var params = MarketBookParameters.builder()
+                    .marketIds(marketIds)
+                    .build();
             List<MarketBook> marketBookReturn = rescriptOperations.listMarketBook(params);
 
             /**
@@ -116,13 +114,13 @@ class ApiNgRescriptDemoTest {
                         .setSize(getSize())
                         .validate();
 
-                PlaceInstruction instruction = new PlaceInstruction()
-                        .setHandicap(0)
-                        .setSide(Side.BACK)
-                        .setOrderType(OrderType.LIMIT)
-                        .setLimitOrder(limitOrder)
-                        .setSelectionId(selectionId)
-                        .validate();
+                PlaceInstruction instruction = PlaceInstruction.builder()
+                        .handicap(0d)
+                        .side(Side.BACK)
+                        .orderType(OrderType.LIMIT)
+                        .limitOrder(limitOrder)
+                        .selectionId(selectionId)
+                        .build();
 
                 var instructions = List.of(instruction);
 

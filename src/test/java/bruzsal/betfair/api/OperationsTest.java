@@ -58,8 +58,8 @@ class OperationsTest {
 
         List<MarketCatalogue> mc = operations.listMarketCatalogue(mf, mp, MarketSort.MAXIMUM_TRADED, 1);
 
-        var params = new MarketBookParameterBuilder()
-                .setMarketIds(mc.get(0).marketId())
+        var params = MarketBookParameters.builder()
+                .marketIds(List.of(mc.get(0).marketId()))
                 .build();
 
         List<MarketBook> lmb = operations.listMarketBook(params);
@@ -133,10 +133,11 @@ class OperationsTest {
     @Test
     void placeOrders() {
 
-        PlaceInstruction pi = new PlaceInstruction()
-                .setOrderType(OrderType.LIMIT)
-                .setSide(Side.BACK)
-                .setSelectionId(4234234L);
+        PlaceInstruction pi = PlaceInstruction.builder()
+                .orderType(OrderType.LIMIT)
+                .side(Side.BACK)
+                .selectionId(4234234L)
+                .build();
 
         assertThrows(ApiNgException.class, () -> operations.placeOrders("1.183689747", List.of(pi), "1.183689747L"));
 
@@ -179,8 +180,8 @@ class OperationsTest {
                 LocalDateTime.now().minusDays(1)
         );
 
-        var params = new CurrentOrdersParametersBuilder()
-                .setPlacedDateRange(timeRange)
+        var params = CurrentOrdersParameters.builder()
+                .placedDateRange(timeRange)
                 .build();
 
         CurrentOrderSummaryReport cosr = operations.listCurrentOrders(params);

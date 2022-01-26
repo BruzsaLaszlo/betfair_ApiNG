@@ -14,14 +14,12 @@ import java.util.*;
 import static bruzsal.betfair.enums.ApiNgOperation.*;
 import static bruzsal.betfair.enums.Endpoint.ACCOUNT;
 import static bruzsal.betfair.enums.Endpoint.BETTING;
+import static java.util.stream.Collectors.toUnmodifiableMap;
 
 
 public class Operations {
 
     private static Operations instance;
-
-    Operations() {
-    }
 
     public static Operations getInstance() {
         if (instance == null)
@@ -30,7 +28,6 @@ public class Operations {
     }
 
     private static final String FILTER = "filter";
-    private static final String LOCALE = "locale";
     private static final String SORT = "sort";
     private static final String MAX_RESULT = "maxResults";
     private static final String MARKET_IDS = "marketIds";
@@ -39,11 +36,21 @@ public class Operations {
     private static final String CUSTOMER_REF = "customerRef";
     private static final String PRICEPROJECTION = "priceProjection";
     private static final String MARKETPROJECTION = "marketProjection";
-    private static final String MATCHPROJECTION = "matchProjection";
     private static final String CURRENCYCODE = "currencyCode";
     private static final String ORDERPROJECTION = "orderProjection";
     private static final String PLACEDDATERANGE = "placedDateRange";
     private static final String ORDERBY = "orderBy";
+    private static final String INCLUDE_OVERALL_POSITION = "includeOverallPosition";
+    private static final String PARTITION_MATCHED_BY_STRATEGY_REF = "partitionMatchedByStrategyRef";
+    private static final String CUSTOMER_STRATEGY_REFS = "customerStrategyRefs";
+    private static final String MATCHED_SINCE = "matchedSince";
+    private static final String BET_IDS = "betIds";
+    private static final String SORT_DIR = "sortDir";
+    private static final String FROM_RECORD = "fromRecord";
+    private static final String INCLUDE_ITEM_DESCRIPTION = "includeItemDescription";
+    private static final String RECORD_COUNT = "recordCount";
+    private static final String MATCHPROJECTION = "matchProjection";
+    private static final String LOCALE = "locale";
     private static final String DEFAULT_LOCALE = Locale.getDefault().toString();
 
     public static final ObjectMapper om = new ObjectMapper();
@@ -56,10 +63,7 @@ public class Operations {
      *               the criteria in the filter are selected
      */
     public List<EventTypeResult> listEventTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
-        var params = new HashMap<String, Object>();
-        params.put(FILTER, filter);
-        params.put(LOCALE, DEFAULT_LOCALE);
-        String result = makeRequestBetting(LISTEVENTTYPES, params);
+        String result = makeRequestBetting(LISTEVENTTYPES, Map.of(FILTER, filter));
         return om.readValue(result, new TypeReference<>() {
         });
     }
@@ -87,7 +91,18 @@ public class Operations {
      * in which you can track prices, traded volume, unmatched orders and your evolving matched position with a
      * reasonably fixed, minimally sized response.
      */
-    public List<MarketBook> listMarketBook(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
+    public List<MarketBook> listMarketBook(MarketBookParameters mbp) throws ApiNgException, JsonProcessingException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(MARKET_IDS, mbp.getMarketIds());
+        params.put(PRICEPROJECTION, mbp.getPriceProjection());
+        params.put(ORDERPROJECTION, mbp.getOrderProjection());
+        params.put(MARKETPROJECTION, mbp.getMatchProjection());
+        params.put(INCLUDE_OVERALL_POSITION, mbp.getIncludeOverallPosition());
+        params.put(PARTITION_MATCHED_BY_STRATEGY_REF, mbp.getPartitionMatchedByStrategyRef());
+        params.put(CUSTOMER_STRATEGY_REFS, mbp.getCustomerStrategyRefs());
+        params.put(CURRENCYCODE, mbp.getCurrencyCode());
+        params.put(MATCHED_SINCE, mbp.getMatchedSince());
+        params.put(BET_IDS, mbp.getBetIds());
 
         String result = makeRequestBetting(LISTMARKETBOOK, params);
         return om.readValue(result, new TypeReference<>() {
@@ -103,9 +118,7 @@ public class Operations {
      *               the criteria in the filter are selected
      */
     public List<CountryCodeResult> listCountries(MarketFilter filter) throws ApiNgException, JsonProcessingException {
-        var params = new HashMap<String, Object>();
-        params.put(FILTER, filter);
-        String result = makeRequestBetting(LISTCOUNTRIES, params);
+        String result = makeRequestBetting(LISTCOUNTRIES, Map.of(FILTER, filter));
         return om.readValue(result, new TypeReference<>() {
         });
     }
@@ -186,9 +199,7 @@ public class Operations {
      *               the criteria in the filter are selected</u>
      */
     public List<MarketTypeResult> listMarketTypes(MarketFilter filter) throws ApiNgException, JsonProcessingException {
-        var params = new HashMap<String, Object>();
-        params.put(FILTER, filter);
-        String result = makeRequestBetting(LISTMARKETTYPES, params);
+        String result = makeRequestBetting(LISTMARKETTYPES, Map.of(FILTER, filter));
         return om.readValue(result, new TypeReference<>() {
         });
     }
@@ -305,11 +316,23 @@ public class Operations {
      *
      * @throws ApiNgException Generic exception that is thrown if this operation fails for any reason.
      */
-    public CurrentOrderSummaryReport listCurrentOrders(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
+    public CurrentOrderSummaryReport listCurrentOrders(CurrentOrdersParameters cop) throws ApiNgException, JsonProcessingException {
+        var params = new HashMap<String, Object>();
+        params.put(BET_IDS, cop.getBetIds());
+        params.put(MARKET_IDS, cop.getMarketIds());
+        String customerOrderRefs = "customerOrderRefs";
+        params.put(customerOrderRefs, cop.getCustomerOrderRefs());
+        params.put(CUSTOMER_STRATEGY_REFS, cop.getCustomerStrategyRefs());
+        params.put(PLACEDDATERANGE, cop.getPlacedDateRange());
+        params.put(ORDERPROJECTION, cop.getOrderProjection());
+        params.put(ORDERBY, cop.getOrderBy());
+        params.put(SORT_DIR, cop.getSortDir());
+        params.put(FROM_RECORD, cop.getFromRecord());
+        params.put(RECORD_COUNT, cop.getRecordCount());
+        params.put(INCLUDE_ITEM_DESCRIPTION, cop.isIncludeItemDescription());
 
         String result = makeRequestBetting(LISTCURRENTORDERS, params);
         return om.readValue(result, CurrentOrderSummaryReport.class);
-
     }
 
 
@@ -320,10 +343,8 @@ public class Operations {
      * The fields available at each roll-up are available here: https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders+-+Roll-up+Fields+Available
      */
     public ClearedOrderSummaryReport listClearedOrders(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
-
         String result = makeRequestBetting(LISTCLEAREDORDERS, params);
         return om.readValue(result, ClearedOrderSummaryReport.class);
-
     }
 
 
@@ -336,9 +357,7 @@ public class Operations {
      *               the criteria in the filter are selected
      */
     public List<CompetitionResult> listCompetitions(MarketFilter filter) throws ApiNgException, JsonProcessingException {
-        var params = new HashMap<String, Object>();
-        params.put(FILTER, filter);
-        String result = makeRequestBetting(LISTCOMPETITIONS, params);
+        String result = makeRequestBetting(LISTCOMPETITIONS, Map.of(FILTER, filter));
         return om.readValue(result, new TypeReference<>() {
         });
     }
@@ -351,9 +370,7 @@ public class Operations {
      *               the criteria in the filter are selected
      */
     public List<EventResult> listEvents(MarketFilter filter) throws ApiNgException, JsonProcessingException {
-        var params = new HashMap<String, Object>();
-        params.put(FILTER, filter);
-        String result = makeRequestBetting(LISTEVENTS, params);
+        String result = makeRequestBetting(LISTEVENTS, Map.of(FILTER, filter));
         return om.readValue(result, new TypeReference<>() {
         });
     }
@@ -363,21 +380,25 @@ public class Operations {
     }
 
     protected String makeRequestAccount(ApiNgOperation operation) throws ApiNgException, JsonProcessingException {
-        return makeRequest(operation, null, ACCOUNT);
+        return makeRequest(operation, Collections.emptyMap(), ACCOUNT);
     }
 
     protected String makeRequestHeartbeat(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
         return makeRequest(ApiNgOperation.HEARTBEAT, params, Endpoint.HEARTBEAT);
     }
 
+    HttpUtil httpUtil = new HttpUtil();
+
     private String makeRequest(ApiNgOperation operation, Map<String, Object> params, Endpoint endpoint) throws ApiNgException, JsonProcessingException {
 
-        String requestString = params == null ? "{}" : om.writeValueAsString(params);
-        requestString = requestString.replaceAll(",\"\\w+\":null|\"\\w+\":null,|\"\\w+\":null", "");
+        params = params.entrySet().stream()
+                .filter(stringObjectEntry -> stringObjectEntry.getValue() != null)
+                .collect(toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+        String requestString = om.writeValueAsString(params);
 
         try {
 
-            return HttpUtil.sendPostRequest(operation, requestString, endpoint);
+            return httpUtil.sendPostRequest(operation, requestString, endpoint);
 
         } catch (IllegalStateException exception) {
             FaultData faultData = om.readValue(exception.getMessage(), FaultData.class);
