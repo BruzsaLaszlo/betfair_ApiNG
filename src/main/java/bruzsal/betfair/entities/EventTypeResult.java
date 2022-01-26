@@ -10,8 +10,6 @@ public record EventTypeResult(
 
     @Override
     public String toString() {
-        return "EventTypeResult" + '\n' +
-                eventType + '\n' +
-                "    marketCount = " + marketCount;
+        return String.format("%5s  %s", marketCount, eventType);
     }
 }

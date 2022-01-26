@@ -10,7 +10,6 @@ public record EventType(
 
     @Override
     public String toString() {
-        return "    name = " + name + '\n' +
-                "    id = " + id;
+        return name + "(\"" + id + "\")";
     }
 }
