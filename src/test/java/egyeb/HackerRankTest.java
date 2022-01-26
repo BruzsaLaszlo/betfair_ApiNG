@@ -399,13 +399,9 @@ class HackerRankTest {
     void straircase() {
         StringBuilder sb = new StringBuilder();
         int n = 10;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 9 - i; j++) {
-                sb.append(" ");
-            }
-            for (int j = 0; j < i + 1; j++) {
-                sb.append("#");
-            }
+        for (int i = 0; i < n; i++) {
+            sb.append(" ".repeat(n - 1 - i));
+            sb.append("#".repeat(i + 1));
             sb.append("\n");
         }
         System.out.println(sb);

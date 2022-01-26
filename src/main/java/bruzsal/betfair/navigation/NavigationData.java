@@ -3,6 +3,7 @@ package bruzsal.betfair.navigation;
 import bruzsal.betfair.enums.Endpoint;
 import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,6 +37,7 @@ import static bruzsal.betfair.api.Operations.om;
  * <p>
  * An EVENT node has zero, one or many EVENT nodes
  */
+@Log4j2
 public class NavigationData {
 
     private static final boolean HORSE_RACING_OFF = true;
@@ -107,18 +109,17 @@ public class NavigationData {
 
     private String downLoadAndSaveNavigationData() {
         try {
-            String dataJson = HttpUtil.sendPostRequest(null, null, Endpoint.NAVIGATION);
+            String dataJson = new HttpUtil().sendPostRequest(null, null, Endpoint.NAVIGATION);
             Files.writeString(NAVIGATION_DATA_JSON, dataJson);
             lastUpdateTime = LocalDateTime.now();
             return dataJson;
         } catch (IOException e) {
-            System.err.println("Nem sikerült kiírni a file-ba a NAVIGATION DATA-t");
-            e.printStackTrace();
+            log.error("Nem sikerült kiírni a file-ba a NAVIGATION DATA-t", e);
             return null;
         }
     }
 
-    public static class rawChild {
+    public static class rawObject {
 
         public String type;
         public String name;
@@ -129,7 +130,7 @@ public class NavigationData {
         public Date marketStartTime;
         public String numberOfWinners;
         public String countryCode;
-        public List<rawChild> children;
+        public List<rawObject> children;
         public String venue;
         public Date startTime;
         public String raceNumber;
@@ -138,7 +139,7 @@ public class NavigationData {
 
     public void createTree(String dataJson) throws JsonProcessingException {
 
-        rawChild rootJson = om.readValue(dataJson, rawChild.class);
+        rawObject rootJson = om.readValue(dataJson, rawObject.class);
 
         clearLists();
 
@@ -175,7 +176,7 @@ public class NavigationData {
         }
     }
 
-    private void bejaras(rawChild root, Child o, int depth) {
+    private void bejaras(rawObject root, Child o, int depth) {
 
         Child nd = null;
         switch (root.type) {
@@ -221,7 +222,7 @@ public class NavigationData {
 
 
         if (root.children != null)
-            for (rawChild c : root.children)
+            for (rawObject c : root.children)
                 bejaras(c, o, depth + 1);
 
     }
