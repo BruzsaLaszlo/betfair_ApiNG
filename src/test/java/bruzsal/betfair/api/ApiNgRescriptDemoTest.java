@@ -108,11 +108,11 @@ class ApiNgRescriptDemoTest {
                         "being placed for marketId: " + marketIdChosen + " with selectionId: " + selectionId + "...\n\n");
 
                 //You can adjust the size and price value in the "apingdemo.properties" file
-                LimitOrder limitOrder = new LimitOrder()
-                        .setPersistenceType(PersistenceType.LAPSE)
-                        .setPrice(getPrice())
-                        .setSize(getSize())
-                        .validate();
+                LimitOrder limitOrder = LimitOrder.builder()
+                        .persistenceType(PersistenceType.LAPSE)
+                        .price(getPrice())
+                        .size(getSize())
+                        .build();
 
                 PlaceInstruction instruction = PlaceInstruction.builder()
                         .handicap(0d)

@@ -43,6 +43,7 @@ public class Operations {
     private static final String INCLUDE_OVERALL_POSITION = "includeOverallPosition";
     private static final String PARTITION_MATCHED_BY_STRATEGY_REF = "partitionMatchedByStrategyRef";
     private static final String CUSTOMER_STRATEGY_REFS = "customerStrategyRefs";
+    private static final String CUSTOMER_ORDER_REFS = "customerOrderRefs";
     private static final String MATCHED_SINCE = "matchedSince";
     private static final String BET_IDS = "betIds";
     private static final String SORT_DIR = "sortDir";
@@ -320,8 +321,7 @@ public class Operations {
         var params = new HashMap<String, Object>();
         params.put(BET_IDS, cop.getBetIds());
         params.put(MARKET_IDS, cop.getMarketIds());
-        String customerOrderRefs = "customerOrderRefs";
-        params.put(customerOrderRefs, cop.getCustomerOrderRefs());
+        params.put(CUSTOMER_ORDER_REFS, cop.getCustomerOrderRefs());
         params.put(CUSTOMER_STRATEGY_REFS, cop.getCustomerStrategyRefs());
         params.put(PLACEDDATERANGE, cop.getPlacedDateRange());
         params.put(ORDERPROJECTION, cop.getOrderProjection());

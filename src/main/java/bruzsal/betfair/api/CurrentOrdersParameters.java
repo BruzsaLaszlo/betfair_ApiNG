@@ -5,6 +5,7 @@ import bruzsal.betfair.enums.OrderBy;
 import bruzsal.betfair.enums.OrderProjection;
 import bruzsal.betfair.enums.SortDir;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 
 import java.util.Set;
@@ -28,6 +29,7 @@ public class CurrentOrdersParameters {
     /**
      * Optionally restricts the results to the specified order status.
      */
+    @Default
     private OrderProjection orderProjection = OrderProjection.ALL;
 
     /**
@@ -60,17 +62,20 @@ public class CurrentOrdersParameters {
      * the dateRange parameter (placed, matched, voided or settled date) - see the dateRange parameter
      * description (above) for more information. See also the OrderBy type definition.
      */
+    @Default
     private OrderBy orderBy = OrderBy.BY_MARKET;
 
     /**
      * Specifies the direction the results will be sorted in.
      * If no value is passed in, it defaults to EARLIEST_TO_LATEST.
      */
+    @Default
     private SortDir sortDir = SortDir.LATEST_TO_EARLIEST;
 
     /**
      * Specifies the first record that will be returned. Records start at index zero, not at index one.
      */
+    @Default
     private int fromRecord = 0;
 
     /**
@@ -78,12 +83,14 @@ public class CurrentOrdersParameters {
      * Note that there is a page size limit of 1000. A value of zero indicates that you would like
      * all records (including and from 'fromRecord') up to the limit.
      */
+    @Default
     private int recordCount = 0;
 
     /**
      * If true then extra description parameters are included in the CurrentOrderSummaryReport.
      * (Pending Release - w/c 9th August)
      */
+    @Default
     private boolean includeItemDescription = true;
 
 

@@ -22,7 +22,6 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +29,7 @@ import java.util.Set;
 import static bruzsal.betfair.enums.CountryCodes.HUNGARY;
 import static bruzsal.betfair.enums.CountryCodes.UNITED_KINGDOM;
 import static bruzsal.betfair.enums.EventTypeIds.SOCCER;
+import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +75,7 @@ class OperationsTest {
 
         var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+                .setMarketStartTime(now(), now().plusDays(1));
 
         List<CountryCodeResult> list = operations.listCountries(marketFilter);
         list.sort(comparing(CountryCodeResult::marketCount));
@@ -89,7 +89,7 @@ class OperationsTest {
 
         var marketFilter = new MarketFilter()
                 .setEventTypeId(SOCCER)
-                .setMarketStartTime(LocalDateTime.now(), LocalDateTime.now().plusDays(10));
+                .setMarketStartTime(now(), now().plusDays(10));
 
         List<TimeRangeResult> list = operations.listTimeRanges(marketFilter, TimeGranularity.DAYS);
         list.sort(comparing(TimeRangeResult::marketCount));
@@ -176,9 +176,7 @@ class OperationsTest {
     @Test
     void listCurrentOrders() throws ApiNgException, JsonProcessingException {
 
-        TimeRange timeRange = new TimeRange(
-                LocalDateTime.now().minusDays(1)
-        );
+        TimeRange timeRange = new TimeRange(now().minusDays(1));
 
         var params = CurrentOrdersParameters.builder()
                 .placedDateRange(timeRange)
@@ -197,8 +195,8 @@ class OperationsTest {
     void listClearedOrders() throws ApiNgException, JsonProcessingException {
 
         TimeRange timeRange = new TimeRange(
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now()
+                now().minusDays(1),
+                now()
         );
 
         var params = new ClearedOrderSummaryParameterBuilder()
@@ -300,12 +298,13 @@ class OperationsTest {
     void getNavigationData() throws JsonProcessingException {
 
         new NavigationData().updateNavigationData();
-        assertFalse(LocalDateTime.now().isEqual(NavigationData.lastUpdateTime));
+        assertFalse(now().isEqual(NavigationData.lastUpdateTime));
 
     }
 
     @Test
-    void json() throws JsonProcessingException {
+    @Disabled
+    void testObjectMapper() throws JsonProcessingException {
 
         String json = """
                 {
@@ -327,7 +326,8 @@ class OperationsTest {
     }
 
     @Test
-    void json2() throws JsonProcessingException {
+    @Disabled
+    void testObjectMapper2() throws JsonProcessingException {
 
         String json = """
                 [{
@@ -363,6 +363,7 @@ class OperationsTest {
 
         ObjectMapper mapper = new ObjectMapper();
         List<String> list = mapper.readValue(json, List.class);
+        System.out.println(list);
 
 
         record DeveloperAppVersion(String owner, long versionId, String version, String applicationKey,
@@ -383,6 +384,7 @@ class OperationsTest {
 
 
     @Test
+    @Disabled
     void htttp() throws IOException, InterruptedException, URISyntaxException {
         String url = "https://api.betfair.com/exchange/account/rest/v1.0/getAccountDetails/";
 
