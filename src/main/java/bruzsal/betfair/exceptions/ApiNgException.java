@@ -41,17 +41,9 @@ public class ApiNgException extends RuntimeException {
      * REQUEST_SIZE_EXCEEDS_LIMIT	The request exceeds the request size limit. Requests are limited to a total of 250 betId’s/marketId’s (or a combination of both).
      * ACCESS_DENIED	The calling client is not permitted to perform the specific action e.g. they have an App Key restriction in place or attempting to place a bet from a restricted jurisdiction.
      */
-    private final String errorCode;
-    private final String requestUUID;
-    private final String errorDetails;
-
-
-    public ApiNgException(String requestUUID, String errorCode, String errorDetails) {
-        super(errorDetails);
-        this.requestUUID = requestUUID;
-        this.errorCode = errorCode;
-        this.errorDetails = errorDetails;
-    }
+    private String errorCode;
+    private String requestUUID;
+    private String errorDetails;
 
 
     @Override
