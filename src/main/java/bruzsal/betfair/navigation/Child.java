@@ -1,8 +1,11 @@
 package bruzsal.betfair.navigation;
 
+import lombok.Getter;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
+@Getter
 public abstract class Child {
 
     protected final String id;
@@ -37,23 +40,6 @@ public abstract class Child {
                 }
             }
         }
-    }
-
-
-    public Child getParent() {
-        return parent;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getDepth() {
-        return depth;
     }
 
 }

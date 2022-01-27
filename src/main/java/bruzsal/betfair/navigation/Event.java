@@ -1,8 +1,11 @@
 package bruzsal.betfair.navigation;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Event extends Child {
 
     private final String countryCode;
@@ -27,19 +30,4 @@ public class Event extends Child {
                 '}';
     }
 
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public List<Market> getMarkets() {
-        return markets;
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
 }

@@ -199,9 +199,9 @@ class OperationsTest {
                 now()
         );
 
-        var params = new ClearedOrderSummaryParameterBuilder()
-                .setSettledDateRange(timeRange)
-                .setBetStatus(BetStatus.SETTLED)
+        var params = ClearedOrderSummaryParameters.builder()
+                .settledDateRange(timeRange)
+                .betStatus(BetStatus.SETTLED)
                 .build();
 
         ClearedOrderSummaryReport cosr = operations.listClearedOrders(params);

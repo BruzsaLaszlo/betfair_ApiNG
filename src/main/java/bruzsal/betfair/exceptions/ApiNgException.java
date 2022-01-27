@@ -1,8 +1,9 @@
 package bruzsal.betfair.exceptions;
 
-public class ApiNgException extends Throwable {
+import lombok.Getter;
 
-    private String requestUUID;
+@Getter
+public class ApiNgException extends RuntimeException {
 
     /**
      * TOO_MUCH_DATA
@@ -40,27 +41,18 @@ public class ApiNgException extends Throwable {
      * REQUEST_SIZE_EXCEEDS_LIMIT	The request exceeds the request size limit. Requests are limited to a total of 250 betId’s/marketId’s (or a combination of both).
      * ACCESS_DENIED	The calling client is not permitted to perform the specific action e.g. they have an App Key restriction in place or attempting to place a bet from a restricted jurisdiction.
      */
-    private String errorCode;
+    private final String errorCode;
+    private final String requestUUID;
+    private final String errorDetails;
 
-    private String errorDetails;
 
-
-    public String getRequestUUID() {
-        return requestUUID;
+    public ApiNgException(String requestUUID, String errorCode, String errorDetails) {
+        super(errorDetails);
+        this.requestUUID = requestUUID;
+        this.errorCode = errorCode;
+        this.errorDetails = errorDetails;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorDetails() {
-        return errorDetails;
-    }
-
-    @Override
-    public void printStackTrace() {
-        System.err.println(this);
-    }
 
     @Override
     public String toString() {

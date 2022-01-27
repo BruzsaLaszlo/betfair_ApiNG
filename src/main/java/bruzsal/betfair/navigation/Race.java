@@ -1,11 +1,14 @@
 package bruzsal.betfair.navigation;
 
+import lombok.Getter;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Getter
 public class Race extends Child {
 
     private final String venue;
@@ -35,23 +38,4 @@ public class Race extends Child {
                 '}';
     }
 
-    public String getVenue() {
-        return venue;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public String getRaceNumber() {
-        return raceNumber;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public List<Market> getMarkets() {
-        return markets;
-    }
 }

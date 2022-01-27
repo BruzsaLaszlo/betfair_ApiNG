@@ -9,6 +9,7 @@ public record FaultData(
         Detail detail
 
 ) {
+
     public record Detail(
 
             @JsonProperty("APINGException")
@@ -17,6 +18,7 @@ public record FaultData(
 
     ) {
     }
+
 }
 
 

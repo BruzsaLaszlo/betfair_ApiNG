@@ -1,18 +1,17 @@
 package bruzsal.betfair.navigation;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Root extends Child {
 
-    public Root() {
-        super(0, "0", "ROOT");
-    }
-
+    @Getter
     private final List<EventType> eventTypes = new ArrayList<>();
 
-    public List<EventType> getEventTypes() {
-        return eventTypes;
+    public Root() {
+        super(0, "0", "ROOT");
     }
 
     @Override

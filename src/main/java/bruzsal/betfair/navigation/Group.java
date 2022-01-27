@@ -1,8 +1,11 @@
 package bruzsal.betfair.navigation;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Group extends Child {
 
     private final List<Event> events = new ArrayList<>();
@@ -21,11 +24,4 @@ public class Group extends Child {
                 '}';
     }
 
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
 }

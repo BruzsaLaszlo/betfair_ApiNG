@@ -342,7 +342,20 @@ public class Operations {
      * By default the service will return all available data for the last 90 days (see Best Practice note below).
      * The fields available at each roll-up are available here: https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders+-+Roll-up+Fields+Available
      */
-    public ClearedOrderSummaryReport listClearedOrders(Map<String, Object> params) throws ApiNgException, JsonProcessingException {
+    public ClearedOrderSummaryReport listClearedOrders(ClearedOrderSummaryParameters cosp) throws ApiNgException, JsonProcessingException {
+        var params = new HashMap<String, Object>();
+        params.put(MARKET_IDS, cosp.getMarketIds());
+        params.put("eventTypeIds", cosp.getEventTypeIds());
+        params.put("eventIds", cosp.getEventIds());
+        params.put("runnerIds", cosp.getRunnerIds());
+        params.put("side", cosp.getSide());
+        params.put(BET_IDS, cosp.getBetIds());
+        params.put("settledDateRange", cosp.getSettledDateRange());
+        params.put("betStatus", cosp.getBetStatus());
+        params.put("groupBy", cosp.getGroupBy());
+        params.put(FROM_RECORD, cosp.getFromRecord());
+        params.put(RECORD_COUNT, cosp.getRecordCount());
+        params.put(INCLUDE_ITEM_DESCRIPTION, cosp.isIncludeItemDescription());
         String result = makeRequestBetting(LISTCLEAREDORDERS, params);
         return om.readValue(result, ClearedOrderSummaryReport.class);
     }
