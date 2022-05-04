@@ -1,0 +1,27 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.1">
+
+    <persistence-unit name="aping_pu">
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="aping"/>
+            <property name="jakarta.persistence.jdbc.password" value="aping"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/aping"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.jpa.compliance.proxy" value="false"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="test_pu">
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
