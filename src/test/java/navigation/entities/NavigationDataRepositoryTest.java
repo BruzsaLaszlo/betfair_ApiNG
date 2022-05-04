@@ -1,21 +1,20 @@
 package navigation.entities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import util.JsonMapper;
 
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-class NavigationDataRepositoryTest {
+class NavigationDataRepositoryTest extends Repository {
 
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("aping_pu");
-    //    EntityManagerFactory factory = Persistence.createEntityManagerFactory("test_pu");
+
     NavigationDataRepository repository = new NavigationDataRepository(factory);
 
     @AfterEach
@@ -25,7 +24,7 @@ class NavigationDataRepositoryTest {
 
     @Test
     @Disabled
-    void name() throws JsonProcessingException {
+    void saveTree() throws JsonProcessingException {
 //        EntityManager ma = factory.createEntityManager();
 //        ma.getTransaction().begin();
 //
@@ -34,7 +33,7 @@ class NavigationDataRepositoryTest {
 //
 //        ma.getTransaction().commit();
 //        ma.close();
-        repository.createTree(repository.getNavigationDataFromFile());
+        repository.saveTree(repository.getNavigationDataFromFile());
     }
 
     @Test
@@ -49,6 +48,21 @@ class NavigationDataRepositoryTest {
         assertThatNoException().isThrownBy(() -> repository.saveAll());
     }
 
+    @Test
+    @DisplayName("Van Soccer az EventType-ok között")
+    void isSoccerPresent() {
+
+//        boolean isPresent = eventTypes()
+//                .peek(System.out::println)
+//                .anyMatch(eventType -> eventType.getName().equals("Soccer"));
+//
+//        assertTrue(isPresent);
+        EventType singleResult = transactionaless(manager -> manager
+                .createQuery("select et from EventType et where et.name = 'Soccer'", EventType.class))
+                .getSingleResult();
+        assertThat(singleResult.name).isEqualTo("Soccer");
+
+    }
 
     @Test
     void getMarketTypes() {

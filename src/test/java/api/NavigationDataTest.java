@@ -31,9 +31,10 @@ class NavigationDataTest {
     @Disabled("túl nagy file-t tölt le")
     void getNavigationData() throws JsonProcessingException {
 
-        new NavigationData().updateNavigationData();
+        var navData = new NavigationData();
+        navData.updateNavigationData();
 
-        assertThat(NavigationData.lastUpdateTime).isEqualToIgnoringMinutes(now());
+        assertThat(navData.getLastUpdateTime()).isEqualToIgnoringMinutes(now());
 
     }
 
