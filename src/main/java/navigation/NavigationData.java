@@ -1,60 +1,30 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
-import bruzsal.betfair.enums.Endpoint;
-import bruzsal.betfair.util.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import enums.Endpoint;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import util.HttpUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static bruzsal.betfair.api.Operations.om;
+import static api.Operations.om;
 
-/**
- * A ROOT group node has one or many EVENT_TYPE nodes
- * <p>
- * An EVENT_TYPE node has zero, one or many GROUP nodes
- * <p>
- * An EVENT_TYPE node has zero, one or many EVENT nodes
- * <p>
- * A Horse Racing EVENT_TYPE node has zero, one or many RACE nodes
- * <p>
- * A RACE node has one or many MARKET nodes
- * <p>
- * A GROUP node has zero, one or many EVENT nodes
- * <p>
- * A GROUP node has zero, one or many GROUP nodes
- * <p>
- * An EVENT node has zero, one or many MARKET nodes
- * <p>
- * An EVENT node has zero, one or many GROUP nodes
- * <p>
- * An EVENT node has zero, one or many EVENT nodes
- */
+
 @Log4j2
 public class NavigationData {
 
     private static final boolean HORSE_RACING_OFF = true;
 
-    public static LocalDateTime lastUpdateTime;
-
-    public static final String[] SPACES = new String[10];
+    private LocalDateTime lastUpdateTime;
 
     private final Root root = new Root();
-
-    static {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
-            SPACES[i] = sb.toString();
-            sb.append("   > ");
-        }
-    }
 
     private static final List<Market> MARKETS = new ArrayList<>(25_000);
     private static final List<Event> EVENTS = new ArrayList<>(2_000);
@@ -100,6 +70,7 @@ public class NavigationData {
 
     public Path updateNavigationData() throws JsonProcessingException {
         String dataJson = downLoadAndSaveNavigationData();
+
         createTree(dataJson);
         return NAVIGATION_DATA_JSON;
     }
@@ -119,27 +90,28 @@ public class NavigationData {
         }
     }
 
-    public static class rawObject {
+    @Data
+    public static class RawObject {
 
-        public String type;
-        public String name;
-        public String id;
-        @Deprecated
-        public String exchangeId;
-        public String marketType;
-        public Date marketStartTime;
-        public String numberOfWinners;
-        public String countryCode;
-        public List<rawObject> children;
-        public String venue;
-        public Date startTime;
-        public String raceNumber;
+        private String type;
+        private String name;
+        private String id;
+        @Deprecated(since = "régen")
+        private String exchangeId;
+        private String marketType;
+        private LocalDateTime marketStartTime;
+        private String numberOfWinners;
+        private String countryCode;
+        private List<RawObject> children;
+        private String venue;
+        private LocalDateTime startTime;
+        private String raceNumber;
 
     }
 
     public void createTree(String dataJson) throws JsonProcessingException {
 
-        rawObject rootJson = om.readValue(dataJson, rawObject.class);
+        RawObject rootJson = om.readValue(dataJson, RawObject.class);
 
         clearLists();
 
@@ -150,35 +122,35 @@ public class NavigationData {
 
     }
 
-    private void add(Child o, Group g) {
+    private void add(Node o, Group g) {
         switch (o) {
             case EventType eventType -> eventType.getGroups().add(g);
             case Group group -> group.getGroups().add(g);
             case Event event -> event.getGroups().add(g);
-            case null, default -> throw new IllegalStateException("Az EventType nem lehet mas");
+            default -> throw new IllegalStateException("Az EventType nem lehet más");
         }
     }
 
-    private void add(Child o, Event e) {
+    private void add(Node o, Event e) {
         switch (o) {
             case EventType eventType -> eventType.getEvents().add(e);
             case Group group -> group.getEvents().add(e);
             case Event event -> event.getEvents().add(e);
-            case null, default -> throw new IllegalStateException("Az Event nem lehet mas");
+            default -> throw new IllegalStateException("Az Event nem lehet más");
         }
     }
 
-    private void add(Child o, Market m) {
+    private void add(Node o, Market m) {
         switch (o) {
             case Event event -> event.getMarkets().add(m);
             case Race race -> race.getMarkets().add(m);
-            case null, default -> throw new IllegalStateException("Az Market nem lehet mas");
+            default -> throw new IllegalStateException("Az Market nem lehet más");
         }
     }
 
-    private void bejaras(rawObject root, Child o, int depth) {
+    private void bejaras(RawObject root, Node o, int depth) {
 
-        Child nd = null;
+        Node nd = null;
         switch (root.type) {
             case "EVENT_TYPE" -> {
                 if (root.id.equals("7") && root.name.equals("Horse Racing") && HORSE_RACING_OFF)
@@ -213,7 +185,7 @@ public class NavigationData {
                 add(o, (Market) nd);
                 MARKETS.add((Market) nd);
             }
-            default -> throw new IllegalStateException("A root(child) nem lehet mas");
+            default -> throw new IllegalStateException("A root(child) nem lehet más");
         }
 
         if (nd != null)
@@ -222,7 +194,7 @@ public class NavigationData {
 
 
         if (root.children != null)
-            for (rawObject c : root.children)
+            for (RawObject c : root.children)
                 bejaras(c, o, depth + 1);
 
     }

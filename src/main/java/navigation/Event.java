@@ -1,4 +1,4 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Event extends Child {
+public class Event extends Node {
 
     private final String countryCode;
 
@@ -23,11 +23,11 @@ public class Event extends Child {
 
     @Override
     public String toString() {
-        return "\n" + NavigationData.SPACES[depth] + "Event{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                '}';
+        return "\n" + SPACES[depth] + "Event{" +
+               "id='" + id + '\'' +
+               ", name='" + name + '\'' +
+               ", countryCode='" + countryCode + '\'' +
+               '}';
     }
 
 }

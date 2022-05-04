@@ -1,15 +1,13 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
 import lombok.Getter;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
-public class Race extends Child {
+public class Race extends Node {
 
     private final String venue;
     private final LocalDateTime startTime;
@@ -18,10 +16,10 @@ public class Race extends Child {
 
     private final List<Market> markets = new ArrayList<>();
 
-    public Race(int depth, String id, String name, String venue, Date startTime, String raceNumber, String countryCode) {
+    public Race(int depth, String id, String name, String venue, LocalDateTime startTime, String raceNumber, String countryCode) {
         super(depth, id, name);
         this.venue = venue;
-        this.startTime = new Timestamp(startTime.getTime()).toLocalDateTime();
+        this.startTime = startTime;
         this.raceNumber = raceNumber;
         this.countryCode = countryCode;
     }

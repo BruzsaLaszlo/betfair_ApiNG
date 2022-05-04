@@ -1,4 +1,4 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class EventType extends Child {
+public class EventType extends Node {
 
     public EventType(int depth, String id, String name) {
         super(depth, id, name);

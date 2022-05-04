@@ -1,4 +1,4 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Group extends Child {
+public class Group extends Node {
 
     private final List<Event> events = new ArrayList<>();
 

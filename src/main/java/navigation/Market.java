@@ -1,15 +1,13 @@
-package bruzsal.betfair.navigation;
+package navigation;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Getter
-public class Market extends Child {
+public class Market extends Node {
 
     private final LocalDateTime martketStartTime;
 
@@ -20,9 +18,9 @@ public class Market extends Child {
     @Setter
     private Event event;
 
-    public Market(int depth, String id, String name, Date martketStartTime, String marketType, String numberOfWinners) {
+    public Market(int depth, String id, String name, LocalDateTime martketStartTime, String marketType, String numberOfWinners) {
         super(depth, id, name);
-        this.martketStartTime = new Timestamp(martketStartTime.getTime()).toLocalDateTime();
+        this.martketStartTime = martketStartTime;
         this.marketType = marketType;
         this.numberOfWinners = numberOfWinners;
     }
