@@ -3,6 +3,7 @@ package navigation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import enums.Endpoint;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import util.HttpUtil;
 
@@ -22,6 +23,7 @@ public class NavigationData {
 
     private static final boolean HORSE_RACING_OFF = true;
 
+    @Getter
     private LocalDateTime lastUpdateTime;
 
     private final Root root = new Root();
