@@ -1,7 +1,7 @@
-package bruzsal.betfair.util;
+package util;
 
-import bruzsal.betfair.enums.ApiNgOperation;
-import bruzsal.betfair.enums.Endpoint;
+import enums.ApiNgOperation;
+import enums.Endpoint;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -15,10 +15,8 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.stream.Collectors;
 
-import static bruzsal.betfair.enums.Endpoint.NAVIGATION;
-import static bruzsal.betfair.util.Properties.APPLICATION_KEY;
-import static bruzsal.betfair.util.Properties.SESSION_TOKEN;
 import static com.github.mizosoft.methanol.MoreBodyHandlers.decoding;
+import static enums.Endpoint.NAVIGATION;
 import static java.net.http.HttpResponse.BodyHandlers;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -68,8 +66,8 @@ public final class HttpUtil {
                 .headers("Content-Type", "application/json")
                 .headers("Accept", "application/json")
                 .headers("Accept-Charset", "UTF-8")
-                .headers("X-Application", APPLICATION_KEY.value())
-                .headers("X-Authentication", SESSION_TOKEN.value())
+                .headers("X-Application", ClientProperties.APPLICATION_KEY.value())
+                .headers("X-Authentication", ClientProperties.sessionToken())
                 .headers("Accept-Encoding", "gzip,deflate")
 //                .headers("Connection", "keep-alive")
                 .timeout(Duration.of(10, SECONDS))

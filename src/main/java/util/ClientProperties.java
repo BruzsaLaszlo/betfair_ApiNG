@@ -1,6 +1,6 @@
-package bruzsal.betfair.util;
+package util;
 
-import bruzsal.betfair.api.Operations;
+import api.Operations;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Log4j2
-public enum Properties {
+public enum ClientProperties {
 
     BETFAIR_USERNAME {
         @Override
@@ -77,7 +77,7 @@ public enum Properties {
     private static String sessionToken;
 
     static {
-        try (InputStream in = Properties.class.getResourceAsStream("/apingdemo.properties")) {
+        try (InputStream in = ClientProperties.class.getResourceAsStream("/API_NG.properties")) {
 
             PROP.load(in);
             sessionToken = updateSessionToken();
@@ -104,7 +104,7 @@ public enum Properties {
                 SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
                 URL console = new URL(BETFAIR_CERT_LOGIN_URL.value());
                 KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(PKCS12_FILE.value()), PKCS12_PASSWORD.value());
-                sslContext.init(km, trustAllCerts, new java.security.SecureRandom());
+                sslContext.init(km, trustAllCerts, new SecureRandom());
                 HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
                 con.setSSLSocketFactory(sslContext.getSocketFactory());
                 con.setRequestMethod("POST");
@@ -137,7 +137,7 @@ public enum Properties {
                 }
                 return getSessionToken(sb.toString());
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
-                    | UnrecoverableKeyException | KeyManagementException | IOException exception) {
+                     | UnrecoverableKeyException | KeyManagementException | IOException exception) {
                 log.fatal("hiba a session token megszerzésekor", exception);
                 throw new NoSuchElementException("nincs meg session token", exception);
             }
@@ -175,8 +175,8 @@ public enum Properties {
         private static String getQuery(List<NameValuePair> params) {
             return params.stream()
                     .map(nameValuePair -> URLEncoder.encode(nameValuePair.getName(), StandardCharsets.UTF_8)
-                            + "="
-                            + URLEncoder.encode(nameValuePair.getValue(), StandardCharsets.UTF_8))
+                                          + "="
+                                          + URLEncoder.encode(nameValuePair.getValue(), StandardCharsets.UTF_8))
                     .collect(Collectors.joining("&"));
         }
 
