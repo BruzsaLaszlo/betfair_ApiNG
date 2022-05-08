@@ -3,19 +3,16 @@ package util;
 import api.Operations;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Log4j2
 public enum ClientProperties {
@@ -115,14 +112,12 @@ public enum ClientProperties {
                 con.setReadTimeout(60 * 1000);
                 con.setRequestProperty("X-Application", "apikey");
 
-                List<NameValuePair> nvps = List.of(
-                        new BasicNameValuePair("username", BETFAIR_USERNAME.value()),
-                        new BasicNameValuePair("password", BETFAIR_PASSWORD.value()));
-
                 try (OutputStream os = con.getOutputStream();
-                     BufferedWriter writer = new BufferedWriter(
-                             new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
-                    writer.write(getQuery(nvps));
+                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, UTF_8))
+                ) {
+                    String userAndPass = "username=%s&password=%s".formatted(
+                            encode(BETFAIR_USERNAME.value(), UTF_8), encode(BETFAIR_PASSWORD.value(), UTF_8));
+                    writer.write(userAndPass);
                 }
 
                 con.connect();
@@ -171,14 +166,6 @@ public enum ClientProperties {
                     }
                 }
         };
-
-        private static String getQuery(List<NameValuePair> params) {
-            return params.stream()
-                    .map(nameValuePair -> URLEncoder.encode(nameValuePair.getName(), StandardCharsets.UTF_8)
-                                          + "="
-                                          + URLEncoder.encode(nameValuePair.getValue(), StandardCharsets.UTF_8))
-                    .collect(Collectors.joining("&"));
-        }
 
         private record Session(
                 String sessionToken,
