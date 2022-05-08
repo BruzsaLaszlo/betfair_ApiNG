@@ -5,8 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.*;
-import java.io.*;
-import java.net.URL;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.NoSuchElementException;
@@ -75,10 +81,8 @@ public enum ClientProperties {
 
     static {
         try (InputStream in = ClientProperties.class.getResourceAsStream("/API_NG.properties")) {
-
             PROP.load(in);
             sessionToken = updateSessionToken();
-
         } catch (IOException e) {
             log.fatal("Error loading the properties file: ", e);
             System.exit(-1);
@@ -99,48 +103,38 @@ public enum ClientProperties {
         public static String get() {
             try {
                 SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                URL console = new URL(BETFAIR_CERT_LOGIN_URL.value());
-                KeyManager[] km = getKeyManagers("pkcs12", new FileInputStream(PKCS12_FILE.value()), PKCS12_PASSWORD.value());
-                sslContext.init(km, trustAllCerts, new SecureRandom());
-                HttpsURLConnection con = (HttpsURLConnection) console.openConnection();
-                con.setSSLSocketFactory(sslContext.getSocketFactory());
-                con.setRequestMethod("POST");
-                con.setDoInput(true);
-                con.setDoOutput(true);
-                con.setUseCaches(false);
-                con.setConnectTimeout(30 * 1000);
-                con.setReadTimeout(60 * 1000);
-                con.setRequestProperty("X-Application", "apikey");
+                sslContext.init(getKeyManagers(new FileInputStream(PKCS12_FILE.value()), PKCS12_PASSWORD.value()),
+                        trustAllCerts, new SecureRandom());
 
-                try (OutputStream os = con.getOutputStream();
-                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, UTF_8))
-                ) {
-                    String userAndPass = "username=%s&password=%s".formatted(
-                            encode(BETFAIR_USERNAME.value(), UTF_8), encode(BETFAIR_PASSWORD.value(), UTF_8));
-                    writer.write(userAndPass);
-                }
+                String userAndPass = "?username=%s&password=%s".formatted(
+                        encode(BETFAIR_USERNAME.value(), UTF_8), encode(BETFAIR_PASSWORD.value(), UTF_8));
 
-                con.connect();
+                HttpRequest httpRequest = HttpRequest.newBuilder()
+                        .uri(new URI(BETFAIR_CERT_LOGIN_URL.value() + userAndPass))
+                        .POST(HttpRequest.BodyPublishers.noBody())
+                        .header("X-Application", "apikey")
+                        .build();
 
-                StringBuilder sb = new StringBuilder();
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()), 1024 * 1024)) {
-                    while (in.ready()) {
-                        String line = in.readLine();
-                        if (line == null) break;
-                        sb.append(line);
-                    }
-                }
-                return getSessionToken(sb.toString());
+                String response = HttpClient.newBuilder().sslContext(sslContext).build()
+                        .send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
+
+                return getSessionToken(response);
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
                      | UnrecoverableKeyException | KeyManagementException | IOException exception) {
                 log.fatal("hiba a session token megszerzésekor", exception);
                 throw new NoSuchElementException("nincs meg session token", exception);
+            } catch (URISyntaxException uriSyntaxException) {
+                throw new IllegalStateException(uriSyntaxException);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException(e);
             }
         }
 
-        private static KeyManager[] getKeyManagers(String keyStoreType, InputStream keyStoreFile, String keyStorePassword)
+
+        private static KeyManager[] getKeyManagers(InputStream keyStoreFile, String keyStorePassword)
                 throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+            KeyStore keyStore = KeyStore.getInstance("pkcs12");
             keyStore.load(keyStoreFile, keyStorePassword.toCharArray());
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(keyStore, keyStorePassword.toCharArray());
@@ -152,12 +146,10 @@ public enum ClientProperties {
                 new X509TrustManager() {
                     @Override
                     public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        // TODO document why this method is empty
                     }
 
                     @Override
                     public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        // TODO document why this method is empty
                     }
 
                     @Override
