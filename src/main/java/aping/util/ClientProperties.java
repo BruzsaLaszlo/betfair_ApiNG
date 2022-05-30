@@ -1,7 +1,5 @@
-package util;
+package aping.util;
 
-import api.Operations;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.*;
@@ -16,78 +14,36 @@ import java.net.http.HttpResponse;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Log4j2
-public enum ClientProperties {
+public abstract class ClientProperties {
 
-    BETFAIR_USERNAME {
-        @Override
-        public String value() {
-            return PROP.getProperty("BETFAIR_USERNAME");
-        }
-    },
+    private ClientProperties() {
+    }
 
-    BETFAIR_PASSWORD {
-        @Override
-        public String value() {
-            return PROP.getProperty("BETFAIR_PASSWORD");
-        }
-    },
-
-    BETFAIR_CERT_LOGIN_URL {
-        @Override
-        public String value() {
-            return PROP.getProperty("BETFAIR_CERT_LOGIN_URL");
-        }
-    },
-
-    PKCS12_FILE {
-        @Override
-        public String value() {
-            return PROP.getProperty("PKCS12_FILE");
-        }
-    },
-
-    PKCS12_PASSWORD {
-        @Override
-        public String value() {
-            return PROP.getProperty("PKCS12_PASSWORD");
-        }
-    },
-
-    APPLICATION_KEY {
-        @Override
-        public String value() {
-            return PROP.getProperty("APPLICATION_KEY");
-        }
-    },
-
-    SESSION_TOKEN {
-        @Override
-        public String value() {
-            return sessionToken;
-        }
-
-    };
-
-    public abstract String value();
-
-    private static final java.util.Properties PROP = new java.util.Properties();
-
-    private static String sessionToken;
+    private static final Properties PROPERTIES = new Properties();
 
     static {
         try (InputStream in = ClientProperties.class.getResourceAsStream("/API_NG.properties")) {
-            PROP.load(in);
-            sessionToken = updateSessionToken();
+            PROPERTIES.load(in);
         } catch (IOException e) {
             log.fatal("Error loading the properties file: ", e);
             System.exit(-1);
         }
     }
+
+    private static final String BETFAIR_USERNAME = PROPERTIES.getProperty("BETFAIR_USERNAME");
+    private static final String BETFAIR_PASSWORD = PROPERTIES.getProperty("BETFAIR_PASSWORD");
+    private static final String BETFAIR_CERT_LOGIN_URL = PROPERTIES.getProperty("BETFAIR_CERT_LOGIN_URL");
+    private static final String PKCS12_FILE = PROPERTIES.getProperty("PKCS12_FILE");
+    private static final String PKCS12_PASSWORD = PROPERTIES.getProperty("PKCS12_PASSWORD");
+    public static final String APPLICATION_KEY = PROPERTIES.getProperty("APPLICATION_KEY");
+
+    private static String sessionToken = updateSessionToken();
 
     public static String updateSessionToken() {
         sessionToken = SessionTokenService.get();
@@ -103,22 +59,26 @@ public enum ClientProperties {
         public static String get() {
             try {
                 SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                sslContext.init(getKeyManagers(new FileInputStream(PKCS12_FILE.value()), PKCS12_PASSWORD.value()),
+                sslContext.init(getKeyManagers(new FileInputStream(PKCS12_FILE)),
                         trustAllCerts, new SecureRandom());
 
                 String userAndPass = "?username=%s&password=%s".formatted(
-                        encode(BETFAIR_USERNAME.value(), UTF_8), encode(BETFAIR_PASSWORD.value(), UTF_8));
+                        encode(BETFAIR_USERNAME, UTF_8), encode(BETFAIR_PASSWORD, UTF_8));
 
                 HttpRequest httpRequest = HttpRequest.newBuilder()
-                        .uri(new URI(BETFAIR_CERT_LOGIN_URL.value() + userAndPass))
+                        .uri(new URI(BETFAIR_CERT_LOGIN_URL + userAndPass))
                         .POST(HttpRequest.BodyPublishers.noBody())
                         .header("X-Application", "apikey")
                         .build();
 
+                System.out.println(httpRequest.uri());
+
                 String response = HttpClient.newBuilder().sslContext(sslContext).build()
                         .send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
 
-                return getSessionToken(response);
+                System.out.println(response);
+
+                return new JsonMapper().readValue(response, Session.class).sessionToken;
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
                      | UnrecoverableKeyException | KeyManagementException | IOException exception) {
                 log.fatal("hiba a session token megszerzésekor", exception);
@@ -132,17 +92,17 @@ public enum ClientProperties {
         }
 
 
-        private static KeyManager[] getKeyManagers(InputStream keyStoreFile, String keyStorePassword)
+        private static KeyManager[] getKeyManagers(InputStream keyStoreFile)
                 throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
             KeyStore keyStore = KeyStore.getInstance("pkcs12");
-            keyStore.load(keyStoreFile, keyStorePassword.toCharArray());
+            keyStore.load(keyStoreFile, ClientProperties.PKCS12_PASSWORD.toCharArray());
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            kmf.init(keyStore, keyStorePassword.toCharArray());
+            kmf.init(keyStore, ClientProperties.PKCS12_PASSWORD.toCharArray());
             return kmf.getKeyManagers();
         }
 
         // Create a trust manager that does not validate certificate chains
-        static final TrustManager[] trustAllCerts = new TrustManager[]{
+        private static final TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
                     public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
@@ -163,21 +123,6 @@ public enum ClientProperties {
                 String sessionToken,
                 String loginStatus
         ) {
-        }
-
-        public static String getSessionToken(String dataJson) {
-            try {
-                Session session = Operations.om.readValue(dataJson, Session.class);
-                if (session.loginStatus.equals("SUCCESS")) {
-                    log.info("LoginsStatus: " + session.loginStatus);
-                    log.info("SessionToken: " + session.sessionToken);
-                    return session.sessionToken;
-                }
-                log.fatal("NO SESSION TOKEN!");
-                throw new IllegalStateException("nem sikerült megszerezni a sessiont token-t");
-            } catch (JsonProcessingException e) {
-                throw new IllegalStateException("Sikertelen a session token megszerzése");
-            }
         }
 
         private SessionTokenService() {
