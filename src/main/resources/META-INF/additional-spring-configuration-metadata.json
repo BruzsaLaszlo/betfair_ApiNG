@@ -1,0 +1,39 @@
+{
+    "properties": [
+        {
+            "name": "aping.BETFAIR_USERNAME",
+            "type": "java.lang.String",
+            "description": "Description for aping.BETFAIR_USERNAME."
+        },
+        {
+            "name": "aping.BETFAIR_PASSWORD",
+            "type": "java.lang.String",
+            "description": "Description for aping.BETFAIR_PASSWORD."
+        },
+        {
+            "name": "aping.BETFAIR_CERT_LOGIN_URL",
+            "type": "java.lang.String",
+            "description": "Description for aping.BETFAIR_CERT_LOGIN_URL."
+        },
+        {
+            "name": "aping.PKCS12_FILE",
+            "type": "java.lang.String",
+            "description": "Description for aping.PKCS12_FILE."
+        },
+        {
+            "name": "aping.PKCS12_PASSWORD",
+            "type": "java.lang.String",
+            "description": "Description for aping.PKCS12_PASSWORD."
+        },
+        {
+            "name": "aping.APPLICATION_KEY",
+            "type": "java.lang.String",
+            "description": "Description for aping.APPLICATION_KEY."
+        },
+        {
+            "name": "aping.HORSE_RACING_OFF",
+            "type": "java.lang.String",
+            "description": "Description for aping.HORSE_RACING_OFF."
+        }
+    ]
+}

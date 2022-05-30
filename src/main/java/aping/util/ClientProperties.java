@@ -1,6 +1,11 @@
 package aping.util;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import javax.net.ssl.*;
 import java.io.FileInputStream;
@@ -14,69 +19,59 @@ import java.net.http.HttpResponse;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Log4j2
-public abstract class ClientProperties {
+@Getter
+@Setter
+@Component
+@ConfigurationProperties(prefix = "aping")
+public class ClientProperties {
 
-    private ClientProperties() {
+    @Autowired
+    HttpClient httpClient;
+
+    private String betfairUsername;
+    private String betfairPassword;
+    private String betfairCertLoginUrl;
+    private String pkcs12File;
+    private String pkcs12Password;
+
+    @Getter
+    private String applicationKey;
+
+    private String sessionToken;
+
+    public String getSessionToken() {
+        return sessionToken == null ? updateSessionToken() : sessionToken;
     }
 
-    private static final Properties PROPERTIES = new Properties();
-
-    static {
-        try (InputStream in = ClientProperties.class.getResourceAsStream("/API_NG.properties")) {
-            PROPERTIES.load(in);
-        } catch (IOException e) {
-            log.fatal("Error loading the properties file: ", e);
-            System.exit(-1);
-        }
-    }
-
-    private static final String BETFAIR_USERNAME = PROPERTIES.getProperty("BETFAIR_USERNAME");
-    private static final String BETFAIR_PASSWORD = PROPERTIES.getProperty("BETFAIR_PASSWORD");
-    private static final String BETFAIR_CERT_LOGIN_URL = PROPERTIES.getProperty("BETFAIR_CERT_LOGIN_URL");
-    private static final String PKCS12_FILE = PROPERTIES.getProperty("PKCS12_FILE");
-    private static final String PKCS12_PASSWORD = PROPERTIES.getProperty("PKCS12_PASSWORD");
-    public static final String APPLICATION_KEY = PROPERTIES.getProperty("APPLICATION_KEY");
-
-    private static String sessionToken = updateSessionToken();
-
-    public static String updateSessionToken() {
-        sessionToken = SessionTokenService.get();
+    public String updateSessionToken() {
+        sessionToken = new SessionTokenService().get();
         return sessionToken;
     }
 
-    public static String sessionToken() {
-        return sessionToken;
-    }
+    private class SessionTokenService {
 
-    private static class SessionTokenService {
-
-        public static String get() {
+        public String get() {
             try {
                 SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                sslContext.init(getKeyManagers(new FileInputStream(PKCS12_FILE)),
+                sslContext.init(getKeyManagers(new FileInputStream(pkcs12File)),
                         trustAllCerts, new SecureRandom());
 
                 String userAndPass = "?username=%s&password=%s".formatted(
-                        encode(BETFAIR_USERNAME, UTF_8), encode(BETFAIR_PASSWORD, UTF_8));
+                        encode(betfairUsername, UTF_8), encode(betfairPassword, UTF_8));
 
                 HttpRequest httpRequest = HttpRequest.newBuilder()
-                        .uri(new URI(BETFAIR_CERT_LOGIN_URL + userAndPass))
+                        .uri(new URI(betfairCertLoginUrl + userAndPass))
                         .POST(HttpRequest.BodyPublishers.noBody())
                         .header("X-Application", "apikey")
                         .build();
 
-                System.out.println(httpRequest.uri());
-
                 String response = HttpClient.newBuilder().sslContext(sslContext).build()
                         .send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
-
-                System.out.println(response);
 
                 return new JsonMapper().readValue(response, Session.class).sessionToken;
             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException
@@ -92,17 +87,17 @@ public abstract class ClientProperties {
         }
 
 
-        private static KeyManager[] getKeyManagers(InputStream keyStoreFile)
+        private KeyManager[] getKeyManagers(InputStream keyStoreFile)
                 throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
             KeyStore keyStore = KeyStore.getInstance("pkcs12");
-            keyStore.load(keyStoreFile, ClientProperties.PKCS12_PASSWORD.toCharArray());
+            keyStore.load(keyStoreFile, pkcs12Password.toCharArray());
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            kmf.init(keyStore, ClientProperties.PKCS12_PASSWORD.toCharArray());
+            kmf.init(keyStore, pkcs12Password.toCharArray());
             return kmf.getKeyManagers();
         }
 
         // Create a trust manager that does not validate certificate chains
-        private static final TrustManager[] trustAllCerts = new TrustManager[]{
+        private TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
                     public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {

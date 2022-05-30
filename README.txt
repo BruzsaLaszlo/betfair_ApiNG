@@ -1,7 +1,7 @@
 
 ##### Description:
 
-This is a maven project containing Java sample code to connect to the Betfair API NG application.
+This is a maven project containing Java sample code to connect to the Betfair API NG aping.application.
 
 It requires:
   -Apache Maven 3 (3.0.3)
@@ -9,13 +9,13 @@ It requires:
 
 ##### To build:
 
-You need Apache Maven in order to build the application. Execute:
+You need Apache Maven in order to build the aping.application. Execute:
    mvn clean install
 
 
 ##### How to invoke:
 
-You can again use Apache Maven to run the application passing the app key, session token and the method (json-rpc or rescript:
+You can again use Apache Maven to run the aping.application passing the app key, session token and the method (json-rpc or rescript:
     mvn exec:java -Dexec.mainClass="com.betfair.aping.ApiNGDemo" -Dexec.args="<YOUR APP KEY> <YOUR SESSION TOKEN> <METHOD>"
 
     <YOUR APP KEY>: a valid app key
