@@ -1,5 +1,6 @@
-package aping.exceptions;
+package aping.entities;
 
+import aping.exceptions.ApiNgException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record FaultData(

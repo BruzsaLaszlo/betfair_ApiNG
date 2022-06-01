@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "races")
+@Table(name = "node_races")
 @NoArgsConstructor
 @Getter
 public class Race extends Node {

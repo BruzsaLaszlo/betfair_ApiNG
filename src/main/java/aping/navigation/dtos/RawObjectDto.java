@@ -1,4 +1,4 @@
-package aping.navigation.entities;
+package aping.navigation.dtos;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -6,7 +6,6 @@ import java.util.List;
 
 public record RawObjectDto(
 
-        Long db_id,
         String id,
         String type,
         String name,

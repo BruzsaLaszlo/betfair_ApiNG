@@ -3,30 +3,27 @@ package aping.navigation.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "events")
+@Table(name = "node_events")
 @NoArgsConstructor
 @Getter
 public class Event extends Node {
 
     private String countryCode;
 
-    @OneToMany//(mappedBy = "parentEvent")
+    @OneToMany(cascade = CascadeType.ALL)//(mappedBy = "parentEvent")
     @JoinColumn(name = "event_id")
     private final List<Market> markets = new ArrayList<>();
 
-    @OneToMany//(mappedBy = "parentEvent")
+    @OneToMany(cascade = CascadeType.ALL)//(mappedBy = "parentEvent")
     @JoinColumn(name = "event_id")
     private final List<Event> events = new ArrayList<>();
 
-    @OneToMany//(mappedBy = "parentEvent")
+    @OneToMany(cascade = CascadeType.ALL)//(mappedBy = "parentEvent")
     @JoinColumn(name = "event_id")
     private final List<Group> groups = new ArrayList<>();
 

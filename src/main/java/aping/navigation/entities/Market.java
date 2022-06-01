@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "markets")
+@Table(name = "node_markets")
 @NoArgsConstructor
 @Getter
 public class Market extends Node {

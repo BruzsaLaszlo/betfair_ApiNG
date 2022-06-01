@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Entity
-//@Table(name = "root")
+//@Table(name = "node_root")
 @Getter
 public final class Root extends Node {
 

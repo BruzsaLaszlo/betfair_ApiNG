@@ -3,11 +3,9 @@ package aping.api;
 import aping.entities.*;
 import aping.enums.*;
 import aping.exceptions.ApiNgException;
-import aping.exceptions.FaultData;
 import aping.util.HttpUtil;
 import aping.util.JsonMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +20,7 @@ import static java.util.stream.Collectors.toUnmodifiableMap;
 @Component
 public final class Operations {
 
-    @NonNull
     private final HttpUtil httpUtil;
-
-    @NonNull
     public final JsonMapper jsonMapper;
 
     private static final String FILTER = "filter";

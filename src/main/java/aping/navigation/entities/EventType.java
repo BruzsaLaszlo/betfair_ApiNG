@@ -3,15 +3,12 @@ package aping.navigation.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "event_types")
+@Table(name = "node_event_types")
 @NoArgsConstructor
 @Getter
 public class EventType extends Node {
@@ -20,15 +17,15 @@ public class EventType extends Node {
         super(depth, id, name);
     }
 
-    @OneToMany//(mappedBy = "parentEventType")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)//(mappedBy = "parentEventType")
     @JoinColumn(name = "event_type_id")
     private final List<Group> groups = new ArrayList<>();
 
-    @OneToMany//(mappedBy = "parentEventType")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)//(mappedBy = "parentEventType")
     @JoinColumn(name = "event_type_id")
     private final List<Event> events = new ArrayList<>();
 
-    @OneToMany//(mappedBy = "parentEventType")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)//(mappedBy = "parentEventType")
     @JoinColumn(name = "event_type_id")
     private final List<Race> races = new ArrayList<>();
 

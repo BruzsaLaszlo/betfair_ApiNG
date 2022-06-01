@@ -1,5 +1,6 @@
 package aping.navigation.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,25 +36,21 @@ import java.util.List;
 //@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @MappedSuperclass
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Node {
+
+    @Transient
+    protected int depth;
 
     @Id
     protected String id;
 
     protected String name;
 
-    @Transient
-    protected int depth;
-
-    protected Node(int depth, String id, String name) {
-        this.depth = depth;
-        this.id = id;
-        this.name = name;
-    }
 
     @SuppressWarnings("unchecked")
-    protected void getAllData(StringBuilder inputOutputStringBuilder, int depth) {
+    public void getAllData(StringBuilder inputOutputStringBuilder, int depth) {
 
         inputOutputStringBuilder.append(SPACES[this.depth]).append(this).append("\n");
         if (depth >= this.depth) {
